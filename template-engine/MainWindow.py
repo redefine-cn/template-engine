@@ -27,6 +27,7 @@ class MainWindow(QMainWindow):
 
 
     def initUI(self):
+        self.text = QTextEdit()
         #name
         self.setWindowTitle(QString.fromUtf8('Template-Engine'))
         #Splitter
@@ -140,15 +141,6 @@ class MainWindow(QMainWindow):
 
     def slotAbout(self):
         QMessageBox.about(QString.fromUtf8("about me"), QString.fromUtf8("这是一个例子"))
-
-    def slotPaste(self):
-        self.text.paste()
-
-    def slotCopy(self):
-        self.text.copy()
-
-    def slotCut(self):
-        self.text.cut()
 
     def setSetting(self):
         self.settings = Settings()
