@@ -2,6 +2,8 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import  sys
+import json
+import os
 from settings import Settings
 
 from SettingDialog import SettingDialog
@@ -9,7 +11,19 @@ from SettingDialog import SettingDialog
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.loadData()
         self.initUI()
+
+    def loadData(self):
+        #load
+        f = file('settings.json')
+        self.data = json.load(f)
+        f.close()
+
+        # add default value
+        if self.data["path"] == "":
+            self.data["path"] = os.path.abspath(sys.path[0])
+
 
     def initUI(self):
         #name
@@ -96,6 +110,7 @@ class MainWindow(QMainWindow):
         self.settingAction.setStatusTip(QString.fromUtf8("配置"))
         self.settingAction.triggered.connect(self.slotSetting)
 
+
         self.setting = QAction(QString.fromUtf8('设置'), self)
         self.setting.setShortcut('Ctrl+Alt+S')
         self.setStatusTip(QString.fromUtf8('设置界面'))
@@ -172,14 +187,20 @@ class MainWindow(QMainWindow):
         settingDialog = SettingDialog(self)
         settingDialog.show()
 
+
+
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
         # self.leftList = QTextEdit(QString.fromUtf8("左窗口"), mainSplitter)
 
+
         self.leftList = QListWidget(mainSplitter)
-        self.leftList.insertItem(0, QString.fromUtf8("模板1"))
-        self.leftList.insertItem(1, QString.fromUtf8("模板2"))
-        self.leftList.insertItem(2, QString.fromUtf8("模板3"))
+
+        # self.leftList.insertItem(0, QString.fromUtf8("模板1"))
+        # self.leftList.insertItem(1, QString.fromUtf8("模板2"))
+        # self.leftList.insertItem(2, QString.fromUtf8("模板3"))
+
+        self.setLeftList()
 
         # model = QDirModel() #系统给我们提供的
         # tree = QTreeView(mainSplitter)
@@ -187,6 +208,7 @@ class MainWindow(QMainWindow):
         # tree.setWindowTitle(tree.tr("左窗口"))
 
         self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
+
         self.text.setAlignment(Qt.AlignCenter)
 
         # rightSplitter = QSplitter(Qt.Vertical, mainSplitter)
@@ -202,7 +224,19 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(mainSplitter)
 
+    def setLeftList(self):
+        dir = QDir(self.data["path"])
+        dir.setFilter(QDir.Dirs|QDir.NoDot|QDir.NoDotDot)
+        list = dir.entryList()
+        self.leftList.clear()
+        for i in xrange(len(list)):
+            self.leftList.addItem(QListWidgetItem(list[i]))
 
+        # self.leftList.itemClicked.connect(self.slotList)
+        self.leftList.currentTextChanged.connect(self.slotList)
+
+    def slotList(self, item):
+        self.text.setText(item)
 
 app = QApplication(sys.argv)
 mainWindow = MainWindow()

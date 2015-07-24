@@ -3,11 +3,14 @@
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 import sys
+import json
 
 class SettingDialog(QDialog):
     def __init__(self, parent):
         super(SettingDialog, self).__init__(parent)
+        self.data = parent.data
         self.InitUI()
+        self.fa = parent
 
     def InitUI(self):
         self.setWindowTitle(QString.fromUtf8("设置"))
@@ -19,6 +22,7 @@ class SettingDialog(QDialog):
         baseLayout = QGridLayout()
         pathLabel = QLabel(QString.fromUtf8("路径："))
         self.pathEdit = QLineEdit()
+        self.pathEdit.setText(QString.fromUtf8(self.data["path"]))
         choseButton = QPushButton(QString.fromUtf8("选择"))
         choseButton.clicked.connect(self.slotChosePath)
 
@@ -55,6 +59,11 @@ class SettingDialog(QDialog):
         # path = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择路径"), "..", " ", None, QFileDialog.ShowDirsOnly)
         if folder and not folder.isEmpty():
             self.pathEdit.setText(folder)
+            self.data["path"] = folder.toUtf8().data()
+            json.dump(self.data, open('settings.json','w'))
+
+    def closeEvent(self, QCloseEvent):
+        self.fa.setLeftList()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
