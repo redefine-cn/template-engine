@@ -16,8 +16,6 @@ class Settings(QDialog):
         self.label=QLabel("Settings")
 
         self.pathLabel = QLabel('Path')
-        # TODO read init path from json file
-
         self.pathLabelText = QLabel(data['path'])
         self.pathButton = QPushButton('Change Path')
 
@@ -48,8 +46,7 @@ class Settings(QDialog):
 
     def addActionRewrite(self):
         text, ok = QInputDialog().getText(self, 'Add Action', 'Action')
-        if ok :
+        if ok:
             # TODO write text to json file (actionList)
             self.actionList.addItem(text)
             # self.actionList.destroy()
-            pass
