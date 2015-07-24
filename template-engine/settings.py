@@ -13,7 +13,7 @@ class Settings(QDialog):
     def __init__(self,parent=None):  
         super(Settings,self).__init__(parent)
         self.setWindowTitle("Settings")
-        self.label=QLabel("Settings")
+        self.resize(300,300)
 
         self.pathLabel = QLabel('Path')
         self.pathLabelText = QLabel(data['path'])
@@ -23,10 +23,11 @@ class Settings(QDialog):
         self.actionList = QComboBox()
         for action in data['actionList']:
             self.actionList.addItem(action)
-        self.actionButton = QPushButton('Add Action')
+        self.actionButton = QPushButton('Add/Delete Action')
+
+        self.saveButton = QPushButton('Save')
 
         gridLayout=QGridLayout(self)
-        gridLayout.addWidget(self.label,0,0,1,3)
 
         gridLayout.addWidget(self.pathLabel, 1, 0)
         gridLayout.addWidget(self.pathLabelText, 1, 1)
@@ -36,17 +37,27 @@ class Settings(QDialog):
         gridLayout.addWidget(self.actionList, 2, 1)
         gridLayout.addWidget(self.actionButton, 2, 2)
 
+        gridLayout.addWidget(self.saveButton, 3, 2)
+
         self.connect(self.pathButton, SIGNAL('clicked()'), self.changePath)
         self.connect(self.actionButton, SIGNAL('clicked()'), self.addActionRewrite)
+        self.connect(self.saveButton, SIGNAL('clicked()'), self.saveAll)
 
     def changePath(self):
-        fname = QFileDialog.getOpenFileName(self , 'open file')
+        fname = QFileDialog.getExistingDirectory(self, 'open file')
         self.pathLabelText.setText(fname)
-        #TODO write fname to json file
 
     def addActionRewrite(self):
-        text, ok = QInputDialog().getText(self, 'Add Action', 'Action')
+        text, ok = QInputDialog().getText(self, 'Add/Delete Action', QString.fromUtf8('插入相同的动作即删除'))
         if ok:
-            # TODO write text to json file (actionList)
-            self.actionList.addItem(text)
-            # self.actionList.destroy()
+            index = self.actionList.findText(text)
+            if int(index) == -1:
+                data['actionList'].append(str(text))
+                self.actionList.addItem(text)
+            else :
+                data['actionList'].remove(str(text))
+                self.actionList.removeItem(index)
+
+    def saveAll(self):
+        data['path'] = str(self.pathLabelText.text())
+        json.dump(data, open('settings.json', 'w'))
