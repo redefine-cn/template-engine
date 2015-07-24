@@ -13,10 +13,10 @@ class Settings(QDialog):
     def __init__(self,parent=None):  
         super(Settings,self).__init__(parent)
         self.setWindowTitle("Settings")
-        self.resize(300,300)
+        self.resize(500,300)
 
         self.pathLabel = QLabel('Path')
-        self.pathLabelText = QLabel(data['path'])
+        self.pathLabelText = QLineEdit(data['path'])
         self.pathButton = QPushButton('Change Path')
 
         self.actionLable = QLabel('Action')
