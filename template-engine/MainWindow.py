@@ -2,7 +2,7 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import  sys
-
+from settings import Settings
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -32,9 +32,10 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(self.exitAction)
 
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
-        editMenu.addAction(self.cutAction)
-        editMenu.addAction(self.copyAction)
-        editMenu.addAction(self.pasteAction)
+        editMenu.addAction(self.setting)
+        # editMenu.addAction(self.cutAction)
+        # editMenu.addAction(self.copyAction)
+        # editMenu.addAction(self.pasteAction)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
         helpMenu.addAction(self.aboutAction)
@@ -82,6 +83,11 @@ class MainWindow(QMainWindow):
         self.pasteAction.setStatusTip(QString.fromUtf8("粘贴"))
         self.pasteAction.triggered.connect(self.slotPaste)
 
+        self.setting = QAction(QString.fromUtf8('设置'), self)
+        self.setting.setShortcut('Ctrl+Alt+S')
+        self.setStatusTip(QString.fromUtf8('设置界面'))
+        self.setting.triggered.connect(self.setSetting)
+
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
         self.aboutAction.triggered.connect(self.slotAbout)
@@ -116,6 +122,10 @@ class MainWindow(QMainWindow):
 
     def slotCut(self):
         self.text.cut()
+
+    def setSetting(self):
+        self.settings = Settings()
+        self.settings.show()
 
     def slotExit(self):
         self.close()
@@ -172,6 +182,8 @@ class MainWindow(QMainWindow):
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
 
         self.setCentralWidget(mainSplitter)
+
+
 
 app = QApplication(sys.argv)
 mainWindow = MainWindow()
