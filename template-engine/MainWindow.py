@@ -5,7 +5,7 @@ import  sys
 import json
 import os
 from settings import Settings
-
+from central_window import CentralWindow
 from SettingDialog import SettingDialog
 from animation import animation
 
@@ -41,6 +41,8 @@ class MainWindow(QMainWindow):
         self.statusBar()
         #DockWidget
         self.createDockWidget()
+        #set Icon
+        self.setWindowIcon(QIcon('../image/icon.png'))
 
     def createMenu(self):
         fileMenu = self.menuBar().addMenu(QString.fromUtf8("File"))
@@ -54,6 +56,10 @@ class MainWindow(QMainWindow):
 
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
         editMenu.addAction(self.settingAction)
+
+        ActionMenu = self.menuBar().addMenu('Action')
+        ActionMenu.addAction(self.addNormalAction)
+        ActionMenu.addAction(self.deleteAction)
         # editMenu.addAction(self.setting)
         # editMenu.addAction(self.cutAction)
         # editMenu.addAction(self.copyAction)
@@ -64,7 +70,7 @@ class MainWindow(QMainWindow):
 
     def createAction(self):
         #打开文件
-        self.fileOpenAction = QAction(QIcon("../image/icon.jpg"), QString.fromUtf8("Open"), self)
+        self.fileOpenAction = QAction(QIcon("../image/icon.png"), QString.fromUtf8("Open"), self)
         self.fileOpenAction.setShortcut("Ctrl+O")
         self.fileOpenAction.setStatusTip(QString.fromUtf8("打开一个文件"))
         self.fileOpenAction.triggered.connect(self.slotOpenFile)
@@ -87,23 +93,7 @@ class MainWindow(QMainWindow):
         self.exitAction.setStatusTip(QString.fromUtf8("退出"))
         self.exitAction.triggered.connect(self.slotExit)
 
-        #剪切
-        self.cutAction = QAction(QIcon("../image/icon.jpg"), QString.fromUtf8("剪切"), self)
-        self.cutAction.setShortcut("Ctrl+X")
-        self.cutAction.setStatusTip(QString.fromUtf8("剪切"))
-        self.cutAction.triggered.connect(self.slotCut)
 
-        #复制
-        self.copyAction = QAction(QString.fromUtf8("复制"), self)
-        self.copyAction.setShortcut("Ctrl+C")
-        self.copyAction.setStatusTip(QString.fromUtf8("复制"))
-        self.copyAction.triggered.connect(self.slotCopy)
-
-        #粘贴
-        self.pasteAction = QAction(QString.fromUtf8("粘贴"), self)
-        self.pasteAction.setShortcut("Ctrl+P")
-        self.pasteAction.setStatusTip(QString.fromUtf8("粘贴"))
-        self.pasteAction.triggered.connect(self.slotPaste)
 
         #打开配置文件
         self.settingAction = QAction(QString.fromUtf8("setting"), self)
@@ -117,6 +107,12 @@ class MainWindow(QMainWindow):
         self.setStatusTip(QString.fromUtf8('设置界面'))
         self.setting.triggered.connect(self.setSetting)
 
+        # Action
+        self.addNormalAction = QAction('&add', self)
+        self.addNormalAction.triggered.connect(self.central.addNormal)
+        self.deleteAction = QAction('&delete', self)
+        self.deleteAction.triggered.connect(self.central.delete)
+
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
@@ -129,9 +125,9 @@ class MainWindow(QMainWindow):
         fileToolBar.addAction(self.fileSaveAction)
 
         editToolBar = self.addToolBar(QString.fromUtf8("Edit"))
-        editToolBar.addAction(self.cutAction)
-        editToolBar.addAction(self.copyAction)
-        editToolBar.addAction(self.pasteAction)
+        # editToolBar.addAction(self.cutAction)
+        # editToolBar.addAction(self.copyAction)
+        # editToolBar.addAction(self.pasteAction)
 
     def createDockWidget(self):
         # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
@@ -209,9 +205,9 @@ class MainWindow(QMainWindow):
         # tree.setModel(model)
         # tree.setWindowTitle(tree.tr("左窗口"))
 
-        self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
-
-        self.text.setAlignment(Qt.AlignCenter)
+        # self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
+        self.central = CentralWindow(mainSplitter)
+        # self.text.setAlignment(Qt.AlignCenter)
 
         # rightSplitter = QSplitter(Qt.Vertical, mainSplitter)
         # # rightSplitter.setOpaqueResize(False)

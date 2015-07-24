@@ -46,7 +46,7 @@ class AddWidget(QWidget):
 
 class CentralWindow(QTreeWidget):
 
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(CentralWindow, self).__init__(parent)
         self.init()
 
