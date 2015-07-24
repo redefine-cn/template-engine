@@ -7,6 +7,7 @@ import os
 from settings import Settings
 
 from SettingDialog import SettingDialog
+from animation import animation
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -133,11 +134,12 @@ class MainWindow(QMainWindow):
         editToolBar.addAction(self.pasteAction)
 
     def createDockWidget(self):
-        dock = QDockWidget(QString.fromUtf8("窗口1"), self)
-        dock.setFeatures(QDockWidget.DockWidgetMovable)
-        dock.setAllowedAreas(Qt.RightDockWidgetArea)
-        te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
-        dock.setWidget(te1)
+        # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
+        dock = animation()
+        # dock.setFeatures(QDockWidget.DockWidgetMovable)
+        # dock.setAllowedAreas(Qt.RightDockWidgetArea)
+        # te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
+        # dock.setWidget(te1)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
 
     def slotAbout(self):

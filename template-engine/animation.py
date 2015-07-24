@@ -4,13 +4,15 @@ from PyQt4.QtCore import *
 import  sys
 
 class animation(QDockWidget):
-    def __init__(self, parent):
-        super(animation, self).__init__(parent)
+    def __init__(self):
+        super(animation, self).__init__()
         self.initUI()
 
     def initUI(self):
-
         self.setWindowTitle(QString.fromUtf8("编辑界面"))
+        self.setFeatures(QDockWidget.DockWidgetMovable)
+        self.setAllowedAreas(Qt.RightDockWidgetArea)
+
         labelCol = 0
         contentCol = 1
         lv1 = 1
@@ -75,7 +77,10 @@ class animation(QDockWidget):
         gridLayout.addWidget(frameLabel3, 8, lv1 )
         gridLayout.addWidget(frameEdit3, 8, lv2 )
 
-        self.setLayout(gridLayout)
+        dialog = QDialog()
+        dialog.setLayout(gridLayout)
+        self.setWidget(dialog)
+        # self.setLayout(gridLayout)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
