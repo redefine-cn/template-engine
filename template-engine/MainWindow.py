@@ -36,9 +36,10 @@ class MainWindow(QMainWindow):
 
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
         editMenu.addAction(self.setting)
+
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
         editMenu.addAction(self.settingAction)
-        editMenu.addAction(self.setting)
+        # editMenu.addAction(self.setting)
         # editMenu.addAction(self.cutAction)
         # editMenu.addAction(self.copyAction)
         # editMenu.addAction(self.pasteAction)
@@ -89,20 +90,21 @@ class MainWindow(QMainWindow):
         self.pasteAction.setStatusTip(QString.fromUtf8("粘贴"))
         self.pasteAction.triggered.connect(self.slotPaste)
 
-        self.setting = QAction(QString.fromUtf8('设置'), self)
-        self.setting.setShortcut('Ctrl+Alt+S')
-        self.setStatusTip(QString.fromUtf8('设置界面'))
-        self.setting.triggered.connect(self.setSetting)
-
-        self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
-        self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
-        self.aboutAction.triggered.connect(self.slotAbout)
-
         #打开配置文件
         self.settingAction = QAction(QString.fromUtf8("setting"), self)
         # self.settingAction.setShortcut("Ctrl+O")
         self.settingAction.setStatusTip(QString.fromUtf8("配置"))
         self.settingAction.triggered.connect(self.slotSetting)
+
+        self.setting = QAction(QString.fromUtf8('设置'), self)
+        self.setting.setShortcut('Ctrl+Alt+S')
+        self.setStatusTip(QString.fromUtf8('设置界面'))
+        self.setting.triggered.connect(self.setSetting)
+
+        #关于
+        self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
+        self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
+        self.aboutAction.triggered.connect(self.slotAbout)
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
