@@ -41,7 +41,7 @@ class MainWindow(QMainWindow):
 
     def createAction(self):
         #打开文件
-        self.fileOpenAction = QAction(QIcon("icon.jpg"), QString.fromUtf8("Open"), self)
+        self.fileOpenAction = QAction(QIcon("../image/icon.jpg"), QString.fromUtf8("Open"), self)
         self.fileOpenAction.setShortcut("Ctrl+O")
         self.fileOpenAction.setStatusTip(QString.fromUtf8("打开一个文件"))
         self.fileOpenAction.triggered.connect(self.slotOpenFile)
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.exitAction.triggered.connect(self.slotExit)
 
         #剪切
-        self.cutAction = QAction(QIcon("icon.jpg"), QString.fromUtf8("剪切"), self)
+        self.cutAction = QAction(QIcon("../image/icon.jpg"), QString.fromUtf8("剪切"), self)
         self.cutAction.setShortcut("Ctrl+X")
         self.cutAction.setStatusTip(QString.fromUtf8("剪切"))
         self.cutAction.triggered.connect(self.slotCut)
