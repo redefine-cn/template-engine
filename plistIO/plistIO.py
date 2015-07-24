@@ -1,7 +1,5 @@
 # -*- coding=utf-8 -*-
 import sys
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
 import codecs
 from os.path import isfile
 import json

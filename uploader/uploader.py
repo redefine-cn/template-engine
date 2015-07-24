@@ -36,7 +36,7 @@ class Uploader(QDialog):
         self.ftp_ip = QLabel(QString.fromUtf8("IP地址"))
         self.ftp_ip_line = QLineEdit()
         self.ftp_file = QLabel(QString.fromUtf8("文件"))
-        self.ftp_file_info = QLabel(QString.fromUtf8("file_info"))
+        self.ftp_file_info = QLabel(QString.fromUtf8(""))
         self.ftp_file_select = QPushButton(QString.fromUtf8("选择文件"))
         self.ftp_username = QLabel(QString.fromUtf8("用户名"))
         self.ftp_username_line = QLineEdit(QString.fromUtf8(""))
@@ -65,6 +65,7 @@ class Uploader(QDialog):
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
+        self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
 
     def http_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, "select file")
@@ -97,6 +98,52 @@ class Uploader(QDialog):
             message.exec_()
             response = message.clickedButton().text()
             print unicode(file_val)
+            return
+        file_upload.file_upload(file_val)
+
+    def ftp_upload(self):
+        OK = '确定'
+        ip_val = self.ftp_ip_line.text()
+        file_val = self.ftp_file_info.text()
+        if ip_val == "":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('IP为空，请填写IP地址'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+            print unicode(ip_val)
+            return
+        if file_val == "":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('请选择文件'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+            print unicode(file_val)
+            return
+        username = self.ftp_username_line.text()
+        password = self.ftp_password_line.text()
+        if username == "":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('用户名不能为空'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+            return
+        if password == "":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('密码不能为空'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
             return
         file_upload.file_upload(file_val)
 app = QApplication(sys.argv)
