@@ -3,6 +3,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import  sys
 from settings import Settings
+
+from SettingDialog import SettingDialog
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -32,6 +35,9 @@ class MainWindow(QMainWindow):
         fileMenu.addAction(self.exitAction)
 
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
+        editMenu.addAction(self.setting)
+        editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
+        editMenu.addAction(self.settingAction)
         editMenu.addAction(self.setting)
         # editMenu.addAction(self.cutAction)
         # editMenu.addAction(self.copyAction)
@@ -92,6 +98,12 @@ class MainWindow(QMainWindow):
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
         self.aboutAction.triggered.connect(self.slotAbout)
 
+        #打开配置文件
+        self.settingAction = QAction(QString.fromUtf8("setting"), self)
+        # self.settingAction.setShortcut("Ctrl+O")
+        self.settingAction.setStatusTip(QString.fromUtf8("配置"))
+        self.settingAction.triggered.connect(self.slotSetting)
+
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
         fileToolBar.addAction(self.fileOpenAction)
@@ -106,7 +118,7 @@ class MainWindow(QMainWindow):
     def createDockWidget(self):
         dock = QDockWidget(QString.fromUtf8("窗口1"), self)
         dock.setFeatures(QDockWidget.DockWidgetMovable)
-        dock.setAllowedAreas(Qt.LeftDockWidgetArea|Qt.RightDockWidgetArea)
+        dock.setAllowedAreas(Qt.RightDockWidgetArea)
         te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
         dock.setWidget(te1)
         self.addDockWidget(Qt.RightDockWidgetArea, dock)
@@ -154,18 +166,23 @@ class MainWindow(QMainWindow):
             while not textStream.atEnd():
                 self.text.append(textStream.readLine())
 
+    def slotSetting(self):
+        settingDialog = SettingDialog(self)
+        settingDialog.show()
+
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
         # self.leftList = QTextEdit(QString.fromUtf8("左窗口"), mainSplitter)
 
         self.leftList = QListWidget(mainSplitter)
-        self.leftList.insertItem(0, QString.fromUtf8("窗口1"))
-        self.leftList.insertItem(1, QString.fromUtf8("窗口2"))
-        self.leftList.insertItem(2, QString.fromUtf8("窗口3"))
+        self.leftList.insertItem(0, QString.fromUtf8("模板1"))
+        self.leftList.insertItem(1, QString.fromUtf8("模板2"))
+        self.leftList.insertItem(2, QString.fromUtf8("模板3"))
 
-        # self.leftList.setAlignment(Qt.AlignCenter)
-
-
+        # model = QDirModel() #系统给我们提供的
+        # tree = QTreeView(mainSplitter)
+        # tree.setModel(model)
+        # tree.setWindowTitle(tree.tr("左窗口"))
 
         self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
         self.text.setAlignment(Qt.AlignCenter)
