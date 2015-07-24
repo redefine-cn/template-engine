@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 import file_upload
 import codecs
 from os.path import isfile
+from plistIO import plistIO
 
 class Uploader(QDialog):
     def __init__(self):
@@ -145,7 +146,11 @@ class Uploader(QDialog):
             message.exec_()
             response = message.clickedButton().text()
             return
-        file_upload.file_upload(file_val)
+        result = plistIO.ftp_login(username, password)
+        if result == "success":
+            file_upload.file_upload(file_val)
+        else:
+            print "failure"
 app = QApplication(sys.argv)
 uploader = Uploader()
 uploader.show()

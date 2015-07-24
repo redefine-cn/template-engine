@@ -16,6 +16,11 @@ def read_plist():
     print pl
     json.dump(pl, open('../template-engine/settings.json', 'w'))
 
+def ftp_login(username, password):
+    if username == "test" and password == "test":
+        return "success"
+    else:
+        return "failure"
 
 if __name__ == '__main__':
     update_plist()
