@@ -51,9 +51,10 @@ class SettingDialog(QDialog):
         self.setLayout(baseLayout)
 
     def slotChosePath(self):
-        path = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择路径"), "..", " ", None, QFileDialog.ShowDirsOnly)
-        if path and not path.isEmpty():
-            self.pathEdit.setText(str(path))
+        folder = QFileDialog.getExistingDirectory(self, QString.fromUtf8("选择项目文件夹"), "..")
+        # path = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择路径"), "..", " ", None, QFileDialog.ShowDirsOnly)
+        if folder and not folder.isEmpty():
+            self.pathEdit.setText(folder)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
