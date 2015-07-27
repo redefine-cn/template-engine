@@ -10,6 +10,8 @@ from SettingDialog import SettingDialog
 from animation import animation
 from layer import layer
 from subtitle import subtitle
+from root import root
+from part import part
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -138,7 +140,9 @@ class MainWindow(QMainWindow):
         # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
         # self.dock = animation()
         # self.dock = layer()
-        self.dock = subtitle()
+        # self.dock = subtitle()
+        # self.dock = root()
+        self.dock = part()
 
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
