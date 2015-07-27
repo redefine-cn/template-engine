@@ -166,6 +166,7 @@ class Uploader(QWidget):
         self.data = QByteArray()
         self.data.append("username")
         self.data.append("password")
+        print self.data
         self.getId = self.http.post(self.url.path(), self.data)
         self._cookiejar = QtNetwork.QNetworkCookieJar(parent=self)
         self.configuration = QtNetwork.QNetworkConfiguration()

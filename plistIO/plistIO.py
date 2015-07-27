@@ -38,6 +38,11 @@ def update_plist(node):
 def write_json(data):
     json.dump(data, open('../plistIO/data.json', 'w'))
 
+def save_plist(path):
+    f = file('../plistIO/data.json')
+    data = json.load(f)
+    writePlist(data, path)
+
 def ftp_login(username, password):
     if username == "test" and password == "test":
         return "success"
