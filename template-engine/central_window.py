@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 sys.path.append('../plistIO')
-from plistIO import update_plist
+from plistIO.plistIO import update_plist
 
 f = file('settings.json')
 data = json.load(f)
@@ -139,8 +139,9 @@ class AddWidget(QWidget):
                 break
             fa = fa.parent()
         self.dic['parent'] = falist
-        update_plist(self.dic)
         print self.dic
+        update_plist(self.dic)
+
         self.close()
 
     def save(self):
@@ -189,8 +190,9 @@ class AddWidget(QWidget):
                 break
             fa = fa.parent()
         self.dic['parent'] = falist
-        update_plist(self.dic)
         print self.dic
+        update_plist(self.dic)
+
         self.close()
 
 

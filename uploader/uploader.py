@@ -2,6 +2,7 @@
 import sys
 from PyQt4.QtCore import *
 from PyQt4.QtGui import *
+from PyQt4 import QtNetwork
 import file_upload
 import codecs
 from os.path import isfile
@@ -67,7 +68,7 @@ class Uploader(QWidget):
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
-        self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
+        self.connect(self.btn_upload, SIGNAL("clicked()"), self.link_url)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
 
     def http_fileSelect(self):
@@ -153,6 +154,56 @@ class Uploader(QWidget):
             file_upload.ftp_upload(file_val, ip_val, username, password)
         else:
             print "failure"
+
+    def link_url(self):
+        self.http = QtNetwork.QHttp(parent=self)
+        # 绑定 done 信号
+        self.http.done.connect(self.on_req_done)
+        self.http.responseHeaderReceived.connect(self.on_response_header)
+        self.url = QUrl("http://101.200.0.168/upload_videoScript")
+        # 设置主机
+        self.http.setHost(self.url.host(), self.url.port(80))
+        self.data = QByteArray()
+        self.data.append("username")
+        self.data.append("password")
+        self.getId = self.http.post(self.url.path(), self.data)
+        self._cookiejar = QtNetwork.QNetworkCookieJar(parent=self)
+        self.configuration = QtNetwork.QNetworkConfiguration()
+        self._sessionjar = QtNetwork.QNetworkSession(self.configuration, parent=self)
+        self.manager = QtNetwork.QNetworkAccessManager(parent=self)
+        self.manager.setCookieJar(self._cookiejar)
+        self.manager.finished.connect(self.on_reply)
+        self.req = QtNetwork.QNetworkRequest(self.url)
+        self.manager.get(self.req)
+
+    def on_reply(self, reply):
+        print reply, self._cookiejar.allCookies()
+        print reply.rawHeaderList()
+        print QByteArray('Server')
+        # print reply.readAll()
+
+    def on_response_header(self, response_header):
+        print response_header.statusCode()
+        if response_header.statusCode() in [301, 302]:
+            location = response_header.value("Location")
+            print "Redirect to: ", location
+            self.getId = self.http.get(location)
+            tmp = QUrl(location)
+            if str(tmp.host()):
+                self.url = tmp
+                self.http.setHost(self.url.host(), self.url.port(80))
+            else:
+                self.url.setPath(location)
+            self.http.get(self.url.path() or "/")
+
+    def on_req_done(self, error):
+        print error
+        if not error:
+            print "Success"
+            print self.http.readAll()
+        else:
+            print "Error"
+
 app = QApplication(sys.argv)
 uploader = Uploader()
 uploader.show()
