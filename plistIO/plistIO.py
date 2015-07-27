@@ -26,12 +26,12 @@ def update_plist(node):
     if len(parent) >= 1:
         if node['Key'] == 'ARRAY':
             pos.append(node['Value'])
-        else :
+        else:
             pos[node['Key']] = node['Value']
-    else :
+    else:
         if node['Key'] == 'ARRAY':
             data.append(node['Value'])
-        else :
+        else:
             data[node['Key']] = node['Value']
     read_plist(data)
 
