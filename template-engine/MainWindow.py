@@ -12,6 +12,7 @@ from layer import layer
 from subtitle import subtitle
 from root import root
 from part import part
+from autodock import autodock
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -142,7 +143,9 @@ class MainWindow(QMainWindow):
         # self.dock = layer()
         # self.dock = subtitle()
         # self.dock = root()
-        self.dock = part()
+        # self.dock = part()
+        self.dock = autodock()
+        self.dock.updateUI({"x":100, "y":200, "point":{"x":300, "y":400}})
 
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
