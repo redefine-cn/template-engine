@@ -118,6 +118,7 @@ class AddWidget(QWidget):
     #     self.col += 1
 
     def saveArray(self):
+        self.dic['Type'] = ''
         type = str(self.E2.currentText())
         if checkNone(self.E3.text()) == False:
             QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -143,7 +144,7 @@ class AddWidget(QWidget):
         self.close()
 
     def save(self):
-
+        self.dic['Value'] = ''
         type = str(self.E2.currentText())
         if type == 'dict' or type == 'array':
             if checkNone(self.E1.text()) == False:
