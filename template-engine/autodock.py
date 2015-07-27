@@ -44,6 +44,7 @@ class autodock(QDockWidget):
 
         gridLayout = QGridLayout()
         self.gridLayout = gridLayout
+        self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
 
         self.row = 0
         for item in data:
@@ -53,7 +54,6 @@ class autodock(QDockWidget):
                 self.row += 1
                 itemDict = data[item]
                 for i in itemDict:
-                    print self.row
                     self.addValue(i, itemDict[i])
             else:
                 self.addValue(item, data[item])

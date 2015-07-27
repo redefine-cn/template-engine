@@ -107,6 +107,7 @@ class layer(QDockWidget):
 
         self.gridLayout.addWidget(animationLabel, 14, labelCol)
 
+        self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
         dialog = QDialog()
         dialog.setLayout(self.gridLayout)
         self.setWidget(dialog)

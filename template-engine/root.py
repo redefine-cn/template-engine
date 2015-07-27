@@ -37,6 +37,7 @@ class root(QDockWidget):
         gridlayout.addWidget(partLabel, 2, labelCol)
 
         self.gridLayout = gridlayout
+        self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
 
         dialog = QDialog()
         dialog.setLayout(self.gridLayout)

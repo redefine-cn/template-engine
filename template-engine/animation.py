@@ -97,6 +97,7 @@ class animation(QDockWidget):
         self.gridLayout.addWidget(frameLabel3, 8, lv1 )
         self.gridLayout.addWidget(frameEdit3, 8, lv2 )
 
+        self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
         dialog = QDialog()
         dialog.setLayout(self.gridLayout)
         self.setWidget(dialog)

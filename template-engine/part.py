@@ -70,6 +70,7 @@ class part(QDockWidget):
 
         gridLayout.addWidget(subtitlesLabel, 8, labelCol)
         self.gridLayout = gridLayout
+        self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
 
         dialog = QDialog()
         dialog.setLayout(self.gridLayout)
