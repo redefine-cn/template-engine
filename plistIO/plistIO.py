@@ -33,14 +33,10 @@ def update_plist(node):
             data.append(node['Value'])
         else:
             data[node['Key']] = node['Value']
-    read_plist(data)
+    write_json(data)
 
-def read_plist(data):
+def write_json(data):
     json.dump(data, open('../plistIO/data.json', 'w'))
-
-def read_json(data):
-    for key in data.keys():
-        print data[key]
 
 def ftp_login(username, password):
     if username == "test" and password == "test":
