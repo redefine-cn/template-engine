@@ -134,12 +134,14 @@ class MainWindow(QMainWindow):
 
     def createDockWidget(self):
         # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
-        dock = animation()
+        self.dock = animation()
+        # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
+        self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         # dock.setFeatures(QDockWidget.DockWidgetMovable)
         # dock.setAllowedAreas(Qt.RightDockWidgetArea)
         # te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
         # dock.setWidget(te1)
-        self.addDockWidget(Qt.RightDockWidgetArea, dock)
+        self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):
         QMessageBox.about(QString.fromUtf8("about me"), QString.fromUtf8("这是一个例子"))
@@ -183,15 +185,9 @@ class MainWindow(QMainWindow):
 
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
-        # self.leftList = QTextEdit(QString.fromUtf8("左窗口"), mainSplitter)
-
 
         self.leftList = QListWidget(mainSplitter)
-
-        # self.leftList.insertItem(0, QString.fromUtf8("模板1"))
-        # self.leftList.insertItem(1, QString.fromUtf8("模板2"))
-        # self.leftList.insertItem(2, QString.fromUtf8("模板3"))
-
+        mainSplitter.setStretchFactor(0, 1)
         self.setLeftList()
 
         # model = QDirModel() #系统给我们提供的
@@ -201,6 +197,7 @@ class MainWindow(QMainWindow):
 
         # self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
         self.central = CentralWindow(mainSplitter)
+        mainSplitter.setStretchFactor(1, 3)
         # self.text.setAlignment(Qt.AlignCenter)
 
         # rightSplitter = QSplitter(Qt.Vertical, mainSplitter)
@@ -210,8 +207,6 @@ class MainWindow(QMainWindow):
         # bottomText = QTextEdit(QString.fromUtf8("下窗口"), rightSplitter)
         # bottomText.setAlignment(Qt.AlignCenter)
 
-        mainSplitter.setStretchFactor(0, 1)
-        mainSplitter.setStretchFactor(1, 4)
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
 
         self.setCentralWidget(mainSplitter)
@@ -229,6 +224,10 @@ class MainWindow(QMainWindow):
 
     def slotList(self, item):
         self.text.setText(item)
+
+    def resizeEvent(self, *args, **kwargs):
+        # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
+        self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
 
 app = QApplication(sys.argv)
 mainWindow = MainWindow()

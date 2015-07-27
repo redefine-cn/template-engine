@@ -100,6 +100,7 @@ class animation(QDockWidget):
         dialog = QDialog()
         dialog.setLayout(self.gridLayout)
         self.setWidget(dialog)
+        # self.adjustSize()
         # self.setLayout(gridLayout)
 
     def valueType(self, index):
