@@ -4,6 +4,9 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 import json
+sys.path.append('../plistIO')
+from plistIO import update_plist
+
 f = file('settings.json')
 data = json.load(f)
 
@@ -28,7 +31,7 @@ class AddWidget(QWidget):
         self.init()
 
     def init(self):
-
+        self.dic = dict()
         fatext = str(self.fa.text(1))
         # if fatext == 'integer' or fatext == 'string' or fatext == 'real':
         #     QMessageBox.critical(self, 'error', self.tr('Can Not Add'), QMessageBox.Ok)
@@ -115,6 +118,7 @@ class AddWidget(QWidget):
     #     self.col += 1
 
     def saveArray(self):
+        self.dic['Type'] = ''
         type = str(self.E2.currentText())
         if checkNone(self.E3.text()) == False:
             QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -125,10 +129,22 @@ class AddWidget(QWidget):
         child = QTreeWidgetItem(self.fa)
         child.setText(1, self.E2.currentText())
         child.setText(2, self.E3.text())
+        self.dic['Type'] = str(self.E2.currentText())
+        self.dic['Value'] = str(self.E3.text())
+        fa = self.fa
+        falist = list()
+        while str(fa.text(0)) != 'root':
+            falist.append(str(fa.text(0)))
+            if getattr(fa, 'parent', None) == None:
+                break
+            fa = fa.parent()
+        self.dic['parent'] = falist
+        update_plist(self.dic)
+        print self.dic
         self.close()
 
     def save(self):
-
+        self.dic['Value'] = ''
         type = str(self.E2.currentText())
         if type == 'dict' or type == 'array':
             if checkNone(self.E1.text()) == False:
@@ -137,6 +153,8 @@ class AddWidget(QWidget):
             child = QTreeWidgetItem(self.fa)
             child.setText(0, self.E1.text())
             child.setText(1, self.E2.currentText())
+            self.dic['Key'] = str(self.E1.text())
+            self.dic['Type'] = str(self.E2.currentText())
         elif type == 'integer':
             if checkNone(self.E1.text()) == False or checkNone(self.E3.text()) == False:
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -148,6 +166,9 @@ class AddWidget(QWidget):
             child.setText(0, self.E1.text())
             child.setText(1, self.E2.currentText())
             child.setText(2, self.E3.text())
+            self.dic['Key'] = str(self.E1.text())
+            self.dic['Type'] = str(self.E2.currentText())
+            self.dic['Value'] = str(self.E3.text())
         else :
             if checkNone(self.E1.text()) == False or checkNone(self.E3.text()) == False:
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -156,13 +177,20 @@ class AddWidget(QWidget):
             child.setText(0, self.E1.text())
             child.setText(1, self.E2.currentText())
             child.setText(2, self.E3.text())
+            self.dic['Key'] = str(self.E1.text())
+            self.dic['Type'] = str(self.E2.currentText())
+            self.dic['Value'] = str(self.E3.text())
 
         fa = self.fa
-        while  str(fa.text(0)) != 'root':
-            print str(fa.text(0))
+        falist = list()
+        while str(fa.text(0)) != 'root':
+            falist.append(str(fa.text(0)))
             if getattr(fa, 'parent', None) == None:
                 break
             fa = fa.parent()
+        self.dic['parent'] = falist
+        update_plist(self.dic)
+        print self.dic
         self.close()
 
 
@@ -180,6 +208,10 @@ class CentralWindow(QTreeWidget):
         self.header().resizeSection(2, 200)
         self.root = QTreeWidgetItem(self)
         self.root.setText(0, 'root')
+
+    def mouseDoubleClickEvent(self, QmouseEvent):
+        if QmouseEvent.button() == Qt.LeftButton:
+            print 11
 
     def addNormal(self):
         self.Window = AddWidget(self.currentItem())
