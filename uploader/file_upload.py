@@ -1,5 +1,7 @@
 # -*- coding=utf-8 -*-
 import qiniu
+import urllib
+import urllib2
 ACCESS_KEY = "vUQlBXXwgYNrGLunTtVbEi40TGU41MvT8rw8N2Qj"
 SECRET_KEY = "fvoi1qSXnMlwpD1mG5hBkFdvoBUOLfHMPdG4FUTm"
 bucket_name = "doco"
@@ -24,3 +26,29 @@ def file_upload(file):
     url = upload_without_key(bucket_name, file)
     URL = pre_url + url
     print URL
+
+def http_upload(file, ip):
+    #定义传送的数据
+    data = {}
+    data['file'] = file
+    data['video_script_id'] = "1"
+    #定义post的地址
+    url = str(ip)
+    post_data = urllib.urlencode(data)
+    #提交，发送数据
+    req = urllib2.urlopen(url, post_data)
+    #获取提交后返回的信息
+    content = req.read()
+    print content
+
+def ftp_upload(file, ip, username, password):
+    data = {}
+    data['username'] = username
+    data['password'] = password
+    url = str(ip)
+    post_data = urllib.urlencode(data)
+    #提交，发送数据
+    req = urllib2.urlopen(url, post_data)
+    #获取提交后返回的信息
+    content = req.read()
+    print content

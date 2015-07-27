@@ -11,8 +11,8 @@ def update_plist():
     data = json.load(f)
     writePlist(data, "c:/zhaolong/test.xml")
 
-def read_plist():
-    pl = readPlist("c:/zhaolong/test.xml")
+def read_plist(path):
+    pl = readPlist(path)
     print pl
     json.dump(pl, open('../template-engine/settings.json', 'w'))
 
