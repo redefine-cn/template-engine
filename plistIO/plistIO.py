@@ -15,28 +15,39 @@ def update_plist(node):
     parent_get = node['parent']
     for i in range(len(parent_get)):
         parent.append(parent_get[len(parent_get) - i - 1])
-    if node['Type'] == "integer":
-        new_data[node['Key']] = int(node['Value'])
-    elif node['Type'] == "dict":
-        new_data[node['Key']] = dict()
+    print parent
+    # if node['Type'] == "integer":
+    #     new_data[node['Key']] = int(node['Value'])
+    # elif node['Type'] == "dict":
+    #     new_data[node['Key']] = dict()
+    # elif node['Type'] == 'array':
+    #     new_data[node['Key']] = list()
+    # else:
+    #     new_data[node['Key']] = node['Value']
+    if node['Type'] == 'dict':
+        node['Value'] = dict()
     elif node['Type'] == 'array':
-        new_data['Type'] = list()
-    else:
-        new_data[node['Key']] = node['Value']
-    aim = None
-    p_len = len(parent)
-    for i in range(p_len - 1):
-        if aim is None:
-            aim = data[parent[i]]
-        else:
-            aim = aim[parent[i]]
-    if p_len >= 1:
-        aim = data[parent[p_len - 1]]
-        aim[parent[p_len - 1]] = new_data
-    else:
-        data = new_data
-    writePlist(data, "c:/zhaolong/test.xml")
-    read_plist("c:/zhaolong/test.xml")
+        node['Value'] = list()
+    elif node['Type'] == 'integer':
+        node['Value'] = int(node['Value'])
+    print data
+    pos = data
+    for i in range(len(parent)):
+        pos = pos[parent[i]]
+    print pos
+    if len(parent) >= 1:
+        if node['Key'] == 'ARRAY':
+            pos.append(node['Value'])
+        else :
+            pos[node['Key']] = node['Value']
+    else :
+        if node['Key'] == 'ARRAY':
+            data.append(node['Value'])
+        else :
+            data[node['Key']] = node['Value']
+    writePlist(data, "c:/test.xml")
+    # read_plist("c:/test.xml")
+
 def read_plist(path):
     pl = readPlist(path)
     print pl

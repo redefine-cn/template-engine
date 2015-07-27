@@ -6,7 +6,6 @@ import sys
 import json
 sys.path.append('../plistIO')
 from plistIO.plistIO import update_plist
-
 f = file('settings.json')
 data = json.load(f)
 
@@ -129,6 +128,7 @@ class AddWidget(QWidget):
         child = QTreeWidgetItem(self.fa)
         child.setText(1, self.E2.currentText())
         child.setText(2, self.E3.text())
+        self.dic['Key'] = 'ARRAY'
         self.dic['Type'] = str(self.E2.currentText())
         self.dic['Value'] = str(self.E3.text())
         fa = self.fa
@@ -141,7 +141,6 @@ class AddWidget(QWidget):
         self.dic['parent'] = falist
         print self.dic
         update_plist(self.dic)
-
         self.close()
 
     def save(self):
@@ -192,7 +191,6 @@ class AddWidget(QWidget):
         self.dic['parent'] = falist
         print self.dic
         update_plist(self.dic)
-
         self.close()
 
 
@@ -213,7 +211,8 @@ class CentralWindow(QTreeWidget):
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
-            print 11
+            pass
+            # TODO show information in right window
 
     def addNormal(self):
         self.Window = AddWidget(self.currentItem())
