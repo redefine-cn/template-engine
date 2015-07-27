@@ -10,7 +10,7 @@ class subtitle(QDockWidget):
 
     def initUI(self):
         self.setWindowTitle(QString.fromUtf8("编辑Subtitle"))
-        self.setFeatures(QDockWidget.DockWidgetMovable)
+        self.setFeatures(QDockWidget.AllDockWidgetFeatures)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
 
         labelCol = 0
