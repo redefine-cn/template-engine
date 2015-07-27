@@ -37,18 +37,32 @@ class animation(QDockWidget):
         frameEdit2 = QLineEdit()
 
         valueLabel = QLabel(QString.fromUtf8("values"))
-        valueTypeBox = QComboBox()
-        valueTypeBox.addItem(QString.fromUtf8("Int"))
-        valueTypeBox.addItem(QString.fromUtf8("Point"))
+        self.IntRadioButton = QRadioButton(QString.fromUtf8("Integer"))
+        self.IntRadioButton.setChecked(True)
+        self.IntRadioButton.clicked.connect(self.slotValue)
+        self.PointRadioButton = QRadioButton(QString.fromUtf8("Point"))
+        self.PointRadioButton.clicked.connect(self.slotValue)
 
-        valueTypeBox.currentIndexChanged[int].connect(self.valueType)
+        # valueTypeBox.currentIndexChanged[int].connect(self.valueType)
+
 
         self.valueInt = QLineEdit()
 
-        self.xLabel = QLabel(QString.fromUtf8("x"))
-        self.xEdit = QLineEdit()
-        self.yLabel = QLabel(QString.fromUtf8("y"))
-        self.yEdit = QLineEdit()
+        self.PointLayout = QHBoxLayout()
+        xLayout = QHBoxLayout()
+        xLabel = QLabel(QString.fromUtf8("x"))
+        xEdit = QLineEdit()
+        xLayout.addWidget(xLabel)
+        xLayout.addWidget(xEdit)
+        yLayout = QHBoxLayout()
+        yLabel = QLabel(QString.fromUtf8("y"))
+        yEdit = QLineEdit()
+        yLayout.addWidget(yLabel)
+        yLayout.addWidget(yEdit)
+
+        self.PointLayout.addLayout(xLayout, 1)
+        self.PointLayout.addLayout(yLayout, 1)
+
 
         timeLabel = QLabel(QString.fromUtf8("times"))
         secondLabel3 = QLabel(QString.fromUtf8("second"))
@@ -70,9 +84,13 @@ class animation(QDockWidget):
         self.gridLayout.addWidget(secondEdit2, 3, lv2)
         self.gridLayout.addWidget(frameLabel2, 4, lv1)
         self.gridLayout.addWidget(frameEdit2, 4, lv2)
+
         self.gridLayout.addWidget(valueLabel, 5, labelCol)
-        self.gridLayout.addWidget(valueTypeBox, 5, lv1 )
+        self.gridLayout.addWidget(self.IntRadioButton, 5, lv1 )
         self.gridLayout.addWidget(self.valueInt, 5, lv2)
+
+        self.gridLayout.addWidget(self.PointRadioButton, 6, lv1)
+        self.gridLayout.addLayout(self.PointLayout, 6, lv2)
         self.gridLayout.addWidget(timeLabel, 7, labelCol )
         self.gridLayout.addWidget(secondLabel3, 7, lv1 )
         self.gridLayout.addWidget(secondEdit3, 7, lv2 )
@@ -95,8 +113,11 @@ class animation(QDockWidget):
             self.gridLayout.removeWidget(self.valueInt)
             self.gridLayout.addWidget(self.xLabel, 5, 2)
             self.gridLayout.addWidget(self.xEdit, 5, 3)
-            self.gridLayout.addWidget(self.yLabel, 6, 2)
-            self.gridLayout.addWidget(self.yEdit, 6, 3)
+            self.gridLayout.addWidget(self.yLabel, 5, 4)
+            self.gridLayout.addWidget(self.yEdit, 5, 5)
+
+    def slotValue(self):
+        pass
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
