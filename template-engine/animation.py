@@ -9,7 +9,7 @@ class animation(QDockWidget):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle(QString.fromUtf8("编辑界面"))
+        self.setWindowTitle(QString.fromUtf8("编辑Animation"))
         self.setFeatures(QDockWidget.DockWidgetMovable)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
 

@@ -9,6 +9,7 @@ from central_window import CentralWindow
 from SettingDialog import SettingDialog
 from animation import animation
 from layer import layer
+from subtitle import subtitle
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -136,7 +137,8 @@ class MainWindow(QMainWindow):
     def createDockWidget(self):
         # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
         # self.dock = animation()
-        self.dock = layer()
+        # self.dock = layer()
+        self.dock = subtitle()
 
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
@@ -183,8 +185,6 @@ class MainWindow(QMainWindow):
     def slotSetting(self):
         settingDialog = SettingDialog(self)
         settingDialog.show()
-
-
 
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)

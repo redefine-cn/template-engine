@@ -9,7 +9,7 @@ class layer(QDockWidget):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle(QString.fromUtf8("编辑界面"))
+        self.setWindowTitle(QString.fromUtf8("编辑Layer"))
         self.setFeatures(QDockWidget.DockWidgetMovable)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
 
@@ -91,7 +91,7 @@ class layer(QDockWidget):
         self.gridLayout.addWidget(sizeHeightLabel, 9, lv1)
         self.gridLayout.addWidget(sizeHeightEdit, 9, lv2)
 
-        self.gridLayout.addWidget(animationLabel, 10, labelCol)
+        self.gridLayout.addWidget(animationsLabel, 10, labelCol)
 
         self.gridLayout.addWidget(starttimeLabel, 10, lv1)
         self.gridLayout.addWidget(secondLabel, 10, lv2)
