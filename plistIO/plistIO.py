@@ -10,31 +10,19 @@ def update_plist(node):
     f = file('../plistIO/data.json')
     data = json.load(f)
 
-    new_data = {}
     parent = []
     parent_get = node['parent']
     for i in range(len(parent_get)):
         parent.append(parent_get[len(parent_get) - i - 1])
-    print parent
-    # if node['Type'] == "integer":
-    #     new_data[node['Key']] = int(node['Value'])
-    # elif node['Type'] == "dict":
-    #     new_data[node['Key']] = dict()
-    # elif node['Type'] == 'array':
-    #     new_data[node['Key']] = list()
-    # else:
-    #     new_data[node['Key']] = node['Value']
     if node['Type'] == 'dict':
         node['Value'] = dict()
     elif node['Type'] == 'array':
         node['Value'] = list()
     elif node['Type'] == 'integer':
         node['Value'] = int(node['Value'])
-    print data
     pos = data
     for i in range(len(parent)):
         pos = pos[parent[i]]
-    print pos
     if len(parent) >= 1:
         if node['Key'] == 'ARRAY':
             pos.append(node['Value'])
@@ -45,13 +33,10 @@ def update_plist(node):
             data.append(node['Value'])
         else :
             data[node['Key']] = node['Value']
-    writePlist(data, "c:/test.xml")
-    # read_plist("c:/test.xml")
+    read_plist(data)
 
-def read_plist(path):
-    pl = readPlist(path)
-    print pl
-    json.dump(pl, open('../plistIO/data.json', 'w'))
+def read_plist(data):
+    json.dump(data, open('../plistIO/data.json', 'w'))
 
 def read_json(data):
     for key in data.keys():
