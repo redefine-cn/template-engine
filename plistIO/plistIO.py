@@ -6,7 +6,7 @@ import json
 from plistlib import *
 
 
-def update_plist(node):
+def add_node(node):
     f = file('../plistIO/data.json')
     data = json.load(f)
 
@@ -33,6 +33,19 @@ def update_plist(node):
             data.append(node['Value'])
         else:
             data[node['Key']] = node['Value']
+    write_json(data)
+
+def delete_node(node):
+    f = file('../plistIO/data.json')
+    data = json.load(f)
+    parent = []
+    parent_get = node['parent']
+    for i in range(len(parent_get)):
+        parent.append(parent_get[len(parent_get) - i - 1])
+    pos = data
+    for i in range(len(parent)):
+        pos = pos[parent[i]]
+    pos.pop(node['Key'], None)
     write_json(data)
 
 def write_json(data):
@@ -66,5 +79,5 @@ if __name__ == '__main__':
         data[node['Key']] = int(node['Value'])
     else:
         data[node['Key']] = node['Value']
-    update_plist(parent, 1, data)
+    add_node(parent, 1, data)
     # read_plist("c:/zhaolong/test.xml")

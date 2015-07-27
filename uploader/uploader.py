@@ -24,6 +24,7 @@ class Uploader(QWidget):
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel(QString.fromUtf8("file_info"))
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
+        self.http_progressBar = QProgressBar()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
         http_grid_layout = QGridLayout(self.tab_http)
@@ -32,6 +33,7 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.file, 1, 0)
         http_grid_layout.addWidget(self.file_info, 1, 1)
         http_grid_layout.addWidget(self.file_select, 1, 5)
+        http_grid_layout.addWidget(self.http_progressBar, 2, 0, 1, 5)
         http_grid_layout.addWidget(self.btn_upload, 3, 4)
         http_grid_layout.addWidget(self.btn_cancel, 3, 5)
 
@@ -68,7 +70,7 @@ class Uploader(QWidget):
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
-        self.connect(self.btn_upload, SIGNAL("clicked()"), self.link_url)
+        self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
 
     def http_fileSelect(self):
@@ -103,7 +105,13 @@ class Uploader(QWidget):
             response = message.clickedButton().text()
             print unicode(file_val)
             return
-        file_upload.http_upload(file_val, ip_val)
+
+        self.http_progressBar.setMinimum(0)
+        self.http_progressBar.setMaximum(20)
+        for i in range(21):
+            self.http_progressBar.setValue(i)
+            QThread.msleep(200)
+        print file_upload.http_upload(file_val, ip_val)
 
     def ftp_upload(self):
         OK = '确定'
@@ -164,13 +172,14 @@ class Uploader(QWidget):
         # 设置主机
         self.http.setHost(self.url.host(), self.url.port(80))
         self.data = QByteArray()
+
         self.data.append("username")
         self.data.append("password")
         print self.data
         self.getId = self.http.post(self.url.path(), self.data)
         self._cookiejar = QtNetwork.QNetworkCookieJar(parent=self)
-        self.configuration = QtNetwork.QNetworkConfiguration()
-        self._sessionjar = QtNetwork.QNetworkSession(self.configuration, parent=self)
+        # self.configuration = QtNetwork.QNetworkConfiguration()
+        # self._sessionjar = QtNetwork.QNetworkSession(self.configuration, parent=self)
         self.manager = QtNetwork.QNetworkAccessManager(parent=self)
         self.manager.setCookieJar(self._cookiejar)
         self.manager.finished.connect(self.on_reply)
@@ -179,8 +188,8 @@ class Uploader(QWidget):
 
     def on_reply(self, reply):
         print reply, self._cookiejar.allCookies()
-        print reply.rawHeaderList()
-        print QByteArray('Server')
+        print reply.rawHeaderList()[0]
+        # print QByteArray('Server')
         # print reply.readAll()
 
     def on_response_header(self, response_header):
