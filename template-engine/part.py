@@ -48,21 +48,27 @@ class part(QDockWidget):
         gridLayout = QGridLayout()
         gridLayout.addWidget(partNameLabel, 0, labelCol)
         gridLayout.addWidget(partNameEdit, 0, contentCol)
+
         gridLayout.addWidget(minTimeLabel, 1, labelCol)
         gridLayout.addWidget(minTimeSecondLable, 1, lv1)
         gridLayout.addWidget(minTimeSecondEdit, 1, lv2)
         gridLayout.addWidget(minTimeFrameLabel, 2, lv1)
         gridLayout.addWidget(minTimeFrameEdit, 2, lv2)
-        gridLayout.addWidget(maxTimeFrameLabel, 3, lv1)
-        gridLayout.addWidget(maxTimeFrameEdit, 3, lv2)
-        gridLayout.addWidget(previewImageLabel, 4, labelCol)
-        gridLayout.addWidget(previewImageEdit, 4, contentCol)
-        gridLayout.addWidget(overlayImageLabel, 5, labelCol)
-        gridLayout.addWidget(overlayImageEdit, 5, contentCol)
-        gridLayout.addWidget(previewVideoLabel, 6, labelCol)
-        gridLayout.addWidget(previewVideoEdit, 6, contentCol)
 
-        gridLayout.addWidget(subtitlesLabel, 7, labelCol)
+        gridLayout.addWidget(maxTimeLabel, 3, labelCol)
+        gridLayout.addWidget(maxTimeSecondLable, 3, lv1)
+        gridLayout.addWidget(maxTimeSecondEdit, 3, lv2)
+        gridLayout.addWidget(maxTimeFrameLabel, 4, lv1)
+        gridLayout.addWidget(maxTimeFrameEdit, 4, lv2)
+
+        gridLayout.addWidget(previewImageLabel, 5, labelCol)
+        gridLayout.addWidget(previewImageEdit, 5, contentCol)
+        gridLayout.addWidget(overlayImageLabel, 6, labelCol)
+        gridLayout.addWidget(overlayImageEdit, 6, contentCol)
+        gridLayout.addWidget(previewVideoLabel, 7, labelCol)
+        gridLayout.addWidget(previewVideoEdit, 7, contentCol)
+
+        gridLayout.addWidget(subtitlesLabel, 8, labelCol)
         self.gridLayout = gridLayout
 
         dialog = QDialog()
