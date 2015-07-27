@@ -48,7 +48,9 @@ class autodock(QDockWidget):
 
         self.row = 0
         for item in data:
-            if type(data[item]) == dict:
+            if item == "title":
+                self.setWindowTitle(QString.fromUtf8("编辑"+item))
+            elif type(data[item]) == dict:
                 label = QLabel(QString.fromUtf8(item))
                 gridLayout.addWidget(label, self.row, self.labelCol)
                 self.row += 1
