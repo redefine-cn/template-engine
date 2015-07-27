@@ -4,8 +4,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 import json
-sys.path.append('../plistIO')
-from plistIO.plistIO import update_plist
+from plistIO.plistIO import add_node, delete_node
 f = file('settings.json')
 data = json.load(f)
 
@@ -140,7 +139,7 @@ class AddWidget(QWidget):
             fa = fa.parent()
         self.dic['parent'] = falist
         print self.dic
-        update_plist(self.dic)
+        add_node(self.dic)
         self.close()
 
     def save(self):
@@ -190,7 +189,7 @@ class AddWidget(QWidget):
             fa = fa.parent()
         self.dic['parent'] = falist
         print self.dic
-        update_plist(self.dic)
+        add_node(self.dic)
         self.close()
 
 
@@ -207,11 +206,34 @@ class CentralWindow(QTreeWidget):
         self.header().resizeSection(1, 200)
         self.header().resizeSection(2, 200)
         self.root = QTreeWidgetItem(self)
+        self.root.childCount()
         self.root.setText(0, 'root')
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
-            pass
+            dic = dict()
+            if int(self.currentItem().childCount()) > 0:
+                for i in range(int(self.currentItem().childCount())):
+                    if str(self.currentItem().child(i).text(1)) == 'dict':
+                        dic1 = dict()
+                        for j in range(int(self.currentItem().child(i).childCount())):
+                            if str(self.currentItem().child(i).child(j).text(1)) == 'array' \
+                                    or str(self.currentItem().child(i).child(j).text(1)) == 'dict':
+                                dic1[str(self.currentItem().child(i).child(j).text(0))] = findChild(self.currentItem().child(i).child(j))
+                            else:
+                                dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(2))
+                        dic[str(self.currentItem().child(i).text(0))] = dic1
+                    elif str(self.currentItem().child(i).text(1)) == 'array':
+                        lis = list()
+                        for j in range(int(self.currentItem().child(i).childCount())):
+                            lis.append(str(self.currentItem().child(i).child(j).text(2)))
+                        dic[str(self.currentItem().child(i).text(0))] = lis
+                    else:
+                        dic[str(self.currentItem().child(i).text(0))] = str(self.currentItem().child(i).text(2))
+            else:
+                dic[str(self.currentItem().text(0))] = str(self.currentItem().text(2))
+            dic['name'] = str(self.currentItem().text(0))
+            print dic
             # TODO show information in right window
 
     def addNormal(self):
@@ -219,7 +241,37 @@ class CentralWindow(QTreeWidget):
         self.Window.show()
 
     def delete(self):
-        self.currentItem().parent().removeChild(self.currentItem())
+        if self.currentItem().text(0) != 'root':
+            dic = dict()
+            fa = self.currentItem().parent()
+            falist = list()
+            while str(fa.text(0)) != 'root':
+                falist.append(str(fa.text(0)))
+                fa = fa.parent()
+            dic['parent'] = falist
+            dic['Key'] = str(self.currentItem().text(0))
+            delete_node(dic)
+            print dic
+            self.currentItem().parent().removeChild(self.currentItem())
+        else:
+            return False
+
+def findChild(parent):
+    type = str(parent.text(1))
+    if type == 'dict':
+        ans = dict()
+        for i in range(parent.childCount()):
+            type1 = str(parent.child(i).text(1))
+            if type1 == 'dict' or type1 == 'array':
+                ans[str(parent.child(i).text(0))] = type1
+            else:
+                ans[str(parent.child(i).text(0))] = str(parent.child(i).text(2))
+        print ans
+    elif type == 'array':
+        ans = list()
+        for i in range(parent.childCount()):
+            ans.append(str(parent.child(i).text(2)))
+    return ans
 
 
 class Example(QMainWindow):
