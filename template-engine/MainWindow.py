@@ -110,8 +110,10 @@ class MainWindow(QMainWindow):
 
         # Action
         self.addNormalAction = QAction('&add', self)
+        self.addNormalAction.setShortcut('Ctrl+A')
         self.addNormalAction.triggered.connect(self.central.addNormal)
         self.deleteAction = QAction('&delete', self)
+        self.deleteAction.setShortcut('Ctrl+D')
         self.deleteAction.triggered.connect(self.central.delete)
 
         #关于
