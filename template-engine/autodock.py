@@ -10,7 +10,7 @@ class autodock(QDockWidget):
 
     def initUI(self):
         self.setWindowTitle(QString.fromUtf8("编辑"))
-        self.setFeatures(QDockWidget.DockWidgetMovable)
+        self.setFeatures(QDockWidget.AllDockWidgetFeatures)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
 
         self.row = 0
