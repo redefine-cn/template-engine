@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
         super(MainWindow, self).__init__()
         self.loadData()
         self.initUI()
+        self.resize(960, 540)
 
     def loadData(self):
         #load

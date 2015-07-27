@@ -1,3 +1,4 @@
+#coding=utf-8
 __author__ = 'Administrator'
 
 from PyQt4.QtGui import *
@@ -21,20 +22,46 @@ def checkNone(text):
         return False
     return True
 
+def findChild(parent):
+    type = str(parent.text(1))
+    if type == 'dict':
+        ans = dict()
+        for i in range(parent.childCount()):
+            type1 = str(parent.child(i).text(1))
+            if type1 == 'dict' or type1 == 'array':
+                ans[str(parent.child(i).text(0))] = type1
+            else:
+                ans[str(parent.child(i).text(0))] = str(parent.child(i).text(2))
+        print ans
+    elif type == 'array':
+        ans = list()
+        for i in range(parent.childCount()):
+            ans.append(str(parent.child(i).text(2)))
+    return ans
+
+
 class AddWidget(QWidget):
 
     def __init__(self, fa):
+
+        if hasattr(fa, 'text'):
+            fatext = str(fa.text(1))
+        else:
+            QMessageBox.critical(fa, 'error', QString.fromUtf8('Please Select Node'), QMessageBox.Ok)
+            return
+        if fatext == 'integer' or fatext == 'string' or fatext == 'real':
+            QMessageBox.critical(None, 'error', QString.fromUtf8('Can Not Add'), QMessageBox.Ok)
+            return
         super(AddWidget, self).__init__()
         self.fa = fa
         self.init()
+        self.setWindowTitle('Add Widget')
+        self.show()
 
     def init(self):
         self.dic = dict()
+
         fatext = str(self.fa.text(1))
-        # if fatext == 'integer' or fatext == 'string' or fatext == 'real':
-        #     QMessageBox.critical(self, 'error', self.tr('Can Not Add'), QMessageBox.Ok)
-        #     self.close()
-        #     return False
         if fatext == 'array':
             self.L2 = QLabel('Type')
             self.L3 = QLabel('Value')
@@ -219,7 +246,8 @@ class CentralWindow(QTreeWidget):
                         for j in range(int(self.currentItem().child(i).childCount())):
                             if str(self.currentItem().child(i).child(j).text(1)) == 'array' \
                                     or str(self.currentItem().child(i).child(j).text(1)) == 'dict':
-                                dic1[str(self.currentItem().child(i).child(j).text(0))] = findChild(self.currentItem().child(i).child(j))
+                                # dic1[str(self.currentItem().child(i).child(j).text(0))] = findChild(self.currentItem().child(i).child(j))
+                                dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(1))
                             else:
                                 dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(2))
                         dic[str(self.currentItem().child(i).text(0))] = dic1
@@ -232,13 +260,14 @@ class CentralWindow(QTreeWidget):
                         dic[str(self.currentItem().child(i).text(0))] = str(self.currentItem().child(i).text(2))
             else:
                 dic[str(self.currentItem().text(0))] = str(self.currentItem().text(2))
-            dic['name'] = str(self.currentItem().text(0))
+            dic['title'] = str(self.currentItem().text(0))
             print dic
+            self.parent().parent().dock.updateUI(dic)
             # TODO show information in right window
 
     def addNormal(self):
         self.Window = AddWidget(self.currentItem())
-        self.Window.show()
+        # self.Window.show()
 
     def delete(self):
         if self.currentItem().text(0) != 'root':
@@ -255,23 +284,6 @@ class CentralWindow(QTreeWidget):
             self.currentItem().parent().removeChild(self.currentItem())
         else:
             return False
-
-def findChild(parent):
-    type = str(parent.text(1))
-    if type == 'dict':
-        ans = dict()
-        for i in range(parent.childCount()):
-            type1 = str(parent.child(i).text(1))
-            if type1 == 'dict' or type1 == 'array':
-                ans[str(parent.child(i).text(0))] = type1
-            else:
-                ans[str(parent.child(i).text(0))] = str(parent.child(i).text(2))
-        print ans
-    elif type == 'array':
-        ans = list()
-        for i in range(parent.childCount()):
-            ans.append(str(parent.child(i).text(2)))
-    return ans
 
 
 class Example(QMainWindow):
