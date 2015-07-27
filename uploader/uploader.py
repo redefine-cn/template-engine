@@ -7,16 +7,16 @@ import codecs
 from os.path import isfile
 from plistIO import plistIO
 
-class Uploader(QDialog):
-    def __init__(self):
-        super(QDialog, self).__init__()
+class Uploader(QWidget):
+    def __init__(self, parent=None):
+        super(Uploader, self).__init__(parent)
         self.setWindowTitle(QString.fromUtf8("上传文件"))
-        self.resize(500, 200)
+        # self.resize(500, 200)
         self.tab_upload = QTabWidget(self)
 
         self.tab_http = QWidget()
         self.tab_ftp = QWidget()
-        self.tab_http.resize(500, 500)
+        # self.tab_http.resize(500, 500)
 
         self.ip = QLabel(QString.fromUtf8("IP地址"))
         self.ip_line = QLineEdit()
@@ -25,14 +25,14 @@ class Uploader(QDialog):
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
-        grid_layout = QGridLayout(self.tab_http)
-        grid_layout.addWidget(self.ip, 0, 0)
-        grid_layout.addWidget(self.ip_line, 0, 1)
-        grid_layout.addWidget(self.file, 1, 0)
-        grid_layout.addWidget(self.file_info, 1, 1)
-        grid_layout.addWidget(self.file_select, 1, 5)
-        grid_layout.addWidget(self.btn_upload, 3, 4)
-        grid_layout.addWidget(self.btn_cancel, 3, 5)
+        http_grid_layout = QGridLayout(self.tab_http)
+        http_grid_layout.addWidget(self.ip, 0, 0)
+        http_grid_layout.addWidget(self.ip_line, 0, 1)
+        http_grid_layout.addWidget(self.file, 1, 0)
+        http_grid_layout.addWidget(self.file_info, 1, 1)
+        http_grid_layout.addWidget(self.file_select, 1, 5)
+        http_grid_layout.addWidget(self.btn_upload, 3, 4)
+        http_grid_layout.addWidget(self.btn_cancel, 3, 5)
 
         self.ftp_ip = QLabel(QString.fromUtf8("IP地址"))
         self.ftp_ip_line = QLineEdit()
@@ -60,6 +60,8 @@ class Uploader(QDialog):
 
         self.tab_upload.addTab(self.tab_http, "http")
         self.tab_upload.addTab(self.tab_ftp, "FTP")
+        layout = QHBoxLayout(self)
+        layout.addWidget(self.tab_upload)
 
         self.connect(self.file_select, SIGNAL("clicked()"), self.http_fileSelect)
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
@@ -100,7 +102,7 @@ class Uploader(QDialog):
             response = message.clickedButton().text()
             print unicode(file_val)
             return
-        file_upload.file_upload(file_val)
+        file_upload.http_upload(file_val, ip_val)
 
     def ftp_upload(self):
         OK = '确定'
@@ -148,7 +150,7 @@ class Uploader(QDialog):
             return
         result = plistIO.ftp_login(username, password)
         if result == "success":
-            file_upload.file_upload(file_val)
+            file_upload.ftp_upload(file_val, ip_val, username, password)
         else:
             print "failure"
 app = QApplication(sys.argv)
