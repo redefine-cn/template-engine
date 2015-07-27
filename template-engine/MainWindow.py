@@ -55,8 +55,8 @@ class MainWindow(QMainWindow):
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
         editMenu.addAction(self.setting)
 
-        editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
-        editMenu.addAction(self.settingAction)
+        # editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
+        # editMenu.addAction(self.settingAction)
 
         ActionMenu = self.menuBar().addMenu('Action')
         ActionMenu.addAction(self.addNormalAction)
@@ -97,16 +97,16 @@ class MainWindow(QMainWindow):
 
 
         #打开配置文件
-        self.settingAction = QAction(QString.fromUtf8("setting"), self)
-        # self.settingAction.setShortcut("Ctrl+O")
-        self.settingAction.setStatusTip(QString.fromUtf8("配置"))
-        self.settingAction.triggered.connect(self.slotSetting)
+        # self.settingAction = QAction(QString.fromUtf8("setting"), self)
+        # # self.settingAction.setShortcut("Ctrl+O")
+        # self.settingAction.setStatusTip(QString.fromUtf8("配置"))
+        # self.settingAction.triggered.connect(self.slotSetting)
 
-
+        #设置
         self.setting = QAction(QString.fromUtf8('设置'), self)
         self.setting.setShortcut('Ctrl+Alt+S')
-        self.setStatusTip(QString.fromUtf8('设置界面'))
-        self.setting.triggered.connect(self.setSetting)
+        self.setting.setStatusTip(QString.fromUtf8('设置'))
+        self.setting.triggered.connect(self.slotSetting)
 
         # Action
         self.addNormalAction = QAction('&add', self)
@@ -142,9 +142,9 @@ class MainWindow(QMainWindow):
     def slotAbout(self):
         QMessageBox.about(QString.fromUtf8("about me"), QString.fromUtf8("这是一个例子"))
 
-    def setSetting(self):
-        self.settings = Settings()
-        self.settings.show()
+    # def setSetting(self):
+    #     self.settings = Settings()
+    #     self.settings.show()
 
     def slotExit(self):
         self.close()

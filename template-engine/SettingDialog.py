@@ -39,6 +39,17 @@ class SettingDialog(QDialog):
         choseLabel3 = QLabel(QString.fromUtf8("选项3："))
         choseEdit3 = QLineEdit()
 
+        saveButton = QPushButton(QString.fromUtf8("保存"))
+        saveButton.clicked.connect(self.slotSave)
+
+        cancelButton = QPushButton(QString.fromUtf8("取消"))
+        cancelButton.clicked.connect(self.slotCancel)
+
+        saveLayout = QHBoxLayout()
+        saveLayout.addWidget(saveButton)
+        saveLayout.addWidget(cancelButton)
+        saveLayout.setAlignment(Qt.AlignRight)
+
         baseLayout.addWidget(pathLabel, 0, labelCol)
         baseLayout.addWidget(self.pathEdit, 0, contentCol)
         baseLayout.addWidget(choseButton, 0, buttonCol)
@@ -52,6 +63,8 @@ class SettingDialog(QDialog):
         baseLayout.addWidget(choseLabel3, 3, labelCol)
         baseLayout.addWidget(choseEdit3, 3, contentCol)
 
+        baseLayout.addLayout(saveLayout, 4, buttonCol, Qt.AlignRight)
+
         self.setLayout(baseLayout)
 
     def slotChosePath(self):
@@ -64,6 +77,13 @@ class SettingDialog(QDialog):
 
     def closeEvent(self, QCloseEvent):
         self.fa.setLeftList()
+
+    def slotSave(self):
+        self.fa.setLeftList()
+        self.close()
+
+    def slotCancel(self):
+        self.close()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
