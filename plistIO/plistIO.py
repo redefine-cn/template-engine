@@ -2,14 +2,22 @@
 import sys
 import codecs
 from os.path import isfile
+import time
+import datetime
 import json
 from plistlib import *
 
+def new_tree():
+    data = {}
+    seed = int(time.time())
+    file_name = 'new' + str(seed)
+    new_json = "../tmp_data/" + file_name
+    json.dump(data, open(new_json, 'w'))
+    return file_name
 
-def add_node(node):
-    f = file('../plistIO/data.json')
-    data = json.load(f)
-
+def add_node(node, file_json):
+    json_data = file('../tmp_data/' + file_json)
+    data = json.load(json_data)
     parent = []
     parent_get = node['parent']
     for i in range(len(parent_get)):
@@ -33,11 +41,11 @@ def add_node(node):
             data.append(node['Value'])
         else:
             data[node['Key']] = node['Value']
-    write_json(data)
+    write_json(data, file_json)
 
-def delete_node(node):
-    f = file('../plistIO/data.json')
-    data = json.load(f)
+def delete_node(node, file_json):
+    json_data = file('../tmp_data/' + file_json)
+    data = json.load(json_data)
     parent = []
     parent_get = node['parent']
     for i in range(len(parent_get)):
@@ -46,15 +54,23 @@ def delete_node(node):
     for i in range(len(parent)):
         pos = pos[parent[i]]
     pos.pop(node['Key'], None)
-    write_json(data)
+    write_json(data, file_json)
 
-def write_json(data):
-    json.dump(data, open('../plistIO/data.json', 'w'))
+def write_json(data, file_json):
+    json.dump(data, open('../tmp_data/' + file_json, 'w'))
 
-def save_plist(path):
-    f = file('../plistIO/data.json')
-    data = json.load(f)
-    writePlist(data, path)
+def save_plist(file_save, file_json):
+    json_data = file('../tmp_data/' + file_json)
+    data = json.load(json_data)
+    writePlist(data, file_save)
+
+def read_plist(path):
+    seed = int(time.time())
+    read_data = readPlist(path)
+    file_name = path.replace(':', "").replace("/", "_").split('.')[0] + str(seed)
+    new_json = "../tmp_data/" + file_name
+    json.dump(read_data, open(new_json, 'w'))
+    return file_name
 
 def ftp_login(username, password):
     if username == "test" and password == "test":
@@ -79,5 +95,5 @@ if __name__ == '__main__':
         data[node['Key']] = int(node['Value'])
     else:
         data[node['Key']] = node['Value']
-    add_node(parent, 1, data)
-    # read_plist("c:/zhaolong/test.xml")
+    # add_node(parent, 1, data)
+    read_plist("c:/zhaolong/test.xml")

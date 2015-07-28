@@ -70,11 +70,12 @@ class Uploader(QWidget):
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
-        self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
+        self.connect(self.btn_upload, SIGNAL("clicked()"), self.link_url)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
 
     def http_fileSelect(self):
-        select = QFileDialog.getOpenFileName(self, "select file")
+        select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("Image Files(*.png *.jpg *.bmp)"))
+        select = QFileDialog.get
         self.file_info.setText(select)
 
     def ftp_fileSelect(self):
@@ -111,7 +112,15 @@ class Uploader(QWidget):
         for i in range(21):
             self.http_progressBar.setValue(i)
             QThread.msleep(200)
+
+        self.thread = MyThread()
+        self.thread.setIdentity("thread1")
+        self.thread.sinOut.connect(self.outText)
+        self.thread.setVal(100)
         print file_upload.http_upload(file_val, ip_val)
+
+    def outText(self, text):
+        print(text)
 
     def ftp_upload(self):
         OK = '确定'
@@ -205,6 +214,10 @@ class Uploader(QWidget):
             else:
                 self.url.setPath(location)
             self.http.get(self.url.path() or "/")
+        elif response_header.statusCode() in [404, 500]:
+            print "upload failure"
+        elif response_header.statusCode() == 200:
+            print "fine it is ok"
 
     def on_req_done(self, error):
         print error
@@ -214,6 +227,26 @@ class Uploader(QWidget):
         else:
             print "Error"
 
+class MyThread(QThread):
+    sinOut = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super(MyThread, self).__init__(parent)
+        self.identity = None
+
+    def setIdentity(self, text):
+        self.identity = text
+
+    def setVal(self, val):
+        self.times = int(val)
+        ##执行线程的run方法
+        self.start()
+
+    def run(self):
+        while self.times > 0 and self.identity:
+            ##发射信号
+            self.sinOut.emit(self.identity+" "+str(self.times))
+            self.times -= 1
 app = QApplication(sys.argv)
 uploader = Uploader()
 uploader.show()
