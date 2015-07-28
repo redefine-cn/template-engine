@@ -5,6 +5,8 @@ import json
 from plistlib import *
 
 # create tree and create the file.json, return the file name
+Map = {}
+
 def new_tree():
     data = {}
     seed = int(time.time())
@@ -41,6 +43,45 @@ def add_node(node, file_json):
             data[node['Key']] = node['Value']
     write_json(data, file_json)
 # delete node from tree
+root = ''
+def add(addr, addrchild, node):
+    try :
+        Node = Map[str(addr)]
+    except KeyError:
+        Map[str(addr)] = {}
+        Node = Map[str(addr)]
+        global root
+        root = str(addr)
+
+    if type(Node) == type({}):
+        if node['Type'] == 'dict':
+            Node[str(node['Key'])] = {}
+        elif node['Type'] == 'array':
+            Node[str(node['Key'])] = []
+        else:
+            if node['Type'] == 'integer':
+                Node[str(node['Key'])] = int(node['Value'])
+            if node['Type'] == 'string':
+                Node[str(node['Key'])] = str(node['Value'])
+            if node['Type'] == 'real':
+                Node[str(node['Key'])] = float(node['Value'])
+        Map[str(addrchild)] = Node[str(node['Key'])]
+    elif type(Node) == type([]):
+        if node['Type'] == 'dict':
+            Node.append({})
+        elif node['Type'] == 'array':
+            Node.append([])
+        else:
+            if node['Type'] == 'integer':
+                Node.append(int(node['Value']))
+            if node['Type'] == 'string':
+                Node.append(str(node['Value']))
+            if node['Type'] == 'real':
+                Node.append(float(node['Value']))
+        Map[str(addrchild)] = Node[len(Node) - 1]
+    global root
+    write_json(Map[root],'../plistIO/data.json')
+
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
