@@ -59,7 +59,7 @@ def http_upload(file, file_name, ip):
     # (which is the cookie containing the session identifier.)
     for cookie in cookiejar:
         print cookie.name
-    if not 'id' in [cookie.name for cookie in cookiejar]:
+    if not 'sessionid' in [cookie.name for cookie in cookiejar]:
         raise ValueError, "Login failed with username=%s, password=%s" % (username, password)
 
     print "We are logged in !"
@@ -68,12 +68,11 @@ def http_upload(file, file_name, ip):
     # (Our urlOpener automatically uses cookies from our cookiejar)
 
     #定义传送的数据
-    data_t = {}
-    data_t['file_videoScript'] = file
-    data_t['name'] = file_name
+    data_t = {'file_videoScript': file, 'name': file_name}
     #定义post的地址
     url_ = str(ip)
-    post_data = urllib.urlencode(data)
+    print url_
+    post_data = urllib.urlencode(data_t)
     #提交，发送数据
     # req = urllib2.urlopen(url, post_data)
     req = urlOpener.open(url_, post_data)
