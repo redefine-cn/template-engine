@@ -20,7 +20,7 @@ class Uploader(QWidget):
         # self.tab_http.resize(500, 500)
 
         self.ip = QLabel(QString.fromUtf8("IP地址"))
-        self.ip_line = QLineEdit()
+        self.ip_line = QLineEdit("http://123.57.206.52/upload_videoScript")
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel(QString.fromUtf8("file_info"))
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
@@ -79,10 +79,9 @@ class Uploader(QWidget):
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
-        self.connect(self.btn_upload, SIGNAL("clicked()"), self.link_url)
+        self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
         self.http_choice.currentIndexChanged.connect(self.choice)
-        # self.connect(self.http_choice, SIGNAL("currentIndexChanged()"), self.choice)
 
     def choice(self):
         currentText = (self.http_choice.currentIndex())
@@ -106,6 +105,7 @@ class Uploader(QWidget):
         OK = '确定'
         ip_val = self.ip_line.text()
         file_val = self.file_info.text()
+        file_name = str(QString.fromUtf8(self.file_name_line.text()))
         if ip_val == "":
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('IP为空，请填写IP地址'))
@@ -133,11 +133,21 @@ class Uploader(QWidget):
             self.http_progressBar.setValue(i)
             QThread.msleep(200)
 
-        self.thread = MyThread()
-        self.thread.setIdentity("thread1")
-        self.thread.sinOut.connect(self.outText)
-        self.thread.setVal(100)
-        print file_upload.http_upload(file_val, ip_val)
+        # self.thread = MyThread()
+        # self.thread.setIdentity("thread1")
+        # self.thread.sinOut.connect(self.outText)
+        # self.thread.setVal(100)
+        result = file_upload.http_upload(file_val, file_name, ip_val)
+        print "the upload result"
+        print result
+        if result != "error":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('上传成功'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
 
     def outText(self, text):
         print(text)
@@ -270,7 +280,8 @@ class Login(QWidget):
         self.init()
 
     def init(self):
-        # self.ip_addr = QLabel
+        self.ip_addr = QLabel(QString.fromUtf8("IP地址"))
+        self.ip_addr_line = QLineEdit("http://123.57.206.52/myadmin/login/")
         self.username = QLabel(QString.fromUtf8("用户名"))
         self.password = QLabel(QString.fromUtf8("密码"))
         self.username_line = QLineEdit()
@@ -279,22 +290,37 @@ class Login(QWidget):
         self.login_btn = QPushButton(QString.fromUtf8("登录"))
         self.cancel_btn = QPushButton(QString.fromUtf8("取消"))
         grid_layout = QGridLayout(self)
-        grid_layout.addWidget(self.username, 0, 0)
-        grid_layout.addWidget(self.username_line, 0, 1)
-        grid_layout.addWidget(self.password, 1, 0)
-        grid_layout.addWidget(self.password_line, 1, 1)
-        grid_layout.addWidget(self.login_btn, 4, 3)
-        grid_layout.addWidget(self.cancel_btn, 5, 3)
+        grid_layout.addWidget(self.ip_addr, 0, 0)
+        grid_layout.addWidget(self.ip_addr_line, 0, 1)
+        grid_layout.addWidget(self.username, 1, 0)
+        grid_layout.addWidget(self.username_line, 1, 1)
+        grid_layout.addWidget(self.password, 2, 0)
+        grid_layout.addWidget(self.password_line, 2, 1)
+        grid_layout.addWidget(self.login_btn, 5, 3)
+        grid_layout.addWidget(self.cancel_btn, 5, 4)
         self.connect(self.login_btn, SIGNAL("clicked()"), self.login)
         self.connect(self.cancel_btn, SIGNAL("clicked()"), self.close)
         self.show()
 
     def login(self):
+        ip = str(self.ip_addr_line.text())
         username = str(self.username_line.text())
         password = self.password_line.text()
-        print username, password
-        ip = self.ip_addr
-        file_upload.login(username, password, ip)
+        print username, password, ip
+        result = file_upload.login(username, password, ip)
+        if result == "success":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('登陆成功'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+            if response == "ok":
+                self.window().close()
+                self.window = Uploader()
+        else:
+            pass
 
 app = QApplication(sys.argv)
 uploader = Uploader()
