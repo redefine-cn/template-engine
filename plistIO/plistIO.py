@@ -1,21 +1,18 @@
 # -*- coding=utf-8 -*-
 import os
-import sys
-import codecs
-from os.path import isfile
 import time
-import datetime
 import json
 from plistlib import *
 
+# create tree and create the file.json, return the file name
 def new_tree():
     data = {}
     seed = int(time.time())
-    file_name = 'new' + str(seed)
+    file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
     return file_name
-
+# add node info to the tree
 def add_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
@@ -43,7 +40,7 @@ def add_node(node, file_json):
         else:
             data[node['Key']] = node['Value']
     write_json(data, file_json)
-
+# delete node from tree
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
@@ -56,20 +53,20 @@ def delete_node(node, file_json):
         pos = pos[parent[i]]
     pos.pop(node['Key'], None)
     write_json(data, file_json)
-
+# insert the data to the file.json
 def write_json(data, file_json):
     json.dump(data, open('../tmp_data/' + file_json, 'w'))
-
+# save file while the tree was completed
 def save_plist(file_save, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
     writePlist(data, file_save)
     os.remove(json_data)
-
+# read file.plist and create corresponding file.json & return file name
 def read_plist(path):
     seed = int(time.time())
     read_data = readPlist(path)
-    file_name = path.replace(':', "").replace("/", "_").split('.')[0] + str(seed)
+    file_name = path.replace(':', "").replace("/", "_").split('.')[0] + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(read_data, open(new_json, 'w'))
     return file_name
