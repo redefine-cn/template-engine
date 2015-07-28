@@ -5,7 +5,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 import json
-from plistIO.plistIO import add_node, delete_node, new_tree, add
+from plistIO.plistIO import add_node, delete_node, new_tree, add, delete
 f = file('settings.json')
 data = json.load(f)
 
@@ -342,8 +342,8 @@ class CentralWindow(QTreeWidget):
             #     dic[str(self.currentItem().text(0))] = str(self.currentItem().text(2))
             # dic['title'] = str(self.currentItem().text(0))
             # print dic
-            # for k, v in dic11.items():
-            #     dfs(v, mainWindow.central.root, k, type(v), v)
+            for k, v in dic11.items():
+                dfs(v, mainWindow.central.root, k, type(v), v)
             # self.parent().parent().dock.updateUI(dic)
 
 
@@ -353,16 +353,9 @@ class CentralWindow(QTreeWidget):
 
     def delete(self):
         if self.currentItem().text(0) != 'root':
-            dic = dict()
-            fa = self.currentItem().parent()
-            falist = list()
-            while str(fa.text(0)) != 'root':
-                falist.append(str(fa.text(0)))
-                fa = fa.parent()
-            dic['parent'] = falist
-            dic['Key'] = str(self.currentItem().text(0))
-            delete_node(dic, path)
-            print dic
+            Node = {}
+            Node['Key'] = str(self.currentItem().text(0))
+            delete(self.currentItem().parent(), self.currentItem(), Node)
             self.currentItem().parent().removeChild(self.currentItem())
         else:
             return False
@@ -408,6 +401,14 @@ class Example(QMainWindow):
 
 if __name__ == '__main__':
     dic11 = {"dict": {"backgroundImage": "run01bg0001.png", "animation1": {"values": [{"y": 1.1, "x": 105}, {"y": 105, "x": 105}, {"y": 100, "x": 100}], "name": "scale", "starttime": {"second": 0, "frame": 0}}, "starttime": {"second": 0, "frame": 0}}}
+    x = list()
+    d = x
+    x.append({})
+    x.append({"1":23})
+    x.append({"1":23})
+    x.append({"1":23})
+    d.remove({"1":23})
+    print x
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()

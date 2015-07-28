@@ -82,6 +82,16 @@ def add(addr, addrchild, node):
     global root
     write_json(Map[root],'../plistIO/data.json')
 
+def delete(addr, addrchild, node):
+    Node = Map[str(addr)]
+    NodeChild = Map[str(addrchild)]
+    if type(Node) == type({}):
+        Node.pop(node['Key'])
+    else:
+        Node.remove(NodeChild)
+    global root
+    write_json(Map[root], '../plistIO/data.json')
+
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
