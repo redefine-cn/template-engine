@@ -1,4 +1,5 @@
 # -*- coding=utf-8 -*-
+import os
 import sys
 import codecs
 from os.path import isfile
@@ -63,6 +64,7 @@ def save_plist(file_save, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
     writePlist(data, file_save)
+    os.remove(json_data)
 
 def read_plist(path):
     seed = int(time.time())
