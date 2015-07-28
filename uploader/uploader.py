@@ -29,17 +29,21 @@ class Uploader(QWidget):
         self.http_progressBar = QProgressBar()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
+        self.http_choice = QComboBox()
+        self.http_choice.addItem(QString.fromUtf8("直接上传"))
+        self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
         http_grid_layout = QGridLayout(self.tab_http)
         http_grid_layout.addWidget(self.ip, 0, 0)
         http_grid_layout.addWidget(self.ip_line, 0, 1)
-        http_grid_layout.addWidget(self.file, 1, 0)
-        http_grid_layout.addWidget(self.file_info, 1, 1)
-        http_grid_layout.addWidget(self.file_select, 1, 5)
-        http_grid_layout.addWidget(self.file_name, 2, 0)
-        http_grid_layout.addWidget(self.file_name_line, 2, 1)
-        http_grid_layout.addWidget(self.http_progressBar, 3, 0, 1, 5)
-        http_grid_layout.addWidget(self.btn_upload, 5, 4)
-        http_grid_layout.addWidget(self.btn_cancel, 5, 5)
+        http_grid_layout.addWidget(self.http_choice, 0, 4)
+        http_grid_layout.addWidget(self.file, 2, 0)
+        http_grid_layout.addWidget(self.file_info, 2, 1)
+        http_grid_layout.addWidget(self.file_select, 2, 5)
+        http_grid_layout.addWidget(self.file_name, 3, 0)
+        http_grid_layout.addWidget(self.file_name_line, 3, 1)
+        http_grid_layout.addWidget(self.http_progressBar, 4, 0, 1, 5)
+        http_grid_layout.addWidget(self.btn_upload, 6, 4)
+        http_grid_layout.addWidget(self.btn_cancel, 6, 5)
 
         self.ftp_ip = QLabel(QString.fromUtf8("IP地址"))
         self.ftp_ip_line = QLineEdit()
@@ -77,6 +81,16 @@ class Uploader(QWidget):
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.btn_upload, SIGNAL("clicked()"), self.link_url)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
+        self.http_choice.currentIndexChanged.connect(self.choice)
+        # self.connect(self.http_choice, SIGNAL("currentIndexChanged()"), self.choice)
+
+    def choice(self):
+        currentText = (self.http_choice.currentIndex())
+        print currentText
+        if currentText == 1:
+            self.Window = Login()
+        else:
+            pass
 
     def http_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("*.zip"))
@@ -189,18 +203,16 @@ class Uploader(QWidget):
         self.url = QUrl(ip_val)
         # 设置主机
         self.http.setHost(self.url.host(), self.url.port(80))
-        self.data = dict()
-        # self.data = QByteArray()
-        # username = {}
-        self.data['username'] = "test"
-        self.data['pwd'] = "pwdtest"
-        # ok = {username}
-        # self.data.append(username)
+        # self.data = dict()
+        # self.data['username'] = "test"
+        # self.data['pwd'] = "pwdtest"
+        self.data = QByteArray()
+        self.data.append("uusername")
 
         print self.data
-        # self.getId = self.http.post(self.url.path(), self.data)
+        self.getId = self.http.post(self.url.path(), self.data)
         self.manager = QtNetwork.QNetworkAccessManager(parent=self)
-        self.getId = self.manager.post(self.url.path(), self.data)
+        # self.getId = self.manager.post(self.url.path(), self.data)
         self.req = QtNetwork.QNetworkRequest(self.url)
         self.manager.get(self.req)
 
@@ -210,6 +222,7 @@ class Uploader(QWidget):
             location = response_header.value("Location")
             print "Redirect to: ", location
             self.getId = self.http.get(location)
+            print self.getId
             tmp = QUrl(location)
             if str(tmp.host()):
                 self.url = tmp
@@ -226,7 +239,7 @@ class Uploader(QWidget):
         print error
         if not error:
             print "Success"
-            print self.http.readAll()
+            # print self.http.readAll()
         else:
             print "Error"
 
@@ -250,6 +263,39 @@ class MyThread(QThread):
             ##发射信号
             self.sinOut.emit(self.identity+" "+str(self.times))
             self.times -= 1
+
+class Login(QWidget):
+    def __init__(self, parent = None):
+        super(Login, self).__init__(parent)
+        self.init()
+
+    def init(self):
+        # self.ip_addr = QLabel
+        self.username = QLabel(QString.fromUtf8("用户名"))
+        self.password = QLabel(QString.fromUtf8("密码"))
+        self.username_line = QLineEdit()
+        self.password_line = QLineEdit()
+        self.password_line.setEchoMode(QLineEdit.Password)
+        self.login_btn = QPushButton(QString.fromUtf8("登录"))
+        self.cancel_btn = QPushButton(QString.fromUtf8("取消"))
+        grid_layout = QGridLayout(self)
+        grid_layout.addWidget(self.username, 0, 0)
+        grid_layout.addWidget(self.username_line, 0, 1)
+        grid_layout.addWidget(self.password, 1, 0)
+        grid_layout.addWidget(self.password_line, 1, 1)
+        grid_layout.addWidget(self.login_btn, 4, 3)
+        grid_layout.addWidget(self.cancel_btn, 5, 3)
+        self.connect(self.login_btn, SIGNAL("clicked()"), self.login)
+        self.connect(self.cancel_btn, SIGNAL("clicked()"), self.close)
+        self.show()
+
+    def login(self):
+        username = str(self.username_line.text())
+        password = self.password_line.text()
+        print username, password
+        ip = self.ip_addr
+        file_upload.login(username, password, ip)
+
 app = QApplication(sys.argv)
 uploader = Uploader()
 uploader.show()

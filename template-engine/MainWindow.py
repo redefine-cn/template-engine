@@ -13,7 +13,7 @@ from subtitle import subtitle
 from root import root
 from part import part
 from autodock import autodock
-from plistIO.plistIO import read_plist
+from plistIO.plistIO import read_plist, save_plist
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -168,7 +168,8 @@ class MainWindow(QMainWindow):
         self.close()
 
     def slotSaveFile(self):
-        pass
+        file_save = str(self.central.path).split('.')[0] + '.xml'
+        save_plist(file_save, str(self.central.path))
 
     def slotCreateFile(self):
         self.newWin = MainWindow()

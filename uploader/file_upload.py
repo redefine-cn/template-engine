@@ -27,6 +27,16 @@ def file_upload(file):
     URL = pre_url + url
     print URL
 
+def login(username, password, ip):
+    user = dict()
+    user['username'] = username
+    user['password'] = password
+    post_url = str(ip)
+    post_data = urllib.urlencode(user)
+    req = urllib2.urlopen(post_url, post_data)
+    content = req.read()
+    print content
+
 def http_upload(file, ip):
     #定义传送的数据
     data = {}

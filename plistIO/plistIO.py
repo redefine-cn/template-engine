@@ -115,9 +115,12 @@ def write_json(data, file_json):
 # save file while the tree was completed
 def save_plist(file_save, file_json):
     json_data = file('../tmp_data/' + file_json)
+    f = open('../tmp_data/' + file_save, 'w')
+    file_S = file('../tmp_data/' + file_save, 'w')
+
     data = json.load(json_data)
-    writePlist(data, file_save)
-    os.remove(json_data)
+    writePlist(data, file_S)
+    # os.remove(json_data)
 # read file.plist and create corresponding file.json & return file name
 def read_plist(path):
     seed = int(time.time())
