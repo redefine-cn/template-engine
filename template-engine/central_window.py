@@ -5,7 +5,7 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 import json
-from plistIO.plistIO import add, delete
+from plistIO.plistIO import add, delete, new_tree
 
 f = file('settings.json')
 data = json.load(f)
@@ -54,6 +54,8 @@ def changeType(Type):
         return 'string'
     elif Type == type(1.1):
         return 'real'
+    elif Type == type(True):
+        return 'bool'
     else:
         return 'string'
 
@@ -91,6 +93,7 @@ class AddWidget(QWidget):
             self.E2.addItem('string')
             self.E2.addItem('integer')
             self.E2.addItem('real')
+            self.E2.addItem('bool')
             self.E2.addItem('dict')
             self.E3 = QLineEdit()
             self.E2.currentIndexChanged.connect(self.arrayBoxChange)
@@ -210,7 +213,7 @@ class AddWidget(QWidget):
         child.setText(1, self.E2.currentText())
         Value = self.E3.text()
         Type = self.E2.currentText()
-        if changeType(Type) == 'integer' or changeType(Type) == 'string':
+        if changeType(Type) == 'integer' or changeType(Type) == 'string' or changeType(Type) == 'bool':
             Value = str(Value)
         child.setText(2, QString.fromUtf8(Value))
         child.setExpanded(True)
@@ -231,14 +234,14 @@ class AddWidget(QWidget):
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
                 return False
             child = QTreeWidgetItem(self.fa)
-            child.setText(0, QString.fromUtf8(self.E1.text()))
+            child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
             child.setExpanded(True)
-            self.dic['Key'] = str(self.E1.text())
+            self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = str(self.E2.currentText())
             add(self.fa, child, self.dic, self.father.path)
         elif type == 'integer':
-            print len(self.E1.text())
+            # print len(self.E1.text())
             if len(self.E1.text()) == 0 or len(self.E3.text()) == 0:
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
                 return False
@@ -246,33 +249,37 @@ class AddWidget(QWidget):
                 QMessageBox.critical(self, 'error', self.tr('Type Error'), QMessageBox.Ok)
                 return False
             child = QTreeWidgetItem(self.fa)
-            print QString.fromUtf8(self.E1.text())
-            child.setText(0, QString.fromUtf8(self.E1.text()))
+            # print QString.fromUtf8(self.E1.text())
+            child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
             Value = self.E3.text()
             Type = self.E2.currentText()
-            if changeType(Type) == 'integer' or changeType(Type) == 'real':
+            if changeType(Type) == 'integer' or changeType(Type) == 'real' or changeType(Type) == 'bool':
                 Value = str(Value)
+            # print(Value)
+            # print unicode(self.E1.text())
             child.setText(2, QString.fromUtf8(Value))
             child.setExpanded(True)
-            self.dic['Key'] = QString.fromUtf8(self.E1.text())
+            self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = str(self.E2.currentText())
             self.dic['Value'] = Value
+            # print self.father.path
             add(self.fa, child, self.dic, self.father.path)
         else :
-            if len(self.E1.text()) == 0 or len(self.E3.text()):
+            if len(self.E1.text()) == 0 or len(self.E3.text()) == 0:
+                # print 222
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
                 return False
             child = QTreeWidgetItem(self.fa)
-            child.setText(0, QString.fromUtf8(self.E1.text()))
+            child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
             Value = self.E3.text()
             Type = self.E2.currentText()
-            if changeType(Type) == 'integer' or changeType(Type) == 'real':
+            if changeType(Type) == 'integer' or changeType(Type) == 'real' or changeType(Type) == 'bool':
                 Value = str(Value)
             child.setText(2, QString.fromUtf8(Value))
             child.setExpanded(True)
-            self.dic['Key'] = str(self.E1.text())
+            self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = str(self.E2.currentText())
             self.dic['Value'] = Value
             add(self.fa, child, self.dic, self.father.path)
@@ -284,8 +291,8 @@ class CentralWindow(QTreeWidget):
     def __init__(self, parent=None):
         super(CentralWindow, self).__init__(parent)
         self.init()
-        self.path = 'temp'
-        # self.path = new_tree()
+        # self.path = 'asd'
+        self.path = new_tree()
 
     def init(self):
         self.setColumnCount(3)
@@ -300,7 +307,7 @@ class CentralWindow(QTreeWidget):
         # print findFatherObject(fa)
         if Type == type({}) or Type == type([]):
             child = QTreeWidgetItem(fa)
-            child.setText(0, QString.fromUtf8(Key))
+            child.setText(0, QString.fromUtf8(unicode(Key)))
             if Type == type({}):
                 child.setText(1, 'dict')
                 child.setExpanded(True)
@@ -315,10 +322,11 @@ class CentralWindow(QTreeWidget):
                     self.dfs(dic[i], child, 'item'+ str(i), type(dic[i]), dic[i])
         else:
             child = QTreeWidgetItem(fa)
-            child.setText(0, QString.fromUtf8((Key)))
+            child.setText(0, QString.fromUtf8(unicode(Key)))
             child.setText(1, changeType(Type))
-            if changeType(Type) == 'integer' or changeType(Type) == 'real':
+            if changeType(Type) == 'integer' or changeType(Type) == 'real' or changeType(Type) == 'bool':
                 Value = str(Value)
+            # print Type
             child.setText(2, QString.fromUtf8((Value)))
             child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':changeType(Type),'Value':Value}, self.path)
@@ -363,7 +371,7 @@ class CentralWindow(QTreeWidget):
     def delete(self):
         if self.currentItem().text(0) != 'root':
             Node = {}
-            Node['Key'] = str(self.currentItem().text(0))
+            Node['Key'] = unicode(self.currentItem().text(0))
             delete(self.currentItem().parent(), self.currentItem(), Node, self.path)
             self.currentItem().parent().removeChild(self.currentItem())
         else:
@@ -413,5 +421,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()
-
     app.exec_()

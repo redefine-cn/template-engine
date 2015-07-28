@@ -219,6 +219,7 @@ class MainWindow(QMainWindow):
 
         # self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
         self.central = CentralWindow(mainSplitter)
+        # self.central.path
         mainSplitter.setStretchFactor(1, 3)
         # self.text.setAlignment(Qt.AlignCenter)
 

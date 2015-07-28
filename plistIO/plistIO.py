@@ -13,7 +13,7 @@ def new_tree():
     file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
-    return file_name
+    return str(file_name)
 # add node info to the tree
 def add_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
@@ -53,6 +53,8 @@ def add(addr, addrchild, node, file_json):
         global root
         root = str(addr)
     # print node
+    # print type(node['Key'])
+    # node['Key'] = unicode(node['Key'],'utf-8','ignore')
     if type(Node) == type({}):
         if node['Type'] == 'dict':
             Node[(node['Key'])] = {}
@@ -65,6 +67,8 @@ def add(addr, addrchild, node, file_json):
                 Node[(node['Key'])] = (node['Value'])
             elif node['Type'] == 'real':
                 Node[(node['Key'])] = float(node['Value'])
+            elif node['Type'] == 'bool':
+                Node[node['Key']] = bool(node['Value'])
             else:
                 Node[(node['Key'])] = (node['Value'])
         Map[str(addrchild)] = Node[(node['Key'])]
@@ -80,10 +84,13 @@ def add(addr, addrchild, node, file_json):
                 Node.append((node['Value']))
             elif node['Type'] == 'real':
                 Node.append(float(node['Value']))
+            elif node['Type'] == 'bool':
+                Node.append(bool(node['Value']))
             else:
                 Node.append((node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
     global root
+    # print node
     write_json(Map[root], file_json)
 
 def delete(addr, addrchild, node, file_json):
@@ -111,6 +118,7 @@ def delete_node(node, file_json):
 # insert the data to the file.json
 def write_json(data, file_json):
     # print file_json
+    # print data
     json.dump(data, open('../tmp_data/' + file_json, 'w'))
 # save file while the tree was completed
 def save_plist(file_save, file_json):
