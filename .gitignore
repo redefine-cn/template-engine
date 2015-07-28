@@ -58,3 +58,4 @@ target/
 .idea/
 *.json
 template-engine/*.json
+tmp_data/
