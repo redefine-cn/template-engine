@@ -52,20 +52,22 @@ def add(addr, addrchild, node, file_json):
         Node = Map[str(addr)]
         global root
         root = str(addr)
-
+    # print node
     if type(Node) == type({}):
         if node['Type'] == 'dict':
-            Node[str(node['Key'])] = {}
+            Node[(node['Key'])] = {}
         elif node['Type'] == 'array':
-            Node[str(node['Key'])] = []
+            Node[(node['Key'])] = []
         else:
             if node['Type'] == 'integer':
-                Node[str(node['Key'])] = int(node['Value'])
-            if node['Type'] == 'string':
-                Node[str(node['Key'])] = str(node['Value'])
-            if node['Type'] == 'real':
-                Node[str(node['Key'])] = float(node['Value'])
-        Map[str(addrchild)] = Node[str(node['Key'])]
+                Node[(node['Key'])] = int(node['Value'])
+            elif node['Type'] == 'string':
+                Node[(node['Key'])] = (node['Value'])
+            elif node['Type'] == 'real':
+                Node[(node['Key'])] = float(node['Value'])
+            else:
+                Node[(node['Key'])] = (node['Value'])
+        Map[str(addrchild)] = Node[(node['Key'])]
     elif type(Node) == type([]):
         if node['Type'] == 'dict':
             Node.append({})
@@ -74,10 +76,12 @@ def add(addr, addrchild, node, file_json):
         else:
             if node['Type'] == 'integer':
                 Node.append(int(node['Value']))
-            if node['Type'] == 'string':
-                Node.append(str(node['Value']))
-            if node['Type'] == 'real':
+            elif node['Type'] == 'string':
+                Node.append((node['Value']))
+            elif node['Type'] == 'real':
                 Node.append(float(node['Value']))
+            else:
+                Node.append((node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
     global root
     write_json(Map[root], file_json)
@@ -106,6 +110,7 @@ def delete_node(node, file_json):
     write_json(data, file_json)
 # insert the data to the file.json
 def write_json(data, file_json):
+    # print file_json
     json.dump(data, open('../tmp_data/' + file_json, 'w'))
 # save file while the tree was completed
 def save_plist(file_save, file_json):

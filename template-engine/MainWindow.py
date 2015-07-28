@@ -5,7 +5,7 @@ import  sys
 import json
 import os
 from settings import Settings
-from central_window import CentralWindow, dfs
+from central_window import CentralWindow
 from SettingDialog import SettingDialog
 from animation import animation
 from layer import layer
@@ -179,10 +179,10 @@ class MainWindow(QMainWindow):
         data = {}
         file_json = read_plist(str(fileName))
         json_data = file('../tmp_data/' + file_json)
-        self.central.path = json_data
+        self.central.path = str(file_json)
         data = json.load(json_data)
         for k, v in data.items():
-            dfs(v, self.central.root, k, type(v), v)
+            self.central.dfs(v, self.central.root, k, type(v), v)
         # if not fileName.isEmpty():
         #     if self.text.document().isEmpty():
         #         # self.load(fileName)
@@ -250,10 +250,12 @@ class MainWindow(QMainWindow):
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
 
-app = QApplication(sys.argv)
-mainWindow = MainWindow()
-mainWindow.show()
-sys.exit(app.exec_())
+if __name__ == '__main__':
+    dic11 = {"dict": {"backgroundImage": "run01bg0001.png", "animation1": {"values": [{"y": 1.1, "x": 105}, {"y": 105, "x": 105}, {"y": 100, "x": 100}], "name": "scale", "starttime": {"second": 0, "frame": 0}}, "starttime": {"second": 0, "frame": 0}}}
+    app = QApplication(sys.argv)
+    mainWindow = MainWindow()
+    mainWindow.show()
+    sys.exit(app.exec_())
 
 
 
