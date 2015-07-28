@@ -5,7 +5,7 @@ import  sys
 import json
 import os
 from settings import Settings
-from central_window import CentralWindow
+from central_window import CentralWindow, dfs
 from SettingDialog import SettingDialog
 from animation import animation
 from layer import layer
@@ -13,6 +13,7 @@ from subtitle import subtitle
 from root import root
 from part import part
 from autodock import autodock
+from plistIO.plistIO import read_plist
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -175,13 +176,22 @@ class MainWindow(QMainWindow):
 
     def slotOpenFile(self):
         fileName = QFileDialog.getOpenFileName(self)
-        if not fileName.isEmpty():
-            if self.text.document().isEmpty():
-                self.load(fileName)
-            else:
-                newWin = MainWindow()
-                newWin.show()
-                newWin.loadFile(fileName)
+        data = {}
+        file_json = read_plist(str(fileName))
+        json_data = file('../tmp_data/' + file_json)
+        self.central.path = json_data
+        data = json.load(json_data)
+        for k, v in data.items():
+            dfs(v, self.central.root, k, type(v), v)
+        # if not fileName.isEmpty():
+        #     if self.text.document().isEmpty():
+        #         # self.load(fileName)
+        #         data = json.load(json_data)
+        #
+        #     else:
+        #         newWin = MainWindow()
+        #         newWin.show()
+        #         newWin.loadFile(fileName)
 
     def loadFile(self, fileName):
         file = QFile(fileName)

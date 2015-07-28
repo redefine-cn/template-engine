@@ -24,6 +24,8 @@ class Uploader(QWidget):
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel(QString.fromUtf8("file_info"))
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
+        self.file_name = QLabel(QString.fromUtf8("文件名称"))
+        self.file_name_line = QLineEdit()
         self.http_progressBar = QProgressBar()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
@@ -33,9 +35,11 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.file, 1, 0)
         http_grid_layout.addWidget(self.file_info, 1, 1)
         http_grid_layout.addWidget(self.file_select, 1, 5)
-        http_grid_layout.addWidget(self.http_progressBar, 2, 0, 1, 5)
-        http_grid_layout.addWidget(self.btn_upload, 3, 4)
-        http_grid_layout.addWidget(self.btn_cancel, 3, 5)
+        http_grid_layout.addWidget(self.file_name, 2, 0)
+        http_grid_layout.addWidget(self.file_name_line, 2, 1)
+        http_grid_layout.addWidget(self.http_progressBar, 3, 0, 1, 5)
+        http_grid_layout.addWidget(self.btn_upload, 5, 4)
+        http_grid_layout.addWidget(self.btn_cancel, 5, 5)
 
         self.ftp_ip = QLabel(QString.fromUtf8("IP地址"))
         self.ftp_ip_line = QLineEdit()
@@ -46,6 +50,7 @@ class Uploader(QWidget):
         self.ftp_username_line = QLineEdit(QString.fromUtf8(""))
         self.ftp_password = QLabel(QString.fromUtf8("密码"))
         self.ftp_password_line = QLineEdit()
+        self.ftp_password_line.setEchoMode(QLineEdit.Password)
         self.ftp_btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.ftp_btn_cancel = QPushButton(QString.fromUtf8("取消"))
         ftp_grid_layout = QGridLayout(self.tab_ftp)
@@ -74,9 +79,10 @@ class Uploader(QWidget):
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
 
     def http_fileSelect(self):
-        select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("Image Files(*.png *.jpg *.bmp)"))
-        select = QFileDialog.get
+        select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("*.zip"))
+        select_len = len(str(QString.fromUtf8(select)).split('/'))
         self.file_info.setText(select)
+        self.file_name_line.setText(QString.fromUtf8("请输入文件名"))
 
     def ftp_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, "select file")
@@ -173,33 +179,30 @@ class Uploader(QWidget):
             print "failure"
 
     def link_url(self):
+        ip_val = self.ip_line.text()
+        file_val = self.file_info.text()
         self.http = QtNetwork.QHttp(parent=self)
         # 绑定 done 信号
         self.http.done.connect(self.on_req_done)
         self.http.responseHeaderReceived.connect(self.on_response_header)
-        self.url = QUrl("http://101.200.0.168/upload_videoScript")
+        # http://101.200.0.168/upload_videoScript
+        self.url = QUrl(ip_val)
         # 设置主机
         self.http.setHost(self.url.host(), self.url.port(80))
-        self.data = QByteArray()
+        self.data = dict()
+        # self.data = QByteArray()
+        # username = {}
+        self.data['username'] = "test"
+        self.data['pwd'] = "pwdtest"
+        # ok = {username}
+        # self.data.append(username)
 
-        self.data.append("username")
-        self.data.append("password")
         print self.data
-        self.getId = self.http.post(self.url.path(), self.data)
-        self._cookiejar = QtNetwork.QNetworkCookieJar(parent=self)
-        # self.configuration = QtNetwork.QNetworkConfiguration()
-        # self._sessionjar = QtNetwork.QNetworkSession(self.configuration, parent=self)
+        # self.getId = self.http.post(self.url.path(), self.data)
         self.manager = QtNetwork.QNetworkAccessManager(parent=self)
-        self.manager.setCookieJar(self._cookiejar)
-        self.manager.finished.connect(self.on_reply)
+        self.getId = self.manager.post(self.url.path(), self.data)
         self.req = QtNetwork.QNetworkRequest(self.url)
         self.manager.get(self.req)
-
-    def on_reply(self, reply):
-        print reply, self._cookiejar.allCookies()
-        print reply.rawHeaderList()[0]
-        # print QByteArray('Server')
-        # print reply.readAll()
 
     def on_response_header(self, response_header):
         print response_header.statusCode()

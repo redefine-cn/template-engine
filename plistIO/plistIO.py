@@ -44,7 +44,7 @@ def add_node(node, file_json):
     write_json(data, file_json)
 # delete node from tree
 root = ''
-def add(addr, addrchild, node):
+def add(addr, addrchild, node, file_json):
     try :
         Node = Map[str(addr)]
     except KeyError:
@@ -80,9 +80,9 @@ def add(addr, addrchild, node):
                 Node.append(float(node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
     global root
-    write_json(Map[root],'../plistIO/data.json')
+    write_json(Map[root], file_json)
 
-def delete(addr, addrchild, node):
+def delete(addr, addrchild, node, file_json):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
     if type(Node) == type({}):
@@ -90,7 +90,7 @@ def delete(addr, addrchild, node):
     else:
         Node.remove(NodeChild)
     global root
-    write_json(Map[root], '../plistIO/data.json')
+    write_json(Map[root], file_json)
 
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
