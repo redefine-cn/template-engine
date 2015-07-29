@@ -147,7 +147,7 @@ class MainWindow(QMainWindow):
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):
-        QMessageBox.about(QString.fromUtf8("about me"), QString.fromUtf8("这是一个例子"))
+        QMessageBox.about(self, QString.fromUtf8("About me"), QString.fromUtf8("欢迎使用本软件"))
 
     def slotExit(self):
         self.close()
