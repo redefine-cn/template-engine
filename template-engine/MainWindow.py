@@ -18,6 +18,7 @@ from plistIO.plistIO import read_plist, save_plist
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        self.central = list()
         self.loadData()
         self.initUI()
         self.resize(960, 540)
@@ -118,10 +119,10 @@ class MainWindow(QMainWindow):
         # Action
         self.addNormalAction = QAction('&add', self)
         self.addNormalAction.setShortcut('Ctrl+A')
-        self.addNormalAction.triggered.connect(self.central.addNormal)
+        self.addNormalAction.triggered.connect(self.tab.currentWidget().addNormal)
         self.deleteAction = QAction('&delete', self)
         self.deleteAction.setShortcut('Ctrl+D')
-        self.deleteAction.triggered.connect(self.central.delete)
+        self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
@@ -169,22 +170,25 @@ class MainWindow(QMainWindow):
         self.close()
 
     def slotSaveFile(self):
-        file_save = str(self.central.path).split('.')[0] + '.xml'
-        save_plist(file_save, str(self.central.path))
+        file_save = str(self.tab.currentWidget().path).split('.')[0] + '.xml'
+        save_plist(file_save, str(self.tab.currentWidget().path))
 
     def slotCreateFile(self):
-        self.newWin = MainWindow()
-        self.newWin.show()
+
+        self.central.append(CentralWindow())
+        self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
+        # self.newWin = MainWindow()
+        # self.newWin.show()
 
     def slotOpenFile(self):
         fileName = QFileDialog.getOpenFileName(self)
         data = {}
         file_json = read_plist(str(fileName))
         json_data = file('../tmp_data/' + file_json)
-        self.central.path = str(file_json)
+        self.tab.currentWidget().path = str(file_json)
         data = json.load(json_data)
         for k, v in data.items():
-            self.central.dfs(v, self.central.root, k, type(v), v)
+            self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
         # if not fileName.isEmpty():
         #     if self.text.document().isEmpty():
         #         # self.load(fileName)
@@ -219,7 +223,15 @@ class MainWindow(QMainWindow):
         # tree.setWindowTitle(tree.tr("左窗口"))
 
         # self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
-        self.central = CentralWindow(mainSplitter)
+        self.tab = QTabWidget(mainSplitter)
+        self.central.append(CentralWindow())
+        self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
+        # self.central = CentralWindow()
+        # self.tab.addTab(self.central, 'Tab1')
+        # self.central2 = CentralWindow()
+        # self.tab.addTab(self.central2,'Tab2')
+        # self.tab.currentWidget()
+        # self.central = CentralWindow(mainSplitter)
         # self.central.path
         mainSplitter.setStretchFactor(1, 3)
         # self.text.setAlignment(Qt.AlignCenter)

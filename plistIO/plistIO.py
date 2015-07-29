@@ -6,10 +6,11 @@ from plistlib import *
 
 # create tree and create the file.json, return the file name
 Map = {}
-
+import random
 def new_tree():
     data = {}
-    seed = int(time.time())
+    seed = (str(time.time()) + str(random.random() * 10000))
+    # print random.random()
     file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
@@ -68,7 +69,10 @@ def add(addr, addrchild, node, file_json):
             elif node['Type'] == 'real':
                 Node[(node['Key'])] = float(node['Value'])
             elif node['Type'] == 'bool':
-                Node[node['Key']] = bool(node['Value'])
+                if node['Value'] == 'True':
+                    Node[node['Key']] = True
+                else:
+                    Node[node['Key']] = False
             else:
                 Node[(node['Key'])] = (node['Value'])
         Map[str(addrchild)] = Node[(node['Key'])]
@@ -85,7 +89,10 @@ def add(addr, addrchild, node, file_json):
             elif node['Type'] == 'real':
                 Node.append(float(node['Value']))
             elif node['Type'] == 'bool':
-                Node.append(bool(node['Value']))
+                if node['Value'] == 'True':
+                    Node.append(True)
+                else:
+                    Node.append(False)
             else:
                 Node.append((node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
