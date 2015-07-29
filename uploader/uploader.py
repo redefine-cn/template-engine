@@ -135,6 +135,9 @@ class Uploader(QWidget):
         try:
             if self.login_window.login_status == "success":
                 pass
+            else:
+                self.login_window = Login()
+                return
         except:
             self.login_window = Login()
             return
@@ -341,7 +344,7 @@ class Login(QWidget):
             response = message.clickedButton().text()
             if response == "ok":
                 self.window().close()
-                self.window = Uploader()
+                # self.window = Uploader()
         else:
             self.login_status = "failure"
             message = QMessageBox(self)
