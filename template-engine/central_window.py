@@ -4,10 +4,12 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import sys
 import json
+sys.path.append('../')
 from plistIO.plistIO import add, delete, new_tree
 
 f = file('settings.json')
 data = json.load(f)
+
 
 def checkInteger(text):
     text = str(text)
@@ -15,6 +17,7 @@ def checkInteger(text):
         if text[i] < '0' or text[i] > '9':
             return False
     return True
+
 
 def findChild(parent):
     type = str(parent.text(1))
@@ -33,6 +36,7 @@ def findChild(parent):
             ans.append(str(parent.child(i).text(2)))
     return ans
 
+
 def findFather(parent):
     fa = parent.fa
     falist = list()
@@ -42,6 +46,7 @@ def findFather(parent):
             break
         fa = fa.parent()
     return falist
+
 
 def changeTypeInDFS(Type):
     if Type == type({}):
@@ -78,8 +83,6 @@ class AddWidget(QWidget):
         # print father.parent().parent().currentWidget().root
         self.col = 3
         self.dic = dict()
-        self.arrayDic = dict()
-        self.arrayE = list()
         self.init()
         self.setWindowTitle('Add Widget')
         self.show()
@@ -113,7 +116,7 @@ class AddWidget(QWidget):
             layout.addWidget(self.E3bool, 1, 1)
             layout.addWidget(self.E3, 1, 1)
             layout.addWidget(self.butsavearray, 2, 1)
-        else :
+        else:
             self.E1 = QLineEdit()
             self.E2 = QComboBox()
             for type in data['Type']:
@@ -135,6 +138,7 @@ class AddWidget(QWidget):
             layout.addWidget(self.butsave, 3, 1)
 
         self.setLayout(layout)
+
     def arrayBoxChange(self):
         currentText = str(self.E2.currentText())
         if currentText == 'dict':
@@ -165,54 +169,6 @@ class AddWidget(QWidget):
             self.E3.show()
             self.L3.show()
 
-    # def addCol(self):
-    #     L1 = QLabel('Key')
-    #     L2 = QLabel('Type')
-    #     L3 = QLabel('Value')
-    #     self.arrayE.append(QLineEdit())
-    #     self.arrayE.append(QComboBox())
-    #     self.arrayE.append(QLineEdit())
-    #     l = len(self.arrayE)
-    #     self.arrayE[l - 2].addItem('integer')
-    #     self.arrayE[l - 2].addItem('real')
-    #     self.arrayE[l - 2].addItem('string')
-    #
-    #     self.layout().addWidget(L1, self.col, 0)
-    #     self.layout().addWidget(L2, self.col + 1, 0)
-    #     self.layout().addWidget(L3, self.col + 2, 0)
-    #     self.layout().addWidget(self.arrayE[l - 3], self.col, 1)
-    #     self.layout().addWidget(self.arrayE[l - 2], self.col + 1, 1)
-    #     self.layout().addWidget(self.arrayE[l - 1], self.col + 2, 1)
-    #     self.layout().addWidget(self.butadd, self.col + 3, 0)
-    #     self.butsavearraydic = QPushButton('Save')
-    #     self.butsavearraydic.clicked.connect(self.saveArrayDic)
-    #     self.layout().addWidget(self.butsavearraydic, self.col + 3, 1)
-    #     self.col += 3
-
-    # def saveArrayDic(self):
-    #     l = len(self.arrayE)
-    #     print l
-    #     child = QTreeWidgetItem(self.fa)
-    #     child.setText(1, 'dict')
-    #     pos = 0
-    #     while pos < l:
-    #         if str(self.arrayE[pos + 1].currentText()) == 'integer':
-    #             val = int(self.arrayE[pos + 2].text())
-    #         elif str(self.arrayE[pos + 1].currentText()) == 'string':
-    #             val = str(self.arrayE[pos + 2].text())
-    #         else:
-    #             val = float(self.arrayE[pos + 2].text())
-    #         self.arrayDic[str(self.arrayE[pos].text())] = val
-    #         childnext = QTreeWidgetItem(child)
-    #         childnext.setText(0, self.arrayE[pos].text())
-    #         childnext.setText(1, self.arrayE[pos + 1].currentText())
-    #         childnext.setText(2, self.arrayE[pos + 2].text())
-    #         pos += 3
-    #     self.dic['Type'] = 'dict'
-    #     self.dic['Key'] = 'ARRAY'
-    #     self.dic['Value'] = self.arrayDic
-    #     self.close()
-
     def saveArray(self):
         self.dic['Type'] = ''
         Type = str(self.E2.currentText())
@@ -236,7 +192,6 @@ class AddWidget(QWidget):
         self.dic['Type'] = Type
         self.dic['Value'] = Value
 
-        self.dic['parent'] = findFather(self)
         add(self.fa, child, self.dic, self.father.path, self.father.root)
         self.close()
 
@@ -273,7 +228,7 @@ class AddWidget(QWidget):
             self.dic['Type'] = str(self.E2.currentText())
             self.dic['Value'] = Value
             add(self.fa, child, self.dic, self.father.path, self.father.root)
-        else :
+        else:
             if len(self.E1.text()) == 0 or (len(self.E3.text()) == 0 and Type != 'bool'):
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
                 return False
@@ -321,13 +276,15 @@ class CentralWindow(QTreeWidget):
             if Type == type({}):
                 child.setText(1, 'dict')
                 child.setExpanded(True)
-                add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
+                add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path,
+                    self.parent().parent().currentWidget().root)
                 for k, v in dic.items():
                     self.dfs(v, child, k, type(v), v)
             else:
                 child.setText(1, 'array')
                 child.setExpanded(True)
-                add(fa, child, {'Key':(Key),'Type':'array'}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
+                add(fa, child, {'Key':(Key),'Type':'array'}, self.parent().parent().currentWidget().path,
+                    self.parent().parent().currentWidget().root)
                 for i in range(len(dic)):
                     self.dfs(dic[i], child, 'item'+ str(i), type(dic[i]), dic[i])
         else:
@@ -339,7 +296,8 @@ class CentralWindow(QTreeWidget):
                 Value = str(Value)
             child.setText(2, QString.fromUtf8((Value)))
             child.setExpanded(True)
-            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
+            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
+                self.parent().parent().currentWidget().root)
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
@@ -348,7 +306,8 @@ class CentralWindow(QTreeWidget):
             self.parent().parent().parent().parent().dock.updateUI(self.parent().parent().currentWidget().currentItem())
 
     def addNormal(self):
-        self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().currentWidget())
+        self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().
+                                currentWidget())
 
     def delete(self):
         if self.parent().parent().currentWidget().currentItem().text(0) != 'root':
@@ -357,7 +316,8 @@ class CentralWindow(QTreeWidget):
             delete(self.parent().parent().currentWidget().currentItem().parent(),
                    self.parent().parent().currentWidget().currentItem(),
                    Node, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
-            self.parent().parent().currentWidget().currentItem().parent().removeChild(self.parent().parent().currentWidget().currentItem())
+            self.parent().parent().currentWidget().currentItem().parent().removeChild(self.parent().parent().
+                                                                                      currentWidget().currentItem())
         else:
             return False
 
