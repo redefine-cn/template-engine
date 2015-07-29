@@ -168,6 +168,10 @@ class MainWindow(QMainWindow):
         # print file_json
         self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
+        # Check if window is not empty, create a new window
+        if self.tab.currentWidget().root.childCount() != 0:
+            self.slotCreateFile()
+            self.tab.setCurrentWidget(self.central[len(self.central) - 1])
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
 
