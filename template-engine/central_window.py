@@ -335,34 +335,31 @@ class CentralWindow(QTreeWidget):
         if QmouseEvent.button() == Qt.LeftButton:
             self.parent().parent().dock.updateUI(self.currentItem())
             # pass
-            # TODO show information in right window
-            # dic = dict()
-            # if int(self.currentItem().childCount()) > 0:
-            #     for i in range(int(self.currentItem().childCount())):
-            #         if str(self.currentItem().child(i).text(1)) == 'dict':
-            #             dic1 = dict()
-            #             for j in range(int(self.currentItem().child(i).childCount())):
-            #                 if str(self.currentItem().child(i).child(j).text(1)) == 'array' \
-            #                         or str(self.currentItem().child(i).child(j).text(1)) == 'dict':
-            #                     # dic1[str(self.currentItem().child(i).child(j).text(0))] = findChild(self.currentItem().child(i).child(j))
-            #                     dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(1))
-            #                 else:
-            #                     dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(2))
-            #             dic[str(self.currentItem().child(i).text(0))] = dic1
-            #         elif str(self.currentItem().child(i).text(1)) == 'array':
-            #             lis = list()
-            #             for j in range(int(self.currentItem().child(i).childCount())):
-            #                 lis.append(str(self.currentItem().child(i).child(j).text(2)))
-            #             dic[str(self.currentItem().child(i).text(0))] = lis
-            #         else:
-            #             dic[str(self.currentItem().child(i).text(0))] = str(self.currentItem().child(i).text(2))
-            # else:
-            #     dic[str(self.currentItem().text(0))] = str(self.currentItem().text(2))
-            # dic['title'] = str(self.currentItem().text(0))
-            # print dic
-            # for k, v in dic11.items():
-            #     self.dfs(v, mainWindow.central.root, k, type(v), v)
-            # self.parent().parent().dock.updateUI(dic)
+#             dic = dict()
+#             if int(self.currentItem().childCount()) > 0:
+#                 for i in range(int(self.currentItem().childCount())):
+#                     if str(self.currentItem().child(i).text(1)) == 'dict':
+#                         dic1 = dict()
+#                         for j in range(int(self.currentItem().child(i).childCount())):
+#                             if str(self.currentItem().child(i).child(j).text(1)) == 'array' \
+#                                     or str(self.currentItem().child(i).child(j).text(1)) == 'dict':
+#                                 # dic1[str(self.currentItem().child(i).child(j).text(0))] = findChild(self.currentItem().child(i).child(j))
+#                                 dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(1))
+#                             else:
+#                                 dic1[str(self.currentItem().child(i).child(j).text(0))] = str(self.currentItem().child(i).child(j).text(2))
+#                         dic[str(self.currentItem().child(i).text(0))] = dic1
+#                     elif str(self.currentItem().child(i).text(1)) == 'array':
+#                         lis = list()
+#                         for j in range(int(self.currentItem().child(i).childCount())):
+#                             lis.append(str(self.currentItem().child(i).child(j).text(2)))
+#                         dic[str(self.currentItem().child(i).text(0))] = lis
+#                     else:
+#                         dic[str(self.currentItem().child(i).text(0))] = str(self.currentItem().child(i).text(2))
+#             else:
+#                 dic[str(self.currentItem().text(0))] = str(self.currentItem().text(2))
+#             dic['title'] = str(self.currentItem().text(0))
+#             print dic
+#             self.parent().parent().dock.updateUI(self.currentItem())
 
 
     def addNormal(self):
