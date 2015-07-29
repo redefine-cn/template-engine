@@ -223,21 +223,21 @@ class MainWindow(QMainWindow):
         self.leftList.itemDoubleClicked.connect(self.slotList)
 
     def slotList(self, item):
-        
-        # name = item.text()
-        # fileName = unicode(self.data["path"]) + unicode("/") + unicode(name) + unicode("/") + unicode(name) + unicode('.plist')
-        # data = {}
-        # file_json = unicode(read_plist(fileName))
-        # json_data = file(unicode('../tmp_data/') + file_json)
-        # # print file_json
-        # self.tab.currentWidget().path = unicode(file_json)
-        # data = json.load(json_data)
-        # # Check if window is not empty, create a new window
-        # if self.tab.currentWidget().root.childCount() != 0:
-        #     self.slotCreateFile()
-        #     self.tab.setCurrentWidget(self.central[len(self.central) - 1])
-        # for k, v in data.items():
-        #     self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+
+        name = item.text()
+        fileName = unicode(self.data["path"]) + unicode("/") + unicode(name) + unicode("/") + unicode(name) + unicode('.plist')
+        data = {}
+        file_json = unicode(read_plist(fileName))
+        json_data = file(unicode('../tmp_data/') + file_json)
+        # print file_json
+        self.tab.currentWidget().path = unicode(file_json)
+        data = json.load(json_data)
+        # Check if window is not empty, create a new window
+        if self.tab.currentWidget().root.childCount() != 0:
+            self.slotCreateFile()
+            self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+        for k, v in data.items():
+            self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
 
     def resizeEvent(self, *args, **kwargs):
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
