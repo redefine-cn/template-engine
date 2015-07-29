@@ -69,10 +69,12 @@ class SettingDialog(QDialog):
 
     def slotChosePath(self):
         folder = QFileDialog.getExistingDirectory(self, QString.fromUtf8("选择项目文件夹"), "..")
-        # path = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择路径"), "..", " ", None, QFileDialog.ShowDirsOnly)
+        folder.replace("\\", '/')
         if folder and not folder.isEmpty():
             self.pathEdit.setText(folder)
-            self.data["path"] = folder.toUtf8().data()
+            path = folder.toUtf8().data()
+
+            self.data["path"] = path
             json.dump(self.data, open('settings.json','w'))
 
     def closeEvent(self, QCloseEvent):
