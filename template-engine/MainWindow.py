@@ -161,11 +161,12 @@ class MainWindow(QMainWindow):
         self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
 
     def slotOpenFile(self):
-        fileName = QFileDialog.getOpenFileName(self)
+        fileName = unicode(QFileDialog.getOpenFileName(self))
         data = {}
-        file_json = read_plist(str(fileName))
-        json_data = file('../tmp_data/' + file_json)
-        self.tab.currentWidget().path = str(file_json)
+        file_json = read_plist(fileName)
+        json_data = file(unicode('../tmp_data/') + file_json)
+        # print file_json
+        self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)

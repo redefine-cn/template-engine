@@ -14,7 +14,7 @@ def new_tree():
     file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
-    return str(file_name)
+    return unicode(file_name)
 # add node info to the tree
 def add_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
@@ -119,11 +119,11 @@ def delete_node(node, file_json):
 def write_json(data, file_json):
     # print file_json
     # print data
-    json.dump(data, open('../tmp_data/' + file_json, 'w'))
+    json.dump(data, open(unicode('../tmp_data/') + file_json, 'w'))
 
 # save file while the tree was completed
 def save_plist(file_save, file_json):
-    json_data = file('../tmp_data/' + file_json)
+    json_data = file(unicode('../tmp_data/') + file_json)
     file_S = file(file_save, 'w')
     data = json.load(json_data)
     writePlist(data, file_S)
@@ -135,7 +135,7 @@ def read_plist(path):
     file_name = path.replace(':', "").replace("/", "_").split('.')[0] + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(read_data, open(new_json, 'w'))
-    print read_data
+    # print read_data
     return file_name
 
 def ftp_login(username, password):
