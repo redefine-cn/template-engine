@@ -174,7 +174,7 @@ class MainWindow(QMainWindow):
 
     def slotOpenFile(self):
         fileName = unicode(QFileDialog.getOpenFileName(self))
-        if len(fileName) == 0:
+        if len(fileName) == 0 or fileName.split('.')[-1] != 'plist':
             return False
         file_json = read_plist(fileName)
         json_data = file(unicode('../tmp_data/') + file_json)
