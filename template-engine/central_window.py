@@ -289,7 +289,6 @@ class AddWidget(QWidget):
 class CentralWindow(QTreeWidget):
 
     def __init__(self, parent=None):
-        print 'here'
         super(CentralWindow, self).__init__(parent)
         self.init()
         # self.path = 'asd'

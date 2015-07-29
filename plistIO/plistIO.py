@@ -8,7 +8,6 @@ from plistlib import *
 Map = {}
 import random
 def new_tree():
-    print 'fuck'
     data = {}
     seed = (str(time.time()) + str(random.random() * 10000))
     # print random.random()
