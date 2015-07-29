@@ -6,10 +6,12 @@ from plistlib import *
 
 # create tree and create the file.json, return the file name
 Map = {}
-
+import random
 def new_tree():
+    print 'fuck'
     data = {}
-    seed = int(time.time())
+    seed = (str(time.time()) + str(random.random() * 10000))
+    # print random.random()
     file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
