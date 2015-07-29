@@ -202,7 +202,9 @@ class MainWindow(QMainWindow):
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
 
-        self.leftList = QListWidget(mainSplitter)
+        # self.leftList = QListWidget(mainSplitter)
+        self.leftTree = QTreeView(mainSplitter)
+
         mainSplitter.setStretchFactor(0, 1)
         self.setLeftList()
         self.tab = QTabWidget(mainSplitter)
@@ -214,31 +216,47 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(mainSplitter)
 
     def setLeftList(self):
-        dir = QDir(self.data["path"])
-        dir.setFilter(QDir.Dirs|QDir.NoDot|QDir.NoDotDot)
-        list = dir.entryList()
-        self.leftList.clear()
-        for i in xrange(len(list)):
-            self.leftList.addItem(QListWidgetItem(list[i]))
+        # dir = QDir(self.data["path"])
+        # dir.setFilter(QDir.Dirs|QDir.NoDot|QDir.NoDotDot)
+        # list = dir.entryList()
+        # self.leftList.clear()
+        # for i in xrange(len(list)):
+        #     self.leftList.addItem(QListWidgetItem(list[i]))
+        #
+        # self.leftList.itemDoubleClicked.connect(self.slotList)
 
-        self.leftList.itemDoubleClicked.connect(self.slotList)
+        # model = QFileSystemModel()
+        # print self.data["path"]
+        # # model.setRootPath(QString.fromUtf8(self.data["path"]))
+        # model.setRootPath(QDir.currentPath())
+        # self.leftTree.setModel(model)
+
+        model = QDirModel()
+        self.leftTree.setModel(model)
+        self.leftTree.setRootIndex(model.index(self.data["path"]))
+        self.leftTree.hideColumn(1)
+        self.leftTree.hideColumn(2)
+        self.leftTree.hideColumn(3)
+        self.leftTree.doubleClicked.connect(self.slotList)
 
     def slotList(self, item):
 
-        name = item.text()
-        fileName = unicode(self.data["path"]) + unicode("/") + unicode(name) + unicode("/") + unicode(name) + unicode('.plist')
-        data = {}
-        file_json = unicode(read_plist(fileName))
-        json_data = file(unicode('../tmp_data/') + file_json)
-        # print file_json
-        self.tab.currentWidget().path = unicode(file_json)
-        data = json.load(json_data)
-        # Check if window is not empty, create a new window
-        if self.tab.currentWidget().root.childCount() != 0:
-            self.slotCreateFile()
-            self.tab.setCurrentWidget(self.central[-1])
-        for k, v in data.items():
-            self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+        print item.data()
+        # name = item.text()
+        # fileName = unicode(self.data["path"]) + unicode("/") + unicode(name) + unicode("/") + unicode(name) + unicode('.plist')
+        # data = {}
+        # file_json = unicode(read_plist(fileName))
+        # json_data = file(unicode('../tmp_data/') + file_json)
+        # # print file_json
+        # self.tab.currentWidget().path = unicode(file_json)
+        # data = json.load(json_data)
+        # # Check if window is not empty, create a new window
+        # if self.tab.currentWidget().root.childCount() != 0:
+        #     self.slotCreateFile()
+        #     self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+        # for k, v in data.items():
+        #     self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+
 
     def resizeEvent(self, *args, **kwargs):
         # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())

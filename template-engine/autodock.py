@@ -38,11 +38,17 @@ class autodock(QDockWidget):
         labelEdit = QLineEdit()
         labelEdit.setText(key)
 
+
+        print type(tp)
         combobox = QComboBox()
-        for i in range(len(self.types)):
-            combobox.addItem(QString.fromUtf8(self.types[i]))
-            if tp == self.types[i]:
-                combobox.setCurrentIndex(i)
+        print tp.compare(QString.fromUtf8("dict")), tp.compare(QString.fromUtf8("array"))
+        if tp.compare(QString.fromUtf8("dict")) == 0 | tp.compare(QString.fromUtf8("array")) == 0:
+            combobox.addItem(QString.fromUtf8(tp))
+        else:
+            for i in range(len(self.types)):
+                combobox.addItem(QString.fromUtf8(self.types[i]))
+                if tp == self.types[i]:
+                    combobox.setCurrentIndex(i)
 
         self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
