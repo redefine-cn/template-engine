@@ -333,7 +333,8 @@ class CentralWindow(QTreeWidget):
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
-            pass
+            self.parent().parent().dock.updateUI(self.currentItem())
+            # pass
             # TODO show information in right window
             # dic = dict()
             # if int(self.currentItem().childCount()) > 0:
