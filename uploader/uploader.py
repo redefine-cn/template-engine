@@ -20,9 +20,9 @@ class Uploader(QWidget):
         # self.tab_http.resize(500, 500)
 
         self.ip = QLabel(QString.fromUtf8("IP地址"))
-        self.ip_line = QLineEdit("http://123.57.206.52/upload_videoScript")
+        self.ip_line = QLineEdit("http://123.57.206.52/upload_videoScript/")
         self.file = QLabel(QString.fromUtf8("文件"))
-        self.file_info = QLabel(QString.fromUtf8("file_info"))
+        self.file_info = QLabel()
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
         self.file_name = QLabel(QString.fromUtf8("文件名称"))
         self.file_name_line = QLineEdit()
@@ -87,7 +87,8 @@ class Uploader(QWidget):
         currentText = (self.http_choice.currentIndex())
         print currentText
         if currentText == 1:
-            self.Window = Login()
+            self.login_window = Login()
+            # self.Window = Login()
         else:
             pass
 
@@ -105,7 +106,9 @@ class Uploader(QWidget):
         OK = '确定'
         ip_val = self.ip_line.text()
         file_val = self.file_info.text()
-        file_name = str(QString.fromUtf8(self.file_name_line.text()))
+
+        file_name = self.file_name_line.text()
+        print type(file_name)
         if ip_val == "":
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('IP为空，请填写IP地址'))
@@ -126,21 +129,29 @@ class Uploader(QWidget):
             response = message.clickedButton().text()
             print unicode(file_val)
             return
-
+        # self.thread = MyThread()
+        # self.thread.setIdentity("thread1")
+        # self.thread.sinOut.connect(self.outText)
+        # self.thread.setVal(100)
+        try:
+            if self.login_window.login_status == "success":
+                pass
+        except:
+            self.login_window = Login()
+            return
+        print unicode(file_name)
+        # return
+        result = file_upload.http_upload(unicode(file_val), unicode(file_name), str(QString.fromUtf8(ip_val)))
         self.http_progressBar.setMinimum(0)
         self.http_progressBar.setMaximum(20)
         for i in range(21):
             self.http_progressBar.setValue(i)
             QThread.msleep(200)
-
-        # self.thread = MyThread()
-        # self.thread.setIdentity("thread1")
-        # self.thread.sinOut.connect(self.outText)
-        # self.thread.setVal(100)
-        result = file_upload.http_upload(file_val, file_name, ip_val)
         print "the upload result"
         print result
-        if result != "error":
+        return_id = 0
+        try:
+            return_id = int(result)
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('上传成功'))
             message.setWindowTitle(QString.fromUtf8('提示'))
@@ -148,6 +159,15 @@ class Uploader(QWidget):
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
+        except:
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8("上传失败，请检查改网站是否需要登录或者重新上传"))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+        print "the latest Video_script id is ", return_id
 
     def outText(self, text):
         print(text)
@@ -280,6 +300,7 @@ class Login(QWidget):
         self.init()
 
     def init(self):
+        self.login_status = "error"
         self.ip_addr = QLabel(QString.fromUtf8("IP地址"))
         self.ip_addr_line = QLineEdit("http://123.57.206.52/myadmin/login/")
         self.username = QLabel(QString.fromUtf8("用户名"))
@@ -307,8 +328,9 @@ class Login(QWidget):
         username = str(self.username_line.text())
         password = self.password_line.text()
         print username, password, ip
-        result = file_upload.login(username, password, ip)
+        result = file_upload.login_session(username, password, ip)
         if result == "success":
+            self.login_status = "success"
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('登陆成功'))
             message.setWindowTitle(QString.fromUtf8('提示'))
@@ -320,7 +342,14 @@ class Login(QWidget):
                 self.window().close()
                 self.window = Uploader()
         else:
-            pass
+            self.login_status = "failure"
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('登陆失败'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
 
 app = QApplication(sys.argv)
 uploader = Uploader()

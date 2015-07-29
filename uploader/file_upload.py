@@ -1,4 +1,7 @@
 # -*- coding=utf-8 -*-
+from poster.encode import multipart_encode
+from poster.streaminghttp import register_openers
+import poster
 import qiniu
 import urllib
 import urllib2
@@ -38,48 +41,67 @@ def login(username, password, ip):
     content = req.read()
     print content
     return content
+opener = ''
+def login_session(username, password, ip):
+    global opener
+    opener = poster.streaminghttp.register_openers()
+    opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
+    values = {'username': username, 'password': password}
+    datagen, headers = poster.encode.multipart_encode(values)
+    request = urllib2.Request(ip, datagen, headers)
+    result_login = urllib2.urlopen(request)
+    login_content = result_login.read()
+    if login_content == "error":
+        print "sorry, login failed"
+        return "login_error"
+    return "success"
 
 def http_upload(file, file_name, ip):
-    username = 'devil'
-    password = '123456'
+    # print username, password
+    # username = 'devil'
+    # password = '123456'
+    # # Enable cookie support for urllib2
+    # cookiejar = cookielib.CookieJar()
+    # urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
+    # # Send username/password to the site and get the session cookie
+    # values = {'username': username, 'password': password}
+    # data = urllib.urlencode(values)
+    # request = urllib2.Request("http://123.57.206.52/myadmin/login/", data)
+    # url = urlOpener.open(request)  # Our cookiejar automatically receives the cookies
+    # print url
+    # # page = url.read(500000)
+    # # Make sure we are logged in by checking the presence of the cookie "id".
+    # # (which is the cookie containing the session identifier.)
+    # for cookie in cookiejar:
+    #     print cookie.name
+    # if not 'sessionid' in [cookie.name for cookie in cookiejar]:
+    #     raise ValueError, "Login failed with username=%s, password=%s" % (username, password)
+    # print "We are logged in !"
+    # # Make another request with our session cookie
+    # # (Our urlOpener automatically uses cookies from our cookiejar)
 
-    # Enable cookie support for urllib2
-    cookiejar = cookielib.CookieJar()
-    urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
-
-    # Send username/password to the site and get the session cookie
-    values = {'username': username, 'password': password}
-    data = urllib.urlencode(values)
-    request = urllib2.Request("http://123.57.206.52/myadmin/login/", data)
-    url = urlOpener.open(request)  # Our cookiejar automatically receives the cookies
-    print url
-    page = url.read(500000)
-
-    # Make sure we are logged in by checking the presence of the cookie "id".
-    # (which is the cookie containing the session identifier.)
-    for cookie in cookiejar:
-        print cookie.name
-    if not 'sessionid' in [cookie.name for cookie in cookiejar]:
-        raise ValueError, "Login failed with username=%s, password=%s" % (username, password)
-
-    print "We are logged in !"
-
-    # Make another request with our session cookie
-    # (Our urlOpener automatically uses cookies from our cookiejar)
-
-    #定义传送的数据
-    data_t = {'file_videoScript': file, 'name': file_name}
-    #定义post的地址
-    url_ = str(ip)
-    print url_
-    post_data = urllib.urlencode(data_t)
-    #提交，发送数据
-    # req = urllib2.urlopen(url, post_data)
-    req = urlOpener.open(url_, post_data)
-    #获取提交后返回的信息
-    content = req.read()
-    print content
-    return content
+    # opener = poster.streaminghttp.register_openers()
+    # opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
+    # values = {'username': username, 'password': password}
+    # datagen, headers = poster.encode.multipart_encode(values)
+    # request = urllib2.Request("http://123.57.206.52/myadmin/login/", datagen, headers)
+    # result_login = urllib2.urlopen(request)
+    # login_content = result_login.read()
+    # if login_content == "error":
+    #     print "sorry, login failed"
+    #     return "login_error"
+    print file_name
+    url_t = str(ip)
+    file_data = {'file_videoScript': open(file, "rb"), 'name': file_name}
+    datagen, headers = poster.encode.multipart_encode(file_data)
+    request = urllib2.Request(url_t, datagen, headers)
+    result_upload = urllib2.urlopen(request)
+    upload_content = result_upload.read()
+    print upload_content
+    if upload_content == "error":
+        print "sorry, upload failed"
+        return "upload_error"
+    return upload_content
 
 def ftp_upload(file, ip, username, password):
     data = {}
@@ -94,4 +116,7 @@ def ftp_upload(file, ip, username, password):
     print content
 
 if __name__ == "__main__":
-    http_upload("http://123.57.206.52/upload_videoScript", "test_pyqt", "http://123.57.206.52/upload_videoScript")
+    ip = "http://123.57.206.52/upload_videoScript/"
+    fileUpload = 'c:/zhaolong/test.xml'
+    # print fileUpload
+    print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")

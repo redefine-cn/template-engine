@@ -136,6 +136,7 @@ def read_plist(path):
     file_name = path.replace(':', "").replace("/", "_").split('.')[0] + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(read_data, open(new_json, 'w'))
+    print read_data
     return file_name
 
 def ftp_login(username, password):
@@ -162,4 +163,4 @@ if __name__ == '__main__':
     else:
         data[node['Key']] = node['Value']
     # add_node(parent, 1, data)
-    read_plist("c:/zhaolong/test.xml")
+    read_plist("c:/test.xml")
