@@ -1,7 +1,7 @@
 #-*- coding: utf-8 -*-
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
-import  sys
+import sys
 import json
 import os
 from settings import Settings
