@@ -148,15 +148,10 @@ class MainWindow(QMainWindow):
         # self.dock = root()
         # self.dock = part()
         self.dock = autodock(self)
-        self.dock.updateUI(None)
 
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setFixedWidth(200)
-        # dock.setFeatures(QDockWidget.DockWidgetMovable)
-        # dock.setAllowedAreas(Qt.RightDockWidgetArea)
-        # te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
-        # dock.setWidget(te1)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):

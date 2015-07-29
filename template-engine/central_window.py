@@ -333,6 +333,8 @@ class CentralWindow(QTreeWidget):
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
+            if self.parent().parent().parent().parent().dock.isHidden():
+                self.parent().parent().parent().parent().dock.show()
             self.parent().parent().parent().parent().dock.updateUI(self.currentItem())
             # pass
 #             dic = dict()
