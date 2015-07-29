@@ -168,7 +168,6 @@ class MainWindow(QMainWindow):
         json_data = file('../tmp_data/' + file_json)
         self.tab.currentWidget().path = str(file_json)
         data = json.load(json_data)
-        print self.tab.currentWidget().root
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
 

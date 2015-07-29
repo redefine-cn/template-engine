@@ -75,12 +75,14 @@ class AddWidget(QWidget):
 
         self.father = father
         self.fa = fa
+        # print father.parent().parent().currentWidget().root
         self.col = 3
         self.dic = dict()
         self.arrayDic = dict()
         self.arrayE = list()
         self.init()
         self.setWindowTitle('Add Widget')
+        self.show()
 
     def init(self):
         fatext = str(self.fa.text(1))
@@ -235,7 +237,7 @@ class AddWidget(QWidget):
         self.dic['Value'] = Value
 
         self.dic['parent'] = findFather(self)
-        add(self.fa, child, self.dic, self.father.path)
+        add(self.fa, child, self.dic, self.father.path, self.father.root)
         self.close()
 
     def save(self):
@@ -251,7 +253,7 @@ class AddWidget(QWidget):
             child.setExpanded(True)
             self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = Type
-            add(self.fa, child, self.dic, self.father.path)
+            add(self.fa, child, self.dic, self.father.path, self.father.root)
         elif Type == 'integer':
             if len(self.E1.text()) == 0 or len(self.E3.text()) == 0:
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -270,7 +272,7 @@ class AddWidget(QWidget):
             self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = str(self.E2.currentText())
             self.dic['Value'] = Value
-            add(self.fa, child, self.dic, self.father.path)
+            add(self.fa, child, self.dic, self.father.path, self.father.root)
         else :
             if len(self.E1.text()) == 0 or (len(self.E3.text()) == 0 and Type != 'bool'):
                 QMessageBox.critical(self, 'error', self.tr('Value Error'), QMessageBox.Ok)
@@ -291,7 +293,7 @@ class AddWidget(QWidget):
             self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = Type
             self.dic['Value'] = Value
-            add(self.fa, child, self.dic, self.father.path)
+            add(self.fa, child, self.dic, self.father.path, self.father.root)
         self.close()
 
 
@@ -310,6 +312,7 @@ class CentralWindow(QTreeWidget):
         self.header().resizeSection(2, 200)
         self.root = QTreeWidgetItem(self)
         self.root.setText(0, 'root')
+        self.root.setExpanded(True)
 
     def dfs(self, dic, fa, Key, Type, Value):
         if Type == type({}) or Type == type([]):
@@ -318,13 +321,13 @@ class CentralWindow(QTreeWidget):
             if Type == type({}):
                 child.setText(1, 'dict')
                 child.setExpanded(True)
-                add(fa, child, {'Key':(Key),'Type':'dict'}, self.path)
+                add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
                 for k, v in dic.items():
                     self.dfs(v, child, k, type(v), v)
             else:
                 child.setText(1, 'array')
                 child.setExpanded(True)
-                add(fa, child, {'Key':(Key),'Type':'array'}, self.path)
+                add(fa, child, {'Key':(Key),'Type':'array'}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
                 for i in range(len(dic)):
                     self.dfs(dic[i], child, 'item'+ str(i), type(dic[i]), dic[i])
         else:
@@ -336,24 +339,25 @@ class CentralWindow(QTreeWidget):
                 Value = str(Value)
             child.setText(2, QString.fromUtf8((Value)))
             child.setExpanded(True)
-            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.path)
+            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
             if self.parent().parent().parent().parent().dock.isHidden():
                 self.parent().parent().parent().parent().dock.show()
-            self.parent().parent().parent().parent().dock.updateUI(self.currentItem())
+            self.parent().parent().parent().parent().dock.updateUI(self.parent().parent().currentWidget().currentItem())
 
     def addNormal(self):
         self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().currentWidget())
-        self.Window.show()
 
     def delete(self):
-        if self.currentItem().text(0) != 'root':
+        if self.parent().parent().currentWidget().currentItem().text(0) != 'root':
             Node = {}
-            Node['Key'] = unicode(self.currentItem().text(0))
-            delete(self.currentItem().parent(), self.currentItem(), Node, self.path)
-            self.currentItem().parent().removeChild(self.currentItem())
+            Node['Key'] = unicode(self.parent().parent().currentWidget().currentItem().text(0))
+            delete(self.parent().parent().currentWidget().currentItem().parent(),
+                   self.parent().parent().currentWidget().currentItem(),
+                   Node, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
+            self.parent().parent().currentWidget().currentItem().parent().removeChild(self.parent().parent().currentWidget().currentItem())
         else:
             return False
 

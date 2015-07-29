@@ -44,18 +44,13 @@ def add_node(node, file_json):
             data[node['Key']] = node['Value']
     write_json(data, file_json)
 # delete node from tree
-root = ''
-def add(addr, addrchild, node, file_json):
+# root = ''
+def add(addr, addrchild, node, file_json, root):
     try :
         Node = Map[str(addr)]
     except KeyError:
         Map[str(addr)] = {}
         Node = Map[str(addr)]
-        global root
-        root = str(addr)
-    # print node
-    # print type(node['Key'])
-    # node['Key'] = unicode(node['Key'],'utf-8','ignore')
     if type(Node) == type({}):
         if node['Type'] == 'dict':
             Node[(node['Key'])] = {}
@@ -96,19 +91,17 @@ def add(addr, addrchild, node, file_json):
             else:
                 Node.append((node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
-    global root
     # print node
-    write_json(Map[root], file_json)
+    write_json(Map[str(root)], file_json)
 
-def delete(addr, addrchild, node, file_json):
+def delete(addr, addrchild, node, file_json, root):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
     if type(Node) == type({}):
         Node.pop(node['Key'])
     else:
         Node.remove(NodeChild)
-    global root
-    write_json(Map[root], file_json)
+    write_json(Map[str(root)], file_json)
 
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
