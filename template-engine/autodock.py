@@ -7,7 +7,7 @@ import  sys
 
 
 class autodock(QDockWidget):
-    def __init__(self, parent):
+    def __init__(self, parent=None):
         super(autodock, self).__init__(parent)
         self.fa = parent
         self.initUI()
@@ -42,14 +42,12 @@ class autodock(QDockWidget):
         self.gridLayout.addWidget(label, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
 
-
         if tp != "dict":
             edit = QLineEdit()
             edit.setText(value)
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
 
         self.row += 1
-
 
     def updateUI(self, data):
 

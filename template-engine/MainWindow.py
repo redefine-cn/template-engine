@@ -140,7 +140,7 @@ class MainWindow(QMainWindow):
     def createDockWidget(self):
 
         self.dock = autodock(self)
-        self.dock.updateUI(None)
+
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setFixedWidth(200)
