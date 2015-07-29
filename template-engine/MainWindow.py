@@ -138,9 +138,7 @@ class MainWindow(QMainWindow):
         editToolBar = self.addToolBar(QString.fromUtf8("Edit"))
 
     def createDockWidget(self):
-
         self.dock = autodock(self)
-
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setFixedWidth(200)

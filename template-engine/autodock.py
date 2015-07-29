@@ -6,6 +6,8 @@ import  sys
 from functools import partial
 
 
+
+
 class autodock(QDockWidget):
     def __init__(self, parent=None):
         super(autodock, self).__init__(parent)
@@ -25,7 +27,6 @@ class autodock(QDockWidget):
         self.lv2 = 2
 
         self.types = self.fa.data["Type"]
-        self.index = {}
         self.gridLayout = QGridLayout()
         self.dialog = QDialog()
         self.updateUI(None)
@@ -57,10 +58,9 @@ class autodock(QDockWidget):
         treeNode.setText(1, QString.fromUtf8(self.types[index]))
 
     def updateUI(self, data):
-
+        print 'update'
         if not data:
             return
-
         if self.gridLayout :
             del self.gridLayout
             self.gridLayout = None
@@ -69,20 +69,16 @@ class autodock(QDockWidget):
             del self.dialog
             self.dialog = None
 
-        if self.index :
-            del self.index
-            self.index = {}
-
         self.gridLayout = QGridLayout()
         self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
 
         self.row = 0
+
         self.data = data
         if data.childCount() == 0:
             self.addValue(data.text(0), data.text(1), data.text(2), data)
         else:
             for i in range(data.childCount()):
-                # self.index = i
                 self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
 
         buttonLayout = QHBoxLayout()
@@ -95,6 +91,35 @@ class autodock(QDockWidget):
         self.dialog = QDialog()
         self.dialog.setLayout(self.gridLayout)
         self.setWidget(self.dialog)
+
+        # self.setWidget(self.dialog)if self.gridLayout :
+        #     del self.gridLayout
+        #     self.gridLayout = None
+        #
+        # if self.dialog :
+        #     del self.dialog
+        #     self.dialog = None
+        #
+        # gridLayout = QGridLayout()
+        # self.gridLayout = gridLayout
+        # self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
+        #
+        # self.row = 0
+        # for item in data:
+        #     if item == "title":
+        #         self.setWindowTitle(QString.fromUtf8(data["title"))
+        #     elif type(data[item]) == dict:
+        #         label = QLabel(QString.fromUtf8(item))
+        #         gridLayout.addWidget(label, self.row, self.labelCol)
+        #         self.row += 1
+        #         itemDict = data[item]
+        #         for i in itemDict:
+        #             self.addValue(i, itemDict[i])
+        #     else:
+        #         self.addValue(item, data[item])
+        # self.dialog = QDialog()
+        # self.dialog.setLayout(self.gridLayout)
+        #
 
 
 
