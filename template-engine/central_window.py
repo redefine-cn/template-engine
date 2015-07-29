@@ -277,6 +277,7 @@ class AddWidget(QWidget):
             Type = self.E2.currentText()
             if changeType(Type) == 'integer' or changeType(Type) == 'real' or changeType(Type) == 'bool':
                 Value = str(Value)
+            # print Value
             child.setText(2, QString.fromUtf8(Value))
             child.setExpanded(True)
             self.dic['Key'] = unicode(self.E1.text())
@@ -326,7 +327,6 @@ class CentralWindow(QTreeWidget):
             child.setText(1, changeType(Type))
             if changeType(Type) == 'integer' or changeType(Type) == 'real' or changeType(Type) == 'bool':
                 Value = str(Value)
-            # print Type
             child.setText(2, QString.fromUtf8((Value)))
             child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':changeType(Type),'Value':Value}, self.path)

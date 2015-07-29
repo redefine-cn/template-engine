@@ -69,7 +69,10 @@ def add(addr, addrchild, node, file_json):
             elif node['Type'] == 'real':
                 Node[(node['Key'])] = float(node['Value'])
             elif node['Type'] == 'bool':
-                Node[node['Key']] = bool(node['Value'])
+                if node['Value'] == 'True':
+                    Node[node['Key']] = True
+                else:
+                    Node[node['Key']] = False
             else:
                 Node[(node['Key'])] = (node['Value'])
         Map[str(addrchild)] = Node[(node['Key'])]
@@ -86,7 +89,10 @@ def add(addr, addrchild, node, file_json):
             elif node['Type'] == 'real':
                 Node.append(float(node['Value']))
             elif node['Type'] == 'bool':
-                Node.append(bool(node['Value']))
+                if node['Value'] == 'True':
+                    Node.append(True)
+                else:
+                    Node.append(False)
             else:
                 Node.append((node['Value']))
         Map[str(addrchild)] = Node[len(Node) - 1]
