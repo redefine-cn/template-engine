@@ -67,9 +67,6 @@ class autodock(QDockWidget):
 
     def updateUI(self, data):
 
-        if not data:
-            return
-
         if self.gridLayout :
             del self.gridLayout
             self.gridLayout = None
@@ -81,21 +78,21 @@ class autodock(QDockWidget):
         self.gridLayout = QGridLayout()
         self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
 
-        self.row = 0
+        if data:
+            self.row = 0
+            self.data = data
+            if data.childCount() == 0:
+                self.addValue(data.text(0), data.text(1), data.text(2), data)
+            else:
+                for i in range(data.childCount()):
+                    self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
 
-        self.data = data
-        if data.childCount() == 0:
-            self.addValue(data.text(0), data.text(1), data.text(2), data)
-        else:
-            for i in range(data.childCount()):
-                self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
-
-        # buttonLayout = QHBoxLayout()
-        # button = QPushButton(QString.fromUtf8("保存"))
-        # buttonLayout.addStretch(1)
-        # buttonLayout.addWidget(button)
-        # buttonLayout.setAlignment(Qt.AlignCenter)=
-        # self.gridLayout.addLayout(buttonLayout, self.row, self.labelCol, 1, 3)
+            # buttonLayout = QHBoxLayout()
+            # button = QPushButton(QString.fromUtf8("保存"))
+            # buttonLayout.addStretch(1)
+            # buttonLayout.addWidget(button)
+            # buttonLayout.setAlignment(Qt.AlignCenter)=
+            # self.gridLayout.addLayout(buttonLayout, self.row, self.labelCol, 1, 3)
 
         self.dialog = QDialog()
         self.dialog.setLayout(self.gridLayout)
