@@ -3,6 +3,8 @@ from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import json
 import  sys
+sys.path.append('../')
+from plistIO.plistIO import modify
 from functools import partial
 
 
@@ -57,13 +59,29 @@ class autodock(QDockWidget):
         self.row += 1
 
     def slotlabelEdit(self, treeNode, text):
+        node = {}
+        node['PreKey'] = unicode(treeNode.text(0))
         treeNode.setText(0, text)
+        node['Key'] = unicode(text)
+        node['Type'] = str(treeNode.text(1))
+        node['Value'] = unicode(treeNode.text(2))
+        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
 
     def slotCombobox(self, treeNode, index):
         treeNode.setText(1, QString.fromUtf8(self.types[index]))
+        node = {}
+        node['Key'] = unicode(treeNode.text(0))
+        node['Type'] = str(self.types[index])
+        node['Value'] = unicode(treeNode.text(2))
+        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
 
     def slotValueEdit(self, treeNode, text):
         treeNode.setText(2, text)
+        node = {}
+        node['Key'] = unicode(treeNode.text(0))
+        node['Type'] = str(treeNode.text(1))
+        node['Value'] = unicode(text)
+        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
 
     def updateUI(self, data):
 

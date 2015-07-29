@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
     def slotCreateFile(self):
         central = CentralWindow()
         self.central.append(central)
-        self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
+        self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
 
     def slotOpenFile(self):
         fileName = unicode(QFileDialog.getOpenFileName(self))
@@ -184,7 +184,7 @@ class MainWindow(QMainWindow):
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
-            self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+            self.tab.setCurrentWidget(self.central[-1])
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
 
@@ -208,7 +208,7 @@ class MainWindow(QMainWindow):
         self.tab = QTabWidget(mainSplitter)
         central = CentralWindow()
         self.central.append(central)
-        self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
+        self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
         mainSplitter.setStretchFactor(1, 3)
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
         self.setCentralWidget(mainSplitter)
@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
-            self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+            self.tab.setCurrentWidget(self.central[-1])
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
 

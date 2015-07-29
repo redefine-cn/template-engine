@@ -103,6 +103,47 @@ def delete(addr, addrchild, node, file_json, root):
         Node.remove(NodeChild)
     write_json(Map[str(root)], file_json)
 
+def modify(addr, addrchild, node, file_json, root, changeType):
+    Node = Map[str(addr)]
+    NodeChild = Map[str(addrchild)]
+    if changeType == 0:
+        Node.pop(node['PreKey'])
+        add(addr, addrchild, node, file_json, root)
+    else:
+        if type(Node) == type({}):
+            if node['Type'] == 'integer':
+                Node[(node['Key'])] = int(node['Value'])
+            elif node['Type'] == 'string':
+                Node[(node['Key'])] = (node['Value'])
+            elif node['Type'] == 'real':
+                Node[(node['Key'])] = float(node['Value'])
+            elif node['Type'] == 'bool':
+                if node['Value'] == 'True':
+                    Node[node['Key']] = True
+                else:
+                    Node[node['Key']] = False
+        else:
+            if node['Type'] == 'integer':
+                index = Node.index(int(node['Value']))
+                Node[index] = int(node['Value'])
+            elif node['Type'] == 'string':
+                index = Node.index(str(node['Value']))
+                Node[index] = str(node['Value'])
+            elif node['Type'] == 'real':
+                index = Node.index(float(node['Value']))
+                Node[index] = float(node['Value'])
+            elif node['Type'] == 'bool':
+                if node['Value'] == 'True':
+                    index = Node.index(True)
+                    Node[index] = True
+                else:
+                    index = Node.index(False)
+                    Node[index] = False
+            else:
+                index = Node.index(node['Value'])
+                Node[index] = node['Value']
+    write_json(Map[str(root)], file_json)
+
 def delete_node(node, file_json):
     json_data = file('../tmp_data/' + file_json)
     data = json.load(json_data)
