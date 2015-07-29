@@ -63,7 +63,6 @@ def changeTypeInDFS(Type):
 class AddWidget(QWidget):
 
     def __init__(self, fa, father):
-
         if hasattr(fa, 'text'):
             fatext = str(fa.text(1))
         else:
@@ -73,6 +72,7 @@ class AddWidget(QWidget):
             QMessageBox.critical(None, 'error', QString.fromUtf8('Can Not Add'), QMessageBox.Ok)
             return
         super(AddWidget, self).__init__()
+
         self.father = father
         self.fa = fa
         self.col = 3
@@ -81,7 +81,6 @@ class AddWidget(QWidget):
         self.arrayE = list()
         self.init()
         self.setWindowTitle('Add Widget')
-        self.show()
 
     def init(self):
         fatext = str(self.fa.text(1))
@@ -344,7 +343,8 @@ class CentralWindow(QTreeWidget):
             self.parent().parent().parent().parent().dock.updateUI(self.currentItem())
 
     def addNormal(self):
-        self.Window = AddWidget(self.currentItem(), self)
+        self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().currentWidget())
+        self.Window.show()
 
     def delete(self):
         if self.currentItem().text(0) != 'root':

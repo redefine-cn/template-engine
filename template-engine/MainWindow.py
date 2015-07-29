@@ -136,35 +136,18 @@ class MainWindow(QMainWindow):
         fileToolBar.addAction(self.fileSaveAction)
 
         editToolBar = self.addToolBar(QString.fromUtf8("Edit"))
-        # editToolBar.addAction(self.cutAction)
-        # editToolBar.addAction(self.copyAction)
-        # editToolBar.addAction(self.pasteAction)
 
     def createDockWidget(self):
-        # dock = QDockWidget(QString.fromUtf8("窗口1"), self)
-        # self.dock = animation()
-        # self.dock = layer()
-        # self.dock = subtitle()
-        # self.dock = root()
-        # self.dock = part()
+
         self.dock = autodock(self)
         self.dock.updateUI(None)
-
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
         self.dock.setFixedWidth(200)
-        # dock.setFeatures(QDockWidget.DockWidgetMovable)
-        # dock.setAllowedAreas(Qt.RightDockWidgetArea)
-        # te1 = QTextEdit(QString.fromUtf8("这个是编辑界面Dock"))
-        # dock.setWidget(te1)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):
         QMessageBox.about(QString.fromUtf8("about me"), QString.fromUtf8("这是一个例子"))
-
-    # def setSetting(self):
-    #     self.settings = Settings()
-    #     self.settings.show()
 
     def slotExit(self):
         self.close()
@@ -174,11 +157,9 @@ class MainWindow(QMainWindow):
         save_plist(file_save, str(self.tab.currentWidget().path))
 
     def slotCreateFile(self):
-
-        self.central.append(CentralWindow())
+        central = CentralWindow()
+        self.central.append(central)
         self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
-        # self.newWin = MainWindow()
-        # self.newWin.show()
 
     def slotOpenFile(self):
         fileName = QFileDialog.getOpenFileName(self)
@@ -187,17 +168,9 @@ class MainWindow(QMainWindow):
         json_data = file('../tmp_data/' + file_json)
         self.tab.currentWidget().path = str(file_json)
         data = json.load(json_data)
+        print self.tab.currentWidget().root
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
-        # if not fileName.isEmpty():
-        #     if self.text.document().isEmpty():
-        #         # self.load(fileName)
-        #         data = json.load(json_data)
-        #
-        #     else:
-        #         newWin = MainWindow()
-        #         newWin.show()
-        #         newWin.loadFile(fileName)
 
     def loadFile(self, fileName):
         file = QFile(fileName)
@@ -216,35 +189,12 @@ class MainWindow(QMainWindow):
         self.leftList = QListWidget(mainSplitter)
         mainSplitter.setStretchFactor(0, 1)
         self.setLeftList()
-
-        # model = QDirModel() #系统给我们提供的
-        # tree = QTreeView(mainSplitter)
-        # tree.setModel(model)
-        # tree.setWindowTitle(tree.tr("左窗口"))
-
-        # self.text = QTextEdit(QString.fromUtf8("右窗口"), mainSplitter)
         self.tab = QTabWidget(mainSplitter)
-        self.central.append(CentralWindow())
+        central = CentralWindow()
+        self.central.append(central)
         self.tab.addTab(self.central[len(self.central) - 1], 'Tab' + str(len(self.central)))
-        # self.central = CentralWindow()
-        # self.tab.addTab(self.central, 'Tab1')
-        # self.central2 = CentralWindow()
-        # self.tab.addTab(self.central2,'Tab2')
-        # self.tab.currentWidget()
-        # self.central = CentralWindow(mainSplitter)
-        # self.central.path
         mainSplitter.setStretchFactor(1, 3)
-        # self.text.setAlignment(Qt.AlignCenter)
-
-        # rightSplitter = QSplitter(Qt.Vertical, mainSplitter)
-        # # rightSplitter.setOpaqueResize(False)
-        # upText = QTextEdit(QString.fromUtf8("上窗口"), rightSplitter)
-        # upText.setAlignment(Qt.AlignCenter)
-        # bottomText = QTextEdit(QString.fromUtf8("下窗口"), rightSplitter)
-        # bottomText.setAlignment(Qt.AlignCenter)
-
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
-
         self.setCentralWidget(mainSplitter)
 
     def setLeftList(self):
