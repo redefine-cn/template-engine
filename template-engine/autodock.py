@@ -45,22 +45,31 @@ class autodock(QDockWidget):
         self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
 
+        labelEdit.textChanged[QString].connect(partial(self.slotlabelEdit, treeNode))
         combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
         if tp != "dict":
             edit = QLineEdit()
             edit.setText(value)
+            edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
 
         self.row += 1
 
+    def slotlabelEdit(self, treeNode, text):
+        treeNode.setText(0, text)
+
     def slotCombobox(self, treeNode, index):
         treeNode.setText(1, QString.fromUtf8(self.types[index]))
 
+    def slotValueEdit(self, treeNode, text):
+        treeNode.setText(2, text)
+
     def updateUI(self, data):
-        print 'update'
+
         if not data:
             return
+
         if self.gridLayout :
             del self.gridLayout
             self.gridLayout = None
@@ -81,46 +90,14 @@ class autodock(QDockWidget):
             for i in range(data.childCount()):
                 self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
 
-        buttonLayout = QHBoxLayout()
-        button = QPushButton(QString.fromUtf8("保存"))
-        buttonLayout.addStretch(1)
-        buttonLayout.addWidget(button)
-        buttonLayout.setAlignment(Qt.AlignCenter)
+        # buttonLayout = QHBoxLayout()
+        # button = QPushButton(QString.fromUtf8("保存"))
+        # buttonLayout.addStretch(1)
+        # buttonLayout.addWidget(button)
+        # buttonLayout.setAlignment(Qt.AlignCenter)=
+        # self.gridLayout.addLayout(buttonLayout, self.row, self.labelCol, 1, 3)
 
-        self.gridLayout.addLayout(buttonLayout, self.row, self.labelCol, 1, 3)
         self.dialog = QDialog()
         self.dialog.setLayout(self.gridLayout)
         self.setWidget(self.dialog)
-
-        # self.setWidget(self.dialog)if self.gridLayout :
-        #     del self.gridLayout
-        #     self.gridLayout = None
-        #
-        # if self.dialog :
-        #     del self.dialog
-        #     self.dialog = None
-        #
-        # gridLayout = QGridLayout()
-        # self.gridLayout = gridLayout
-        # self.gridLayout.setAlignment(Qt.AlignTop|Qt.AlignLeft)
-        #
-        # self.row = 0
-        # for item in data:
-        #     if item == "title":
-        #         self.setWindowTitle(QString.fromUtf8(data["title"))
-        #     elif type(data[item]) == dict:
-        #         label = QLabel(QString.fromUtf8(item))
-        #         gridLayout.addWidget(label, self.row, self.labelCol)
-        #         self.row += 1
-        #         itemDict = data[item]
-        #         for i in itemDict:
-        #             self.addValue(i, itemDict[i])
-        #     else:
-        #         self.addValue(item, data[item])
-        # self.dialog = QDialog()
-        # self.dialog.setLayout(self.gridLayout)
-        #
-
-
-
 
