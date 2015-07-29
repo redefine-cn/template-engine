@@ -49,12 +49,17 @@ def login_session(username, password, ip):
     values = {'username': username, 'password': password}
     datagen, headers = poster.encode.multipart_encode(values)
     request = urllib2.Request(ip, datagen, headers)
-    result_login = urllib2.urlopen(request)
-    login_content = result_login.read()
-    if login_content == "error":
-        print "sorry, login failed"
-        return "login_error"
-    return "success"
+    try:
+        result_login = urllib2.urlopen(request)
+        login_content = result_login.read()
+        if login_content == "error":
+            print "sorry, login failed"
+            return u"对不起，登录失败"
+        return "success"
+    except urllib2.URLError:
+        return u"网络连接错误"
+    except ValueError:
+        return u"检查地址是否正确"
 
 def http_upload(file, file_name, ip):
     # print username, password
@@ -95,12 +100,17 @@ def http_upload(file, file_name, ip):
     file_data = {'file_videoScript': open(file, "rb"), 'name': file_name}
     datagen, headers = poster.encode.multipart_encode(file_data)
     request = urllib2.Request(url_t, datagen, headers)
-    result_upload = urllib2.urlopen(request)
+    try:
+        result_upload = urllib2.urlopen(request)
+    except urllib2.URLError:
+        return u"网络连接错误"
+    except ValueError:
+        return u"请检查地址是否正确"
     upload_content = result_upload.read()
     print upload_content
     if upload_content == "error":
         print "sorry, upload failed"
-        return "upload_error"
+        return u"上传失败，请检查改网站是否需要登录或者重新上传"
     return upload_content
 
 def ftp_upload(file, ip, username, password):

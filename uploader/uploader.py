@@ -10,7 +10,7 @@ from plistIO import plistIO
 
 class Uploader(QWidget):
     def __init__(self, parent=None):
-        super(Uploader, self).__init__(parent)
+        super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
         # self.resize(500, 200)
         self.tab_upload = QTabWidget(self)
@@ -26,12 +26,13 @@ class Uploader(QWidget):
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
         self.file_name = QLabel(QString.fromUtf8("文件名称"))
         self.file_name_line = QLineEdit()
-        self.http_progressBar = QProgressBar()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
         self.http_choice = QComboBox()
         self.http_choice.addItem(QString.fromUtf8("直接上传"))
         self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
+        self.http_progressBar = QProgressBar()
+        self.http_upload_tip = QLabel()
         http_grid_layout = QGridLayout(self.tab_http)
         http_grid_layout.addWidget(self.ip, 0, 0)
         http_grid_layout.addWidget(self.ip_line, 0, 1)
@@ -42,6 +43,7 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.file_name, 3, 0)
         http_grid_layout.addWidget(self.file_name_line, 3, 1)
         http_grid_layout.addWidget(self.http_progressBar, 4, 0, 1, 5)
+        http_grid_layout.addWidget(self.http_upload_tip, 4, 1)
         http_grid_layout.addWidget(self.btn_upload, 6, 4)
         http_grid_layout.addWidget(self.btn_cancel, 6, 5)
 
@@ -82,6 +84,7 @@ class Uploader(QWidget):
         self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
         self.http_choice.currentIndexChanged.connect(self.choice)
+        self.show()
 
     def choice(self):
         currentText = (self.http_choice.currentIndex())
@@ -106,9 +109,7 @@ class Uploader(QWidget):
         OK = '确定'
         ip_val = self.ip_line.text()
         file_val = self.file_info.text()
-
         file_name = self.file_name_line.text()
-        print type(file_name)
         if ip_val == "":
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('IP为空，请填写IP地址'))
@@ -117,7 +118,6 @@ class Uploader(QWidget):
             message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
-            print unicode(ip_val)
             return
         if file_val == "":
             message = QMessageBox(self)
@@ -127,7 +127,6 @@ class Uploader(QWidget):
             message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
-            print unicode(file_val)
             return
         # self.thread = MyThread()
         # self.thread.setIdentity("thread1")
@@ -139,19 +138,22 @@ class Uploader(QWidget):
         except:
             self.login_window = Login()
             return
-        print unicode(file_name)
         # return
-        result = file_upload.http_upload(unicode(file_val), unicode(file_name), str(QString.fromUtf8(ip_val)))
         self.http_progressBar.setMinimum(0)
         self.http_progressBar.setMaximum(20)
-        for i in range(21):
+        for i in range(4):
             self.http_progressBar.setValue(i)
             QThread.msleep(200)
-        print "the upload result"
-        print result
+        # QThread.msleep(2000)
+        # self.http_upload_tip.setText(u"正在上传...")
+        # QThread.sleep(2000)
+        result = file_upload.http_upload(unicode(file_val), unicode(file_name), str(QString.fromUtf8(ip_val)))
         return_id = 0
         try:
             return_id = int(result)
+            for i in range(4, 21):
+                self.http_progressBar.setValue(i)
+                QThread.msleep(200)
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('上传成功'))
             message.setWindowTitle(QString.fromUtf8('提示'))
@@ -161,13 +163,12 @@ class Uploader(QWidget):
             response = message.clickedButton().text()
         except:
             message = QMessageBox(self)
-            message.setText(QString.fromUtf8("上传失败，请检查改网站是否需要登录或者重新上传"))
+            message.setText(result)
             message.setWindowTitle(QString.fromUtf8('提示'))
             message.setIcon(QMessageBox.Warning)
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
-        print "the latest Video_script id is ", return_id
 
     def outText(self, text):
         print(text)
@@ -344,14 +345,14 @@ class Login(QWidget):
         else:
             self.login_status = "failure"
             message = QMessageBox(self)
-            message.setText(QString.fromUtf8('登陆失败'))
+            message.setText(result)
             message.setWindowTitle(QString.fromUtf8('提示'))
             message.setIcon(QMessageBox.Warning)
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
-
-app = QApplication(sys.argv)
-uploader = Uploader()
-uploader.show()
-app.exec_()
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    uploader = Uploader()
+    uploader.show()
+    app.exec_()

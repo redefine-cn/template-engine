@@ -7,6 +7,7 @@ import os
 from settings import Settings
 from central_window import CentralWindow
 from SettingDialog import SettingDialog
+from uploader.uploader import Uploader
 from animation import animation
 from layer import layer
 from subtitle import subtitle
@@ -32,7 +33,6 @@ class MainWindow(QMainWindow):
         # add default value
         if self.data["path"] == "":
             self.data["path"] = os.path.abspath(sys.path[0])
-
 
     def initUI(self):
         self.text = QTextEdit()
@@ -76,6 +76,9 @@ class MainWindow(QMainWindow):
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
         helpMenu.addAction(self.aboutAction)
+
+        uploadMenu = self.menuBar().addMenu(QString.fromUtf8("Upload"))
+        uploadMenu.addAction(self.uploadAction)
 
     def createAction(self):
         #打开文件
@@ -129,6 +132,11 @@ class MainWindow(QMainWindow):
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
         self.aboutAction.triggered.connect(self.slotAbout)
 
+        self.uploadAction = QAction(QString.fromUtf8("上传模版") ,self)
+        self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
+        self.uploadAction.triggered.connect(self.slotUpload)
+
+
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
         fileToolBar.addAction(self.fileOpenAction)
@@ -146,6 +154,10 @@ class MainWindow(QMainWindow):
 
     def slotAbout(self):
         QMessageBox.about(self, QString.fromUtf8("About me"), QString.fromUtf8("欢迎使用本软件"))
+
+    def slotUpload(self):
+        self.uploadDialog = Uploader()
+        # uploadDialog.show()
 
     def slotExit(self):
         self.close()
