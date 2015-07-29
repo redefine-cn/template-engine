@@ -153,8 +153,9 @@ class MainWindow(QMainWindow):
         self.close()
 
     def slotSaveFile(self):
-        file_save = str(self.tab.currentWidget().path).split('.')[0] + '.xml'
-        save_plist(file_save, str(self.tab.currentWidget().path))
+        fileName = QFileDialog.getSaveFileName(self)
+        print fileName, type(fileName)
+        save_plist(unicode(fileName), str(self.tab.currentWidget().path))
 
     def slotCreateFile(self):
         central = CentralWindow()
