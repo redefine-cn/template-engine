@@ -32,6 +32,7 @@ class Uploader(QWidget):
         self.file_name = QLabel(QString.fromUtf8("文件名称"))
         self.file_name_line = QLineEdit()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
+        self.btn_success = QPushButton(QString.fromUtf8("完成"))
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
         # self.http_choice = QComboBox()
         # self.http_choice.addItem(QString.fromUtf8("直接上传"))
@@ -60,6 +61,7 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.http_progressBar, 5, 0, 1, 5)
         http_grid_layout.addWidget(self.http_upload_tip, 5, 1)
         http_grid_layout.addWidget(self.btn_upload, 6, 4)
+        http_grid_layout.addWidget(self.btn_success, 6, 4)
         http_grid_layout.addWidget(self.btn_cancel, 6, 5)
 
         self.ftp_ip = QLabel(QString.fromUtf8("IP地址"))
@@ -89,6 +91,7 @@ class Uploader(QWidget):
         self.file_cover.hide()
         self.file_cover_info.hide()
         self.file_cover_select.hide()
+        self.btn_success.hide()
         self.tab_upload.addTab(self.tab_http, "http")
         self.tab_upload.addTab(self.tab_ftp, "FTP")
         layout = QHBoxLayout(self)
@@ -106,6 +109,7 @@ class Uploader(QWidget):
         self.http_choice_server.currentIndexChanged.connect(self.choose_server)
         self.connect(self.tab_upload, SIGNAL("tabCloseRequested(int)"), self.closeTab)
         self.connect(self.check_cover_btn, SIGNAL("stateChanged(int)"), self.choose_cover)
+        self.connect(self.btn_success, SIGNAL("clicked()"), self.close)
         self.show()
 
     def http_fileCoverSelect(self):
@@ -218,13 +222,13 @@ class Uploader(QWidget):
         return_id = 0
         try:
             return_id = int(result)
-            for i in range(4, 21):
-                self.http_progressBar.setValue(i)
-                QThread.msleep(200)
             if self.check_cover_btn.isChecked():
                 ip_val = data["server"][data["server"]["choice"]]["cover_ip"]
                 result = file_upload.http_upload(ip_val, unicode(file_val), unicode(file_name), unicode(cover_val),
                                                  return_id)
+            for i in range(4, 21):
+                self.http_progressBar.setValue(i)
+                QThread.msleep(200)
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('上传成功'))
             message.setWindowTitle(QString.fromUtf8('提示'))
@@ -232,6 +236,8 @@ class Uploader(QWidget):
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
+            self.btn_upload.hide()
+            self.btn_success.show()
         except:
             message = QMessageBox(self)
             message.setText(result)
