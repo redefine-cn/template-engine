@@ -50,10 +50,10 @@ class AddWidget(QWidget):
         if hasattr(fa, 'text'):
             fatext = str(fa.text(1))
         else:
-            QMessageBox.critical(fa, 'error', QString.fromUtf8('Please Select Node'), QMessageBox.Ok)
+            QMessageBox.critical(father, 'error', QString.fromUtf8('Please Select Node'), QMessageBox.Ok)
             return
         if fatext == 'integer' or fatext == 'string' or fatext == 'real' or fatext == 'bool':
-            QMessageBox.critical(None, 'error', QString.fromUtf8('Can Not Add'), QMessageBox.Ok)
+            QMessageBox.critical(father, 'error', QString.fromUtf8('Can Not Add'), QMessageBox.Ok)
             return
         super(AddWidget, self).__init__()
 
@@ -302,6 +302,7 @@ class CentralWindow(QTreeWidget):
 
     def addSomething(self, text):
         if self.parent().parent().currentWidget().currentItem() == None:
+            QMessageBox.critical(self, 'error', 'Please Select Node', QMessageBox.Ok)
             return False
         father = self.parent().parent().currentWidget().currentItem()
         child = QTreeWidgetItem(father)
