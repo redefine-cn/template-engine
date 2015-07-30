@@ -35,6 +35,10 @@ class MainWindow(QMainWindow):
         if self.data["path"] == "":
             self.data["path"] = os.path.abspath(sys.path[0])
 
+        #leftTree
+        self.model = None
+        self.leftTree = None
+
     def initUI(self):
         self.text = QTextEdit()
         #name
@@ -260,15 +264,19 @@ class MainWindow(QMainWindow):
         # model.setRootPath(QDir.currentPath())
         # self.leftTree.setModel(model)
 
-        self.model = QDirModel()
-        self.leftTree.setModel(self.model)
-        self.leftTree.setRootIndex(self.model.index(self.data["path"]))
-        self.leftTree.hideColumn(1)
-        self.leftTree.hideColumn(2)
-        self.leftTree.hideColumn(3)
-        self.leftTree.doubleClicked.connect(self.slotList)
+        if not self.model:
+            self.model = QDirModel()
+            self.leftTree.setModel(self.model)
+            self.leftTree.setRootIndex(self.model.index(self.data["path"]))
+            self.leftTree.hideColumn(1)
+            self.leftTree.hideColumn(2)
+            self.leftTree.hideColumn(3)
+            self.leftTree.doubleClicked.connect(self.slotList)
+        else:
+             self.leftTree.setRootIndex(self.model.index(self.data["path"]))
 
     def slotList(self, item):
+        print 'haha'
         if not item.parent():
             return
         filedir = item.parent().data().toString()
