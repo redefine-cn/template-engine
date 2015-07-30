@@ -201,6 +201,8 @@ class MainWindow(QMainWindow):
         file_json = read_plist(fileName)
         json_data = file(unicode('../tmp_data/') + file_json)
         # print file_json
+        if self.tab.currentWidget() == None:
+            self.slotCreateFile()
         self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
         # Check if window is not empty, create a new window
@@ -281,6 +283,8 @@ class MainWindow(QMainWindow):
         file_json = unicode(read_plist(fileName))
         json_data = file(unicode('../tmp_data/') + file_json)
         # print file_json
+        if self.tab.currentWidget() == None:
+            self.slotCreateFile()
         self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
         # Check if window is not empty, create a new window
