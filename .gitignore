@@ -58,3 +58,4 @@ target/
 .idea/
 template-engine/*.json
 tmp_data/
+plistIO/*.json
