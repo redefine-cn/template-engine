@@ -66,6 +66,7 @@ def add(addr, addrchild, node, file_json, root):
     # print node
     write_json(Map[str(root)], file_json)
 
+
 def delete(addr, addrchild, node, file_json, root):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
@@ -75,12 +76,32 @@ def delete(addr, addrchild, node, file_json, root):
         Node.remove(NodeChild)
     write_json(Map[str(root)], file_json)
 
+
+def returnTrueData(data, type):
+    if type == 'integer':
+        return int(data)
+    elif type == 'real':
+        return float(data)
+    elif type == 'string':
+        return unicode(data)
+    elif type == 'bool':
+        if data == 'True':
+            return True
+        else:
+            return False
+    elif type == 'dict':
+        return {}
+    elif type == 'array':
+        return []
+
+
 def modify(addr, addrchild, node, file_json, root, changeType):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
     if changeType == 0:
+        Node[node['Key']] = Node[node['PreKey']]
         Node.pop(node['PreKey'])
-        add(addr, addrchild, node, file_json, root)
+        Map[str(addrchild)] = Node[node['Key']]
     else:
         if type(Node) == type({}):
             if node['Type'] == 'integer':
@@ -100,27 +121,28 @@ def modify(addr, addrchild, node, file_json, root, changeType):
                 Node[node['Key']] = []
             Map[str(addrchild)] = Node[node['Key']]
         else:
+            # print node['PreValue'] == u''
             if node['Type'] == 'integer':
-                index = Node.index(int(node['Value']))
+                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = int(node['Value'])
             elif node['Type'] == 'string':
-                index = Node.index(str(node['Value']))
+                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = str(node['Value'])
             elif node['Type'] == 'real':
-                index = Node.index(float(node['Value']))
+                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = float(node['Value'])
             elif node['Type'] == 'bool':
                 if node['Value'] == 'True':
-                    index = Node.index(True)
+                    index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
                     Node[index] = True
                 else:
-                    index = Node.index(False)
+                    index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
                     Node[index] = False
             elif node['Type'] == 'dict':
-                index = Node.index(node['Value'])
+                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = {}
             elif node['Type'] == 'array':
-                index = Node.index(node['Value'])
+                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = []
             Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)

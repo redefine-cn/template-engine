@@ -163,8 +163,9 @@ class AddWidget(QWidget):
             Value = self.E3bool.currentText()
         else:
             Value = self.E3.text()
-        if Type == 'integer' or Type == 'string' or Type == 'bool' or Type == 'string':
-            Value = str(Value)
+        # if Type == 'integer' or Type == 'string' or Type == 'bool' or Type == 'string':
+        #     Value = str(Value)
+        Value = unicode(Value)
         child.setText(2, QString.fromUtf8(Value))
         child.setExpanded(True)
         self.dic['Key'] = 'ARRAY'
@@ -219,9 +220,9 @@ class AddWidget(QWidget):
             else:
                 Value = self.E3.text()
 
-            if Type == 'integer' or Type == 'real' or Type == 'bool' or Type == 'string':
-                Value = str(Value)
-            # print Value
+            # if Type == 'integer' or Type == 'real' or Type == 'bool' or Type == 'string':
+            #     Value = str(Value)
+            Value = unicode(Value)
             child.setText(2, QString.fromUtf8(Value))
             child.setExpanded(True)
             self.dic['Key'] = unicode(self.E1.text())
