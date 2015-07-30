@@ -126,6 +126,7 @@ class MainWindow(QMainWindow):
         self.deleteAction.setShortcut('Ctrl+D')
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
+        #open the json
         self.addSegment = QAction('&addSegment', self)
         self.addSegment.setShortcut('Ctrl+1')
         self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
@@ -162,7 +163,12 @@ class MainWindow(QMainWindow):
         fileToolBar.addAction(self.fileCreateAction)
         fileToolBar.addAction(self.fileSaveAction)
 
-        editToolBar = self.addToolBar(QString.fromUtf8("Edit"))
+        addJsonToolBar = self.addToolBar(QString.fromUtf8("addJson"))
+        addJsonToolBar.addAction(self.addSegment)
+        addJsonToolBar.addAction(self.addStraightLine)
+        addJsonToolBar.addAction(self.addOpacity)
+        addJsonToolBar.addAction(self.addLayer)
+        addJsonToolBar.addAction(self.addSubtitle)
 
     def createDockWidget(self):
         self.dock = autodock(self)
