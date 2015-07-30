@@ -1,1 +1,13 @@
-{"actionList": ["line2", "line3", "line4", "line"], "path": "C:/lhq/models", "Type": ["integer", "dict", "array", "string", "real", "bool"]}
+{"actionList": ["line2", "line3", "line4", "line"], "path": "C:/lhq/models", "Type": ["integer", "dict", "array", "string", "real", "bool"],
+  "server":{
+    "choice": "0",
+    "0":{
+      "login_ip":"http://123.57.206.52/myadmin/login/",
+      "upload_ip":"http://123.57.206.52/upload_videoScript/"
+    },
+    "1":{
+      "login_ip":"http://101.200.0.168/myadmin/login/",
+      "upload_ip":"http://101.200.0.168/upload_videoScript/"
+    }
+  }
+}
