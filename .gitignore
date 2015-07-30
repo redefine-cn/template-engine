@@ -56,6 +56,5 @@ docs/_build/
 # PyBuilder
 target/
 .idea/
-*.json
 template-engine/*.json
 tmp_data/

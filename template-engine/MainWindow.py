@@ -14,7 +14,7 @@ from subtitle import subtitle
 from root import root
 from part import part
 from autodock import autodock
-from plistIO.plistIO import read_plist, save_plist
+from plistIO.plistIO import read_plist, save_plist, write_json
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -66,6 +66,7 @@ class MainWindow(QMainWindow):
         ActionMenu = self.menuBar().addMenu('Action')
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
+        ActionMenu.addAction(self.addSegment)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
         helpMenu.addAction(self.aboutAction)
@@ -121,6 +122,9 @@ class MainWindow(QMainWindow):
         self.deleteAction = QAction('&delete', self)
         self.deleteAction.setShortcut('Ctrl+D')
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
+        self.addSegment = QAction('&addSegment', self)
+        self.addSegment.setShortcut('Ctrl+G')
+        self.addSegment.triggered.connect(self.tab.currentWidget().addSegment)
 
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
@@ -206,9 +210,14 @@ class MainWindow(QMainWindow):
         central = CentralWindow()
         self.central.append(central)
         self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
+        self.tab.setTabsClosable(True)
+        self.tab.tabCloseRequested.connect(self.closeTab)
         mainSplitter.setStretchFactor(1, 3)
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
         self.setCentralWidget(mainSplitter)
+
+    def closeTab(self):
+        self.tab.removeTab(self.tab.currentIndex())
 
     def setLeftList(self):
         # dir = QDir(self.data["path"])

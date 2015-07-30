@@ -6,8 +6,7 @@ import sys
 import json
 sys.path.append('../')
 from plistIO.plistIO import add, delete, new_tree
-
-
+from plistlib import *
 f = file('settings.json')
 data = json.load(f)
 
@@ -20,33 +19,12 @@ def checkInteger(text):
     return True
 
 
-def findChild(parent):
-    type = str(parent.text(1))
-    if type == 'dict':
-        ans = dict()
-        for i in range(parent.childCount()):
-            type1 = str(parent.child(i).text(1))
-            if type1 == 'dict' or type1 == 'array':
-                ans[str(parent.child(i).text(0))] = type1
-            else:
-                ans[str(parent.child(i).text(0))] = str(parent.child(i).text(2))
-        print ans
-    elif type == 'array':
-        ans = list()
-        for i in range(parent.childCount()):
-            ans.append(str(parent.child(i).text(2)))
-    return ans
-
-
-def findFather(parent):
-    fa = parent.fa
-    falist = list()
-    while str(fa.text(0)) != 'root':
-        falist.append(str(fa.text(0)))
-        if getattr(fa, 'parent', None) == None:
-            break
-        fa = fa.parent()
-    return falist
+def findNum(text, father):
+    num = 0
+    for i in range(father.childCount()):
+        if str(father.child(i).text(0)).startswith(str(text)):
+            num += 1
+    return str(num + 1)
 
 
 def changeTypeInDFS(Type):
@@ -295,7 +273,7 @@ class CentralWindow(QTreeWidget):
             child.setText(1, Type)
             if Type == 'integer' or Type == 'real' or Type == 'bool':
                 Value = str(Value)
-            child.setText(2, QString.fromUtf8((Value)))
+            child.setText(2, QString.fromUtf8(unicode(Value)))
             child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
                 self.parent().parent().currentWidget().root)
@@ -322,6 +300,18 @@ class CentralWindow(QTreeWidget):
         else:
             return False
 
+    def addSegment(self):
+        father = self.parent().parent().currentWidget().currentItem()
+        print father, self.parent().parent().currentWidget().root
+        child = QTreeWidgetItem(father)
+        segment = 'segment' + findNum('segment', father)
+        child.setText(0, segment)
+        child.setText(1, 'dict')
+        add(father, child,{'Key': unicode(segment), 'Type':'dict'},self.parent().parent().currentWidget().path,
+                self.parent().parent().currentWidget().root)
+        dic = json.load(file('../action_data/segment.json'))
+        for k, v in dic.items():
+            self.dfs(v, child, k, type(v), v)
 
 class Example(QMainWindow):
     def __init__(self):
@@ -348,6 +338,11 @@ class Example(QMainWindow):
 
 
 if __name__ == '__main__':
+    dic = readPlist('../action_data/segment.plist')
+    json.dump(dic, open('../action_data/segment.json', 'w'))
+    dic = json.load(file('../action_data/segment.json'))
+    print dic
+    print type(dic)
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()
