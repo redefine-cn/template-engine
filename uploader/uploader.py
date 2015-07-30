@@ -7,7 +7,7 @@ import file_upload
 import codecs
 from os.path import isfile
 from plistIO import plistIO
-
+upload_login = {}
 class Uploader(QWidget):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
@@ -15,6 +15,15 @@ class Uploader(QWidget):
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
 
+        global upload_login
+        upload_login["production"] = {
+            "login_ip": "http://101.200.0.168/myadmin/login/",
+            "upload_ip": "http://101.200.0.168/upload_videoScript/",
+        }
+        upload_login["test"] = {
+            "login_ip": "http://123.57.206.52/myadmin/login/",
+            "upload_ip": "http://123.57.206.52/upload_videoScript/",
+        }
         self.tab_http = QWidget()
         self.tab_ftp = QWidget()
         # self.tab_http.resize(500, 500)
@@ -30,7 +39,7 @@ class Uploader(QWidget):
         self.btn_cancel = QPushButton(QString.fromUtf8("取消"))
         self.http_choice = QComboBox()
         self.http_choice.addItem(QString.fromUtf8("直接上传"))
-        self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
+        # self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
         self.http_choice_server = QComboBox()
         self.http_choice_server.addItem(QString.fromUtf8("测试服务器"))
         self.http_choice_server.addItem(QString.fromUtf8("生产服务器"))
@@ -102,10 +111,11 @@ class Uploader(QWidget):
 
     def choose_server(self):
         current_index = self.http_choice_server.currentIndex()
+        global upload_login
         if current_index == 1:
-            self.ip_line.setText("http://101.200.0.168/upload_videoScript/")
+            self.ip_line.setText(upload_login["production"]["upload_ip"])
         else:
-            self.ip_line.setText("http://123.57.206.52/upload_videoScript/")
+            self.ip_line.setText(upload_login["test"]["upload_ip"])
 
     def http_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("*.zip"))
@@ -149,6 +159,12 @@ class Uploader(QWidget):
                 pass
             else:
                 self.login_window = Login()
+                current_index = self.http_choice_server.currentIndex()
+                global upload_login
+                if current_index == 1:
+                    self.login_window.ip_addr_line.setText(upload_login["production"]["login_ip"])
+                else:
+                    self.ip_line.setText(upload_login["test"]["login_ip"])
                 return
         except:
             self.login_window = Login()

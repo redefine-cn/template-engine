@@ -111,6 +111,11 @@ def http_upload(file, file_name, ip):
     if upload_content == "error":
         print "sorry, upload failed"
         return u"上传失败，请检查改网站是否需要登录或者重新上传"
+    else:
+        try:
+            return_id = int(upload_content)
+        except:
+            return u"检查服务器连接"
     return upload_content
 
 def ftp_upload(file, ip, username, password):
