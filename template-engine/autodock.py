@@ -139,6 +139,7 @@ class autodock(QDockWidget):
         node['Value'] = unicode(text)
         if node['Type'] == 'integer' and checkInteger(node['Value']) == False:
             QMessageBox.critical(self, 'error', 'Value Error', QMessageBox.Ok)
+            return False
         treeNode.setText(2, text)
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
         # self.updateUI(treeNode.parent())
