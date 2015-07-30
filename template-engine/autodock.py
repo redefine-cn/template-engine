@@ -6,7 +6,7 @@ import  sys
 sys.path.append('../')
 from plistIO.plistIO import modify
 from functools import partial
-
+from central_window import checkInteger
 
 
 
@@ -91,8 +91,10 @@ class autodock(QDockWidget):
         # self.updateUI(treeNode.parent())
 
     def slotCombobox(self, treeNode, index):
-        treeNode.setText(1, QString.fromUtf8(self.types[index]))
         node = {}
+        node['PreType'] = str(treeNode.text(1))
+        treeNode.setText(1, QString.fromUtf8(self.types[index]))
+        node['PreValue'] = unicode(treeNode.text(2))
         node['Key'] = unicode(treeNode.text(0))
         node['Type'] = str(self.types[index])
         if node['Type'] == 'dict' or node['Type'] == 'array':
@@ -101,12 +103,12 @@ class autodock(QDockWidget):
             try:
                 node['Value'] = int(treeNode.text(2))
             except:
-                node['Value'] = '1'
+                node['Value'] = '-1'
         elif node['Type'] == 'real':
             try:
                 node['Value'] = float(treeNode.text(2))
             except:
-                node['Value'] = '1.0'
+                node['Value'] = '-1.0'
         elif node['Type'] == 'bool':
             try:
                 node['Value'] = str(treeNode.text(2))
@@ -129,11 +131,15 @@ class autodock(QDockWidget):
             self.updateUI(treeNode)
 
     def slotValueEdit(self, treeNode, text):
-        treeNode.setText(2, text)
         node = {}
+        node['PreValue'] = unicode(treeNode.text(2))
+        node['PreType'] = str(treeNode.text(1))
         node['Key'] = unicode(treeNode.text(0))
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(text)
+        if node['Type'] == 'integer' and checkInteger(node['Value']) == False:
+            QMessageBox.critical(self, 'error', 'Value Error', QMessageBox.Ok)
+        treeNode.setText(2, text)
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
         # self.updateUI(treeNode.parent())
 
