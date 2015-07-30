@@ -54,6 +54,8 @@ class autodock(QDockWidget):
         if treeNode.parent() == None:
             x = QLabel(key)
             self.gridLayout.addWidget(x, self.row, self.labelCol)
+        elif str(treeNode.parent().text(1))== 'array':
+            pass
         else:
             self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
