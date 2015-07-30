@@ -172,7 +172,7 @@ class Uploader(QWidget):
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
-
+            self.http_progressBar.setValue(0)
     def outText(self, text):
         print(text)
 
