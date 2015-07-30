@@ -12,6 +12,7 @@ class Uploader(QWidget):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
+        self.setWindowIcon(QIcon('../image/icon.png'))
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
         # self.tab_upload.setTabsClosable(True)
@@ -24,6 +25,10 @@ class Uploader(QWidget):
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel()
         self.file_select = QPushButton(QString.fromUtf8("选择文件"))
+        self.file_cover = QLabel(QString.fromUtf8("封面"))
+        self.file_cover_info = QLabel()
+        self.file_cover_select = QPushButton(QString.fromUtf8("选择封面"))
+        self.check_cover_btn = QCheckBox(QString.fromUtf8("是否上传封面"))
         self.file_name = QLabel(QString.fromUtf8("文件名称"))
         self.file_name_line = QLineEdit()
         self.btn_upload = QPushButton(QString.fromUtf8("上传"))
@@ -48,8 +53,12 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.file_select, 2, 5)
         http_grid_layout.addWidget(self.file_name, 3, 0)
         http_grid_layout.addWidget(self.file_name_line, 3, 1)
-        http_grid_layout.addWidget(self.http_progressBar, 4, 0, 1, 5)
-        http_grid_layout.addWidget(self.http_upload_tip, 4, 1)
+        http_grid_layout.addWidget(self.check_cover_btn, 3, 4)
+        http_grid_layout.addWidget(self.file_cover, 4, 0)
+        http_grid_layout.addWidget(self.file_cover_info, 4, 1)
+        http_grid_layout.addWidget(self.file_cover_select, 4, 5)
+        http_grid_layout.addWidget(self.http_progressBar, 5, 0, 1, 5)
+        http_grid_layout.addWidget(self.http_upload_tip, 5, 1)
         http_grid_layout.addWidget(self.btn_upload, 6, 4)
         http_grid_layout.addWidget(self.btn_cancel, 6, 5)
 
@@ -77,13 +86,16 @@ class Uploader(QWidget):
         ftp_grid_layout.addWidget(self.ftp_password_line, 3, 1)
         ftp_grid_layout.addWidget(self.ftp_btn_upload, 4, 4)
         ftp_grid_layout.addWidget(self.ftp_btn_cancel, 4, 5)
-
+        self.file_cover.hide()
+        self.file_cover_info.hide()
+        self.file_cover_select.hide()
         self.tab_upload.addTab(self.tab_http, "http")
         self.tab_upload.addTab(self.tab_ftp, "FTP")
         layout = QHBoxLayout(self)
         layout.addWidget(self.tab_upload)
 
         self.connect(self.file_select, SIGNAL("clicked()"), self.http_fileSelect)
+        self.connect(self.file_cover_select, SIGNAL("clicked()"), self.http_fileCoverSelect)
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
@@ -92,8 +104,23 @@ class Uploader(QWidget):
         # self.http_choice.currentIndexChanged.connect(self.choose_style)
         self.connect(self.http_login, SIGNAL("clicked()"), self.htpp_login_action)
         self.http_choice_server.currentIndexChanged.connect(self.choose_server)
-        self.connect(self.tab_upload, SIGNAL("tabCloseRequested(int)"), self.closeTab) #信号与槽
+        self.connect(self.tab_upload, SIGNAL("tabCloseRequested(int)"), self.closeTab)
+        self.connect(self.check_cover_btn, SIGNAL("stateChanged(int)"), self.choose_cover)
         self.show()
+
+    def http_fileCoverSelect(self):
+        select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的封面文件"), self.tr("*.png"))
+        self.file_cover_info.setText(select)
+
+    def choose_cover(self):
+        if self.check_cover_btn.isChecked():
+            self.file_cover.show()
+            self.file_cover_info.show()
+            self.file_cover_select.show()
+        else:
+            self.file_cover.hide()
+            self.file_cover_info.hide()
+            self.file_cover_select.hide()
 
     def closeTab(self):
         #关闭标签
@@ -137,6 +164,7 @@ class Uploader(QWidget):
         ip_val = self.ip_line.text()
         file_val = self.file_info.text()
         file_name = self.file_name_line.text()
+        cover_val = self.file_cover_info.text()
         if ip_val == "":
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('IP为空，请填写IP地址'))
@@ -149,6 +177,15 @@ class Uploader(QWidget):
         if file_val == "":
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('请选择文件'))
+            message.setWindowTitle(QString.fromUtf8('提示'))
+            message.setIcon(QMessageBox.Warning)
+            message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
+            message.exec_()
+            response = message.clickedButton().text()
+            return
+        if self.check_cover_btn.isChecked() and cover_val == "":
+            message = QMessageBox(self)
+            message.setText(QString.fromUtf8('请选择封面文件'))
             message.setWindowTitle(QString.fromUtf8('提示'))
             message.setIcon(QMessageBox.Warning)
             message.addButton(QString.fromUtf8(OK), QMessageBox.AcceptRole)
@@ -177,13 +214,17 @@ class Uploader(QWidget):
         # QThread.msleep(2000)
         # self.http_upload_tip.setText(u"正在上传...")
         # QThread.sleep(2000)
-        result = file_upload.http_upload(unicode(file_val), unicode(file_name), str(QString.fromUtf8(ip_val)))
+        result = file_upload.http_upload(str(QString.fromUtf8(ip_val)), unicode(file_val),  unicode(file_name))
         return_id = 0
         try:
             return_id = int(result)
             for i in range(4, 21):
                 self.http_progressBar.setValue(i)
                 QThread.msleep(200)
+            if self.check_cover_btn.isChecked():
+                ip_val = data["server"][data["server"]["choice"]]["cover_ip"]
+                result = file_upload.http_upload(ip_val, unicode(file_val), unicode(file_name), unicode(cover_val),
+                                                 return_id)
             message = QMessageBox(self)
             message.setText(QString.fromUtf8('上传成功'))
             message.setWindowTitle(QString.fromUtf8('提示'))
@@ -331,6 +372,7 @@ class Login(QWidget):
         super(Login, self).__init__()
         self.setWindowTitle(QString.fromUtf8("用户登录"))
         self.resize(500, 200)
+        self.setWindowIcon(QIcon('../image/icon.png'))
         self.init()
 
     def init(self):

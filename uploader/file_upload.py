@@ -67,7 +67,7 @@ def login_session(username, password, ip):
     except ValueError:
         return u"检查地址是否正确"
 
-def http_upload(file, file_name, ip):
+def http_upload(ip, file, file_name=u"模版文件", cover_file=None, video_script_id=1):
     # print username, password
     # username = 'devil'
     # password = '123456'
@@ -102,8 +102,12 @@ def http_upload(file, file_name, ip):
     #     print "sorry, login failed"
     #     return "login_error"
     print file_name
+    print ip
     url_t = str(ip)
-    file_data = {'file_videoScript': open(file, "rb"), 'name': file_name}
+    if cover_file is None:
+        file_data = {'file_videoScript': open(file, "rb"), 'name': file_name}
+    else:
+        file_data = {"file": open(cover_file, 'rb'), "video_script_id": video_script_id}
     datagen, headers = poster.encode.multipart_encode(file_data)
     request = urllib2.Request(url_t, datagen, headers)
     try:
