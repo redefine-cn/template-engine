@@ -14,6 +14,7 @@ class Uploader(QWidget):
         self.setWindowTitle(QString.fromUtf8("上传文件"))
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
+        # self.tab_upload.setTabsClosable(True)
         self.tab_http = QWidget()
         self.tab_ftp = QWidget()
         # self.tab_http.resize(500, 500)
@@ -91,7 +92,13 @@ class Uploader(QWidget):
         # self.http_choice.currentIndexChanged.connect(self.choose_style)
         self.connect(self.http_login, SIGNAL("clicked()"), self.htpp_login_action)
         self.http_choice_server.currentIndexChanged.connect(self.choose_server)
+        self.connect(self.tab_upload, SIGNAL("tabCloseRequested(int)"), self.closeTab) #信号与槽
         self.show()
+
+    def closeTab(self):
+        #关闭标签
+        i = self.tab_upload.currentIndex()  #获取当前处于激活状态的标签
+        self.tab_upload.removeTab(i)
 
     def choose_style(self):
         current_index = (self.http_choice.currentIndex())
