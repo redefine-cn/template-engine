@@ -1,63 +1,94 @@
-# -*- coding: utf-8 -*-   
-from PyQt4.QtGui import *  
-from PyQt4.QtCore import *  
-import sys  
+# *-* coding: utf-8 -*-
+
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+import sys
 import json
 
-QTextCodec.setCodecForTr(QTextCodec.codecForName("utf8"))  
-
-f = file('settings.json')
-data = json.load(f)
-
 class Settings(QDialog):
-    def __init__(self,parent=None):  
-        super(Settings,self).__init__(parent)
-        self.setWindowTitle("Settings")
-        self.resize(500,300)
+    def __init__(self, parent):
+        super(Settings, self).__init__(parent)
+        self.data = parent.data
+        self.InitUI()
+        self.fa = parent
 
-        self.pathLabel = QLabel('Path')
-        self.pathLabelText = QLineEdit(data['path'])
-        self.pathButton = QPushButton('Change Path')
+    def InitUI(self):
+        self.setWindowTitle(QString.fromUtf8("设置"))
+        self.resize(500, 200)
+        labelCol = 0
+        contentCol = 1
+        buttonCol = 2
 
-        self.actionLable = QLabel('Action')
-        self.actionList = QComboBox()
-        for action in data['actionList']:
-            self.actionList.addItem(action)
-        self.actionButton = QPushButton('Add/Delete Action')
+        baseLayout = QGridLayout()
+        pathLabel = QLabel(QString.fromUtf8("路径："))
+        self.pathEdit = QLineEdit()
+        self.pathEdit.setText(QString.fromUtf8(self.data["path"]))
+        choseButton = QPushButton(QString.fromUtf8("选择"))
+        choseButton.clicked.connect(self.slotChosePath)
 
-        self.saveButton = QPushButton('Save')
 
-        gridLayout=QGridLayout(self)
+        choseLabel1 = QLabel(QString.fromUtf8("选项1："))
+        choseBox1 = QComboBox()
+        choseBox1.addItem(QString.fromUtf8("男"))
+        choseBox1.addItem(QString.fromUtf8("女"))
 
-        gridLayout.addWidget(self.pathLabel, 1, 0)
-        gridLayout.addWidget(self.pathLabelText, 1, 1)
-        gridLayout.addWidget(self.pathButton, 1, 2)
 
-        gridLayout.addWidget(self.actionLable, 2, 0)
-        gridLayout.addWidget(self.actionList, 2, 1)
-        gridLayout.addWidget(self.actionButton, 2, 2)
+        choseLabel2 = QLabel(QString.fromUtf8("选项2："))
+        choseEdit2 = QLineEdit()
 
-        gridLayout.addWidget(self.saveButton, 3, 2)
+        choseLabel3 = QLabel(QString.fromUtf8("选项3："))
+        choseEdit3 = QLineEdit()
 
-        self.connect(self.pathButton, SIGNAL('clicked()'), self.changePath)
-        self.connect(self.actionButton, SIGNAL('clicked()'), self.addActionRewrite)
-        self.connect(self.saveButton, SIGNAL('clicked()'), self.saveAll)
+        saveButton = QPushButton(QString.fromUtf8("保存"))
+        saveButton.clicked.connect(self.slotSave)
 
-    def changePath(self):
-        fname = QFileDialog.getExistingDirectory(self, 'open file')
-        self.pathLabelText.setText(fname)
+        cancelButton = QPushButton(QString.fromUtf8("取消"))
+        cancelButton.clicked.connect(self.slotCancel)
 
-    def addActionRewrite(self):
-        text, ok = QInputDialog().getText(self, 'Add/Delete Action', QString.fromUtf8('插入相同的动作即删除'))
-        if ok:
-            index = self.actionList.findText(text)
-            if int(index) == -1:
-                data['actionList'].append(str(text))
-                self.actionList.addItem(text)
-            else :
-                data['actionList'].remove(str(text))
-                self.actionList.removeItem(index)
+        saveLayout = QHBoxLayout()
+        saveLayout.addWidget(saveButton)
+        saveLayout.addWidget(cancelButton)
+        saveLayout.setAlignment(Qt.AlignRight)
 
-    def saveAll(self):
-        data['path'] = str(self.pathLabelText.text())
-        json.dump(data, open('settings.json', 'w'))
+        baseLayout.addWidget(pathLabel, 0, labelCol)
+        baseLayout.addWidget(self.pathEdit, 0, contentCol)
+        baseLayout.addWidget(choseButton, 0, buttonCol)
+
+        baseLayout.addWidget(choseLabel1, 1, labelCol)
+        baseLayout.addWidget(choseBox1, 1, contentCol)
+
+        baseLayout.addWidget(choseLabel2, 2, labelCol)
+        baseLayout.addWidget(choseEdit2, 2, contentCol)
+
+        baseLayout.addWidget(choseLabel3, 3, labelCol)
+        baseLayout.addWidget(choseEdit3, 3, contentCol)
+
+        baseLayout.addLayout(saveLayout, 4, buttonCol, Qt.AlignRight)
+
+        self.setLayout(baseLayout)
+
+    def slotChosePath(self):
+        folder = QFileDialog.getExistingDirectory(self, QString.fromUtf8("选择项目文件夹"), "..")
+        folder.replace("\\", '/')
+        if folder and not folder.isEmpty():
+            self.pathEdit.setText(folder)
+            path = folder.toUtf8().data()
+
+            self.data["path"] = path
+            json.dump(self.data, open('settings.json','w'))
+
+    def closeEvent(self, QCloseEvent):
+        self.fa.setLeftList()
+
+    def slotSave(self):
+        self.fa.setLeftList()
+        self.close()
+
+    def slotCancel(self):
+        self.close()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mainWindow = Settings(None)
+    mainWindow.show()
+    sys.exit(app.exec_())

@@ -5,17 +5,11 @@ import sys
 import json
 import os
 from functools import partial
-# from settings import Settings
+from settings import Settings
 from central_window import CentralWindow
-from SettingDialog import SettingDialog
 from uploader.uploader import Uploader
-from animation import animation
-from layer import layer
-from subtitle import subtitle
-from root import root
-from part import part
 from autodock import autodock
-from plistIO.plistIO import read_plist, save_plist, write_json
+from plistIO.plistIO import read_plist, save_plist
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -224,8 +218,8 @@ class MainWindow(QMainWindow):
                 self.text.append(textStream.readLine())
 
     def slotSetting(self):
-        settingDialog = SettingDialog(self)
-        settingDialog.show()
+        settings = Settings(self)
+        settings.show()
 
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
