@@ -4,7 +4,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 import os
-from settings import Settings
+# from settings import Settings
 from central_window import CentralWindow
 from SettingDialog import SettingDialog
 from uploader.uploader import Uploader
@@ -105,8 +105,6 @@ class MainWindow(QMainWindow):
         self.exitAction.setStatusTip(QString.fromUtf8("退出"))
         self.exitAction.triggered.connect(self.slotExit)
 
-
-
         #打开配置文件
         # self.settingAction = QAction(QString.fromUtf8("setting"), self)
         # # self.settingAction.setShortcut("Ctrl+O")
@@ -135,7 +133,6 @@ class MainWindow(QMainWindow):
         self.uploadAction = QAction(QString.fromUtf8("上传模版") ,self)
         self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
         self.uploadAction.triggered.connect(self.slotUpload)
-
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")

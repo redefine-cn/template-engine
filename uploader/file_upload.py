@@ -43,6 +43,7 @@ def login(username, password, ip):
     return content
 opener = ''
 def login_session(username, password, ip):
+    print username, password, ip
     global opener
     opener = poster.streaminghttp.register_openers()
     opener.add_handler(urllib2.HTTPCookieProcessor(cookielib.CookieJar()))
@@ -52,10 +53,15 @@ def login_session(username, password, ip):
     try:
         result_login = urllib2.urlopen(request)
         login_content = result_login.read()
+        print login_content
         if login_content == "error":
             print "sorry, login failed"
             return u"对不起，登录失败"
-        return "success"
+        else:
+            if login_content == "success":
+                return "success"
+            else:
+                return u"检查服务器是否正确"
     except urllib2.URLError:
         return u"网络连接错误"
     except ValueError:

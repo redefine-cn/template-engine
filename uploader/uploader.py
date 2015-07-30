@@ -4,26 +4,16 @@ from PyQt4.QtCore import *
 from PyQt4.QtGui import *
 from PyQt4 import QtNetwork
 import file_upload
-import codecs
-from os.path import isfile
+import json
 from plistIO import plistIO
-upload_login = {}
+f = file('../template-engine/settings.json')
+data = json.load(f)
 class Uploader(QWidget):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
-
-        global upload_login
-        upload_login["production"] = {
-            "login_ip": "http://101.200.0.168/myadmin/login/",
-            "upload_ip": "http://101.200.0.168/upload_videoScript/",
-        }
-        upload_login["test"] = {
-            "login_ip": "http://123.57.206.52/myadmin/login/",
-            "upload_ip": "http://123.57.206.52/upload_videoScript/",
-        }
         self.tab_http = QWidget()
         self.tab_ftp = QWidget()
         # self.tab_http.resize(500, 500)
@@ -113,9 +103,11 @@ class Uploader(QWidget):
         current_index = self.http_choice_server.currentIndex()
         global upload_login
         if current_index == 1:
-            self.ip_line.setText(upload_login["production"]["upload_ip"])
+            data["server"]["choice"] = str(current_index)
+            self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
         else:
-            self.ip_line.setText(upload_login["test"]["upload_ip"])
+            data["server"]["choice"] = str(current_index)
+            self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
 
     def http_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("*.zip"))
@@ -159,12 +151,6 @@ class Uploader(QWidget):
                 pass
             else:
                 self.login_window = Login()
-                current_index = self.http_choice_server.currentIndex()
-                global upload_login
-                if current_index == 1:
-                    self.login_window.ip_addr_line.setText(upload_login["production"]["login_ip"])
-                else:
-                    self.ip_line.setText(upload_login["test"]["login_ip"])
                 return
         except:
             self.login_window = Login()
@@ -328,15 +314,16 @@ class MyThread(QThread):
             self.times -= 1
 
 class Login(QWidget):
-    def __init__(self, parent = None):
-        super(Login, self).__init__(parent)
+    def __init__(self):
+        super(Login, self).__init__()
         self.setWindowTitle(QString.fromUtf8("用户登录"))
+        self.resize(500, 200)
         self.init()
 
     def init(self):
         self.login_status = "error"
         self.ip_addr = QLabel(QString.fromUtf8("IP地址"))
-        self.ip_addr_line = QLineEdit("http://123.57.206.52/myadmin/login/")
+        self.ip_addr_line = QLineEdit()
         self.username = QLabel(QString.fromUtf8("用户名"))
         self.password = QLabel(QString.fromUtf8("密码"))
         self.username_line = QLineEdit()
@@ -356,6 +343,7 @@ class Login(QWidget):
         self.connect(self.login_btn, SIGNAL("clicked()"), self.login)
         self.connect(self.cancel_btn, SIGNAL("clicked()"), self.close)
         self.show()
+        self.ip_addr_line.setText(data["server"][data["server"]["choice"]]["login_ip"])
 
     def login(self):
         ip = str(self.ip_addr_line.text())
