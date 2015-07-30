@@ -276,7 +276,6 @@ class MainWindow(QMainWindow):
              self.leftTree.setRootIndex(self.model.index(self.data["path"]))
 
     def slotList(self, item):
-        print 'haha'
         if not item.parent():
             return
         filedir = item.parent().data().toString()
