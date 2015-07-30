@@ -91,7 +91,6 @@ class autodock(QDockWidget):
             except:
                 node['Value'] = '1'
         elif node['Type'] == 'real':
-            print treeNode.text(2)
             try:
                 node['Value'] = float(treeNode.text(2))
             except:
@@ -107,10 +106,10 @@ class autodock(QDockWidget):
             node['Value'] = unicode(treeNode.text(2))
 
         if treeNode.text(2) == QString.fromUtf8(''):
-            treeNode.setText(2, node['Value'])
+            treeNode.setText(2, unicode(node['Value']))
             edit = QLineEdit(treeNode.text(2))
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
-        treeNode.setText(2, node['Value'])
+        treeNode.setText(2, unicode(node['Value']))
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
         self.updateUI(treeNode)
 
