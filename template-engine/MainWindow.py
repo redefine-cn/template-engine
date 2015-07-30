@@ -189,8 +189,9 @@ class MainWindow(QMainWindow):
 
     def slotSaveFile(self):
         fileName = QFileDialog.getSaveFileName(self)
+        print unicode(fileName) + unicode('.plist')
         if len(fileName) != 0:
-            save_plist(unicode(fileName) + unicode('.plist'), str(self.tab.currentWidget().path))
+            save_plist(unicode(fileName) + unicode('.plist'), unicode(self.tab.currentWidget().path))
 
     def slotCreateFile(self):
         central = CentralWindow()
