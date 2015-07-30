@@ -235,8 +235,15 @@ class MainWindow(QMainWindow):
         self.leftTree.doubleClicked.connect(self.slotList)
 
     def slotList(self, item):
+        if not item.parent():
+            return
         filedir = item.parent().data().toString()
-        name = item.data().toString().split('.')[0]
+
+        f = item.data().toString().split('.')
+        if f[-1] != 'plist':
+            return
+
+        name = f[0]
         fileName = unicode(self.data["path"]) + unicode("/") + unicode(filedir) + unicode("/") + unicode(name) + unicode('.plist')
         data = {}
         file_json = unicode(read_plist(fileName))
