@@ -12,7 +12,7 @@ class Uploader(QWidget):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
-        # self.resize(500, 200)
+        self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
 
         self.tab_http = QWidget()
@@ -31,12 +31,16 @@ class Uploader(QWidget):
         self.http_choice = QComboBox()
         self.http_choice.addItem(QString.fromUtf8("直接上传"))
         self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
+        self.http_choice_server = QComboBox()
+        self.http_choice_server.addItem(QString.fromUtf8("测试服务器"))
+        self.http_choice_server.addItem(QString.fromUtf8("生产服务器"))
         self.http_progressBar = QProgressBar()
         self.http_upload_tip = QLabel()
         http_grid_layout = QGridLayout(self.tab_http)
         http_grid_layout.addWidget(self.ip, 0, 0)
         http_grid_layout.addWidget(self.ip_line, 0, 1)
         http_grid_layout.addWidget(self.http_choice, 0, 4)
+        http_grid_layout.addWidget(self.http_choice_server, 0, 5)
         http_grid_layout.addWidget(self.file, 2, 0)
         http_grid_layout.addWidget(self.file_info, 2, 1)
         http_grid_layout.addWidget(self.file_select, 2, 5)
@@ -83,17 +87,25 @@ class Uploader(QWidget):
         self.connect(self.ftp_btn_cancel, SIGNAL("clicked()"), self.close)
         self.connect(self.btn_upload, SIGNAL("clicked()"), self.http_upload)
         self.connect(self.ftp_btn_upload, SIGNAL("clicked()"), self.ftp_upload)
-        self.http_choice.currentIndexChanged.connect(self.choice)
+        self.http_choice.currentIndexChanged.connect(self.choose_style)
+        self.http_choice_server.currentIndexChanged.connect(self.choose_server)
         self.show()
 
-    def choice(self):
-        currentText = (self.http_choice.currentIndex())
-        print currentText
-        if currentText == 1:
+    def choose_style(self):
+        current_index = (self.http_choice.currentIndex())
+        print current_index
+        if current_index == 1:
             self.login_window = Login()
             # self.Window = Login()
         else:
             pass
+
+    def choose_server(self):
+        current_index = self.http_choice_server.currentIndex()
+        if current_index == 1:
+            self.ip_line.setText("http://101.200.0.168/upload_videoScript/")
+        else:
+            self.ip_line.setText("http://123.57.206.52/upload_videoScript/")
 
     def http_fileSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的文件"), self.tr("*.zip"))
@@ -173,6 +185,7 @@ class Uploader(QWidget):
             message.exec_()
             response = message.clickedButton().text()
             self.http_progressBar.setValue(0)
+
     def outText(self, text):
         print(text)
 
