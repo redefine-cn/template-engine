@@ -16,35 +16,7 @@ def new_tree():
     json.dump(data, open(new_json, 'w'))
     return unicode(file_name)
 # add node info to the tree
-def add_node(node, file_json):
-    json_data = file('../tmp_data/' + file_json)
-    data = json.load(json_data)
-    parent = []
-    parent_get = node['parent']
-    for i in range(len(parent_get)):
-        parent.append(parent_get[len(parent_get) - i - 1])
-    if node['Type'] == 'dict':
-        node['Value'] = dict()
-    elif node['Type'] == 'array':
-        node['Value'] = list()
-    elif node['Type'] == 'integer':
-        node['Value'] = int(node['Value'])
-    pos = data
-    for i in range(len(parent)):
-        pos = pos[parent[i]]
-    if len(parent) >= 1:
-        if node['Key'] == 'ARRAY':
-            pos.append(node['Value'])
-        else:
-            pos[node['Key']] = node['Value']
-    else:
-        if node['Key'] == 'ARRAY':
-            data.append(node['Value'])
-        else:
-            data[node['Key']] = node['Value']
-    write_json(data, file_json)
-# delete node from tree
-# root = ''
+
 def add(addr, addrchild, node, file_json, root):
     try :
         Node = Map[str(addr)]
@@ -153,18 +125,6 @@ def modify(addr, addrchild, node, file_json, root, changeType):
             Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)
 
-def delete_node(node, file_json):
-    json_data = file('../tmp_data/' + file_json)
-    data = json.load(json_data)
-    parent = []
-    parent_get = node['parent']
-    for i in range(len(parent_get)):
-        parent.append(parent_get[len(parent_get) - i - 1])
-    pos = data
-    for i in range(len(parent)):
-        pos = pos[parent[i]]
-    pos.pop(node['Key'], None)
-    write_json(data, file_json)
 # insert the data to the file.json
 def write_json(data, file_json):
     # print file_json
