@@ -301,6 +301,7 @@ class MyThread(QThread):
 class Login(QWidget):
     def __init__(self, parent = None):
         super(Login, self).__init__(parent)
+        self.setWindowTitle(QString.fromUtf8("用户登录"))
         self.init()
 
     def init(self):
