@@ -121,7 +121,7 @@ class autodock(QDockWidget):
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
         treeNode.setText(2, unicode(node['Value']))
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
-        # self.updateUI(treeNode.parent())
+        self.updateUI(treeNode.parent())
 
     def slotValueEdit(self, treeNode, text):
         treeNode.setText(2, text)
