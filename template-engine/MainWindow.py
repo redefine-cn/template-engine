@@ -63,16 +63,9 @@ class MainWindow(QMainWindow):
         editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
         editMenu.addAction(self.setting)
 
-        # editMenu = self.menuBar().addMenu(QString.fromUtf8("Setting"))
-        # editMenu.addAction(self.settingAction)
-
         ActionMenu = self.menuBar().addMenu('Action')
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
-        # editMenu.addAction(self.setting)
-        # editMenu.addAction(self.cutAction)
-        # editMenu.addAction(self.copyAction)
-        # editMenu.addAction(self.pasteAction)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
         helpMenu.addAction(self.aboutAction)
@@ -80,6 +73,16 @@ class MainWindow(QMainWindow):
         uploadMenu = self.menuBar().addMenu(QString.fromUtf8("Upload"))
         uploadMenu.addAction(self.uploadAction)
 
+        # 右键菜单
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.customContextMenuRequested.connect(self.showContextMenu)
+        self.contextMenu = QMenu()
+        self.contextMenu.addAction(self.addNormalAction)
+        self.contextMenu.addAction(self.deleteAction)
+
+    def showContextMenu(self, pos):
+        self.contextMenu.move(self.pos() + pos)
+        self.contextMenu.show()
     def createAction(self):
         #打开文件
         self.fileOpenAction = QAction(QIcon("../image/icon.png"), QString.fromUtf8("Open"), self)
@@ -105,12 +108,6 @@ class MainWindow(QMainWindow):
         self.exitAction.setStatusTip(QString.fromUtf8("退出"))
         self.exitAction.triggered.connect(self.slotExit)
 
-        #打开配置文件
-        # self.settingAction = QAction(QString.fromUtf8("setting"), self)
-        # # self.settingAction.setShortcut("Ctrl+O")
-        # self.settingAction.setStatusTip(QString.fromUtf8("配置"))
-        # self.settingAction.triggered.connect(self.slotSetting)
-
         #设置
         self.setting = QAction(QString.fromUtf8('设置'), self)
         self.setting.setShortcut('Ctrl+Alt+S')
@@ -130,6 +127,7 @@ class MainWindow(QMainWindow):
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
         self.aboutAction.triggered.connect(self.slotAbout)
 
+        # 上传文件
         self.uploadAction = QAction(QString.fromUtf8("上传模版") ,self)
         self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
         self.uploadAction.triggered.connect(self.slotUpload)
