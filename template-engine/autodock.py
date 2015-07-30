@@ -21,7 +21,7 @@ class autodock(QDockWidget):
         self.setFeatures(QDockWidget.AllDockWidgetFeatures)
         self.setAllowedAreas(Qt.RightDockWidgetArea)
 
-        self.row = 0
+        self.row = -1
         self.labelCol = 0
         self.typeCol = 1
         self.contentCol = 2
@@ -34,32 +34,39 @@ class autodock(QDockWidget):
         self.updateUI(None)
 
     def addValue(self, key, tp, value, treeNode):
-
+        self.row += 1
         labelEdit = QLineEdit()
         labelEdit.setText(key)
+        key = unicode(key)
+        tp = str(tp)
+        value = unicode(value)
 
         combobox = QComboBox()
-        if (tp.compare(QString.fromUtf8("dict")) is 0 or tp.compare(QString.fromUtf8("array")) is 0):
-            combobox.addItem(QString.fromUtf8(tp))
+
+        if treeNode.childCount() != 0 or treeNode.parent() == None:
+            combobox.addItem(tp)
         else:
             for i in range(len(self.types)):
-                combobox.addItem(QString.fromUtf8(self.types[i]))
-                if tp == self.types[i]:
+                combobox.addItem(str(self.types[i]))
+                if tp == str(self.types[i]):
                     combobox.setCurrentIndex(i)
 
-        self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
+        if treeNode.parent() == None:
+            x = QLabel(key)
+            self.gridLayout.addWidget(x, self.row, self.labelCol)
+        else:
+            self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
 
         labelEdit.textChanged[QString].connect(partial(self.slotlabelEdit, treeNode))
         combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
-        if tp != "dict" and tp != "array":
+        if tp != 'dict' and tp != 'array' and treeNode.parent() != None:
             edit = QLineEdit()
             edit.setText(value)
             edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
 
-        self.row += 1
 
     def slotlabelEdit(self, treeNode, text):
         node = {}
@@ -69,14 +76,43 @@ class autodock(QDockWidget):
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(treeNode.text(2))
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
+        self.updateUI(treeNode)
 
     def slotCombobox(self, treeNode, index):
         treeNode.setText(1, QString.fromUtf8(self.types[index]))
         node = {}
         node['Key'] = unicode(treeNode.text(0))
         node['Type'] = str(self.types[index])
-        node['Value'] = unicode(treeNode.text(2))
+        if node['Type'] == 'dict' or node['Type'] == 'array':
+            treeNode.setText(2, QString.fromUtf8(''))
+        if node['Type'] == 'integer':
+            try:
+                node['Value'] = int(treeNode.text(2))
+            except:
+                node['Value'] = '1'
+        elif node['Type'] == 'real':
+            print treeNode.text(2)
+            try:
+                node['Value'] = float(treeNode.text(2))
+            except:
+                node['Value'] = '1.0'
+        elif node['Type'] == 'bool':
+            try:
+                node['Value'] = str(treeNode.text(2))
+            except:
+                node['Value'] = 'True'
+            if node['Value'] != 'True' and node['Value'] != 'False':
+                node['Value'] = 'True'
+        else:
+            node['Value'] = unicode(treeNode.text(2))
+
+        if treeNode.text(2) == QString.fromUtf8(''):
+            treeNode.setText(2, node['Value'])
+            edit = QLineEdit(treeNode.text(2))
+            self.gridLayout.addWidget(edit, self.row, self.contentCol)
+        treeNode.setText(2, node['Value'])
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
+        self.updateUI(treeNode)
 
     def slotValueEdit(self, treeNode, text):
         treeNode.setText(2, text)
@@ -85,6 +121,7 @@ class autodock(QDockWidget):
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(text)
         modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
+        self.updateUI(treeNode)
 
     def updateUI(self, data):
 
@@ -102,9 +139,8 @@ class autodock(QDockWidget):
         if data:
             self.row = 0
             self.data = data
-            if data.childCount() == 0:
-                self.addValue(data.text(0), data.text(1), data.text(2), data)
-            else:
+            self.addValue(data.text(0), data.text(1), data.text(2), data)
+            if data.childCount() != 0:
                 for i in range(data.childCount()):
                     self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
 
@@ -112,3 +148,5 @@ class autodock(QDockWidget):
         self.dialog.setLayout(self.gridLayout)
         self.setWidget(self.dialog)
 
+if __name__ == '__main__':
+    print float('123')

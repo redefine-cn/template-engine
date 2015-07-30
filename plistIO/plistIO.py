@@ -90,7 +90,7 @@ def add(addr, addrchild, node, file_json, root):
                     Node.append(False)
             else:
                 Node.append((node['Value']))
-        Map[str(addrchild)] = Node[len(Node) - 1]
+        Map[str(addrchild)] = Node[-1]
     # print node
     write_json(Map[str(root)], file_json)
 
@@ -122,6 +122,11 @@ def modify(addr, addrchild, node, file_json, root, changeType):
                     Node[node['Key']] = True
                 else:
                     Node[node['Key']] = False
+            elif node['Type'] == 'dict':
+                Node[node['Key']] = {}
+            elif node['Type'] == 'array':
+                Node[node['Key']] = []
+            Map[str(addrchild)] = Node[node['Key']]
         else:
             if node['Type'] == 'integer':
                 index = Node.index(int(node['Value']))
@@ -139,9 +144,13 @@ def modify(addr, addrchild, node, file_json, root, changeType):
                 else:
                     index = Node.index(False)
                     Node[index] = False
-            else:
+            elif node['Type'] == 'dict':
                 index = Node.index(node['Value'])
-                Node[index] = node['Value']
+                Node[index] = {}
+            elif node['Type'] == 'array':
+                index = Node.index(node['Value'])
+                Node[index] = []
+            Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)
 
 def delete_node(node, file_json):
