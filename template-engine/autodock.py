@@ -38,11 +38,8 @@ class autodock(QDockWidget):
         labelEdit = QLineEdit()
         labelEdit.setText(key)
 
-
-        print type(tp)
         combobox = QComboBox()
-        print tp.compare(QString.fromUtf8("dict")), tp.compare(QString.fromUtf8("array"))
-        if tp.compare(QString.fromUtf8("dict")) == 0 | tp.compare(QString.fromUtf8("array")) == 0:
+        if (tp.compare(QString.fromUtf8("dict")) is 0 or tp.compare(QString.fromUtf8("array")) is 0):
             combobox.addItem(QString.fromUtf8(tp))
         else:
             for i in range(len(self.types)):
@@ -56,7 +53,7 @@ class autodock(QDockWidget):
         labelEdit.textChanged[QString].connect(partial(self.slotlabelEdit, treeNode))
         combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
-        if tp != "dict":
+        if tp != "dict" and tp != "array":
             edit = QLineEdit()
             edit.setText(value)
             edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
@@ -110,13 +107,6 @@ class autodock(QDockWidget):
             else:
                 for i in range(data.childCount()):
                     self.addValue(data.child(i).text(0), data.child(i).text(1), data.child(i).text(2), data.child(i))
-
-            # buttonLayout = QHBoxLayout()
-            # button = QPushButton(QString.fromUtf8("保存"))
-            # buttonLayout.addStretch(1)
-            # buttonLayout.addWidget(button)
-            # buttonLayout.setAlignment(Qt.AlignCenter)=
-            # self.gridLayout.addLayout(buttonLayout, self.row, self.labelCol, 1, 3)
 
         self.dialog = QDialog()
         self.dialog.setLayout(self.gridLayout)
