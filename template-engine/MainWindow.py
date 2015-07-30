@@ -4,6 +4,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 import os
+from functools import partial
 # from settings import Settings
 from central_window import CentralWindow
 from SettingDialog import SettingDialog
@@ -67,6 +68,10 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addSegment)
+        ActionMenu.addAction(self.addLayer)
+        ActionMenu.addAction(self.addOpacity)
+        ActionMenu.addAction(self.addStraightLine)
+        ActionMenu.addAction(self.addSubtitle)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
         helpMenu.addAction(self.aboutAction)
@@ -122,9 +127,26 @@ class MainWindow(QMainWindow):
         self.deleteAction = QAction('&delete', self)
         self.deleteAction.setShortcut('Ctrl+D')
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
+
         self.addSegment = QAction('&addSegment', self)
-        self.addSegment.setShortcut('Ctrl+G')
-        self.addSegment.triggered.connect(self.tab.currentWidget().addSegment)
+        self.addSegment.setShortcut('Ctrl+1')
+        self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
+
+        self.addStraightLine = QAction('&addStraightLine', self)
+        self.addStraightLine.setShortcut('Ctrl+2')
+        self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
+
+        self.addOpacity = QAction('&addOpacity', self)
+        self.addOpacity.setShortcut('Ctrl+3')
+        self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
+
+        self.addLayer = QAction('&addLayer', self)
+        self.addLayer.setShortcut('Ctrl+4')
+        self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
+
+        self.addSubtitle = QAction('&addSubtitle', self)
+        self.addSubtitle.setShortcut('Ctrl+5')
+        self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
@@ -170,6 +192,7 @@ class MainWindow(QMainWindow):
         central = CentralWindow()
         self.central.append(central)
         self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
+        self.tab.setCurrentWidget(self.central[-1])
 
     def slotOpenFile(self):
         fileName = unicode(QFileDialog.getOpenFileName(self))

@@ -300,18 +300,21 @@ class CentralWindow(QTreeWidget):
         else:
             return False
 
-    def addSegment(self):
+    def addSomething(self, text):
+        if self.parent().parent().currentWidget().currentItem() == None:
+            return False
         father = self.parent().parent().currentWidget().currentItem()
-        print father, self.parent().parent().currentWidget().root
         child = QTreeWidgetItem(father)
-        segment = 'segment' + findNum('segment', father)
-        child.setText(0, segment)
+        key = text.split('_')[0]
+        name = key + findNum(key, father)
+        child.setText(0, name)
         child.setText(1, 'dict')
-        add(father, child,{'Key': unicode(segment), 'Type':'dict'},self.parent().parent().currentWidget().path,
+        add(father, child,{'Key': unicode(name), 'Type':'dict'},self.parent().parent().currentWidget().path,
                 self.parent().parent().currentWidget().root)
-        dic = json.load(file('../action_data/segment.json'))
+        dic = json.load(file('../action_data/'+ text))
         for k, v in dic.items():
             self.dfs(v, child, k, type(v), v)
+
 
 class Example(QMainWindow):
     def __init__(self):
@@ -338,11 +341,6 @@ class Example(QMainWindow):
 
 
 if __name__ == '__main__':
-    dic = readPlist('../action_data/segment.plist')
-    json.dump(dic, open('../action_data/segment.json', 'w'))
-    dic = json.load(file('../action_data/segment.json'))
-    print dic
-    print type(dic)
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()
