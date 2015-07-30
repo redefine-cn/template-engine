@@ -260,9 +260,9 @@ class MainWindow(QMainWindow):
         # model.setRootPath(QDir.currentPath())
         # self.leftTree.setModel(model)
 
-        model = QDirModel()
-        self.leftTree.setModel(model)
-        self.leftTree.setRootIndex(model.index(self.data["path"]))
+        self.model = QDirModel()
+        self.leftTree.setModel(self.model)
+        self.leftTree.setRootIndex(self.model.index(self.data["path"]))
         self.leftTree.hideColumn(1)
         self.leftTree.hideColumn(2)
         self.leftTree.hideColumn(3)
@@ -272,13 +272,11 @@ class MainWindow(QMainWindow):
         if not item.parent():
             return
         filedir = item.parent().data().toString()
-
         f = item.data().toString().split('.')
         if f[-1] != 'plist':
             return
-
         name = f[0]
-        fileName = unicode(self.data["path"]) + unicode("/") + unicode(filedir) + unicode("/") + unicode(name) + unicode('.plist')
+        fileName = unicode(self.model.filePath(self.leftTree.selectedIndexes()[0]))
         data = {}
         file_json = unicode(read_plist(fileName))
         json_data = file(unicode('../tmp_data/') + file_json)
