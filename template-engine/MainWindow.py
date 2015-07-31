@@ -66,9 +66,9 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addSegment)
-        ActionMenu.addAction(self.addLayer)
-        ActionMenu.addAction(self.addOpacity)
         ActionMenu.addAction(self.addStraightLine)
+        ActionMenu.addAction(self.addOpacity)
+        ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
