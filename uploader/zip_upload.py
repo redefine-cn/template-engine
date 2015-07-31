@@ -30,18 +30,13 @@ class ZipUpload(QWidget):
         z = zipfile.ZipFile("test_zip.zip", 'w')
         filelist = []
         if os.path.isfile(file_path):
-            print "file"
             filelist.append(file_path)
         else:
-            print "directory"
             for root, dirs, files in os.walk(unicode(file_path)):
                 for name in files:
                     filelist.append(os.path.join(root, name))
         for tar in filelist:
-            print tar
-            print len(file_path)
             arcname = tar[len(file_path):]
-            print arcname
             z.write(tar, arcname)
         z.close()
         print unicode(file_path)
