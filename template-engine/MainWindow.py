@@ -55,16 +55,16 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('../image/icon.png'))
 
     def createMenu(self):
-        fileMenu = self.menuBar().addMenu(QString.fromUtf8("File"))
+        fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
         fileMenu.addAction(self.fileOpenAction)
         fileMenu.addAction(self.fileCreateAction)
         fileMenu.addAction(self.fileSaveAction)
         fileMenu.addAction(self.exitAction)
 
-        editMenu = self.menuBar().addMenu(QString.fromUtf8("Settings"))
+        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
         editMenu.addAction(self.setting)
 
-        ActionMenu = self.menuBar().addMenu('Action')
+        ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addSegment)
@@ -73,10 +73,10 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
 
-        helpMenu = self.menuBar().addMenu(QString.fromUtf8("About"))
+        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
 
-        uploadMenu = self.menuBar().addMenu(QString.fromUtf8("Upload"))
+        uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
 
         # 右键菜单
@@ -96,61 +96,61 @@ class MainWindow(QMainWindow):
         self.contextMenu.show()
     def createAction(self):
         #打开文件
-        self.fileOpenAction = QAction(QIcon("../image/icon.png"), QString.fromUtf8("Open"), self)
+        self.fileOpenAction = QAction(QString.fromUtf8("打开"), self)
         self.fileOpenAction.setShortcut("Ctrl+O")
         self.fileOpenAction.setStatusTip(QString.fromUtf8("打开一个文件"))
         self.fileOpenAction.triggered.connect(self.slotOpenFile)
 
         #新建文件
-        self.fileCreateAction = QAction(QString.fromUtf8("New"), self)
+        self.fileCreateAction = QAction(QString.fromUtf8("新建"), self)
         self.fileCreateAction.setShortcut("Ctrl+N")
         self.fileCreateAction.setStatusTip(QString.fromUtf8("创建一个文件"))
         self.fileCreateAction.triggered.connect(self.slotCreateFile)
 
         #保存文件
-        self.fileSaveAction = QAction(QString.fromUtf8("Save"), self)
+        self.fileSaveAction = QAction(QString.fromUtf8("保存"), self)
         self.fileSaveAction.setShortcut("Ctrl+S")
         self.fileSaveAction.setStatusTip(QString.fromUtf8("保存当前文件"))
         self.fileSaveAction.triggered.connect(self.slotSaveFile)
 
         #退出
-        self.exitAction = QAction(QString.fromUtf8("Exit"), self)
+        self.exitAction = QAction(QString.fromUtf8("退出"), self)
         self.exitAction.setShortcut("Ctrl+E")
         self.exitAction.setStatusTip(QString.fromUtf8("退出"))
         self.exitAction.triggered.connect(self.slotExit)
 
         #设置
         self.setting = QAction(QString.fromUtf8('设置'), self)
-        self.setting.setShortcut('Ctrl+Alt+S')
+        self.setting.setShortcut('Ctrl+Q')
         self.setting.setStatusTip(QString.fromUtf8('设置'))
         self.setting.triggered.connect(self.slotSetting)
 
         # Action
-        self.addNormalAction = QAction('&add', self)
+        self.addNormalAction = QAction('&Add', self)
         self.addNormalAction.setShortcut('Ctrl+A')
         self.addNormalAction.triggered.connect(self.tab.currentWidget().addNormal)
-        self.deleteAction = QAction('&delete', self)
+        self.deleteAction = QAction('&Delete', self)
         self.deleteAction.setShortcut('Ctrl+D')
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
         #open the json
-        self.addSegment = QAction('&addSegment', self)
+        self.addSegment = QAction('&AddSegment', self)
         self.addSegment.setShortcut('Ctrl+1')
         self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
 
-        self.addStraightLine = QAction('&addStraightLine', self)
+        self.addStraightLine = QAction('&AddStraightLine', self)
         self.addStraightLine.setShortcut('Ctrl+2')
         self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
 
-        self.addOpacity = QAction('&addOpacity', self)
+        self.addOpacity = QAction('&AddOpacity', self)
         self.addOpacity.setShortcut('Ctrl+3')
         self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
-        self.addLayer = QAction('&addLayer', self)
+        self.addLayer = QAction('&AddLayer', self)
         self.addLayer.setShortcut('Ctrl+4')
         self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
-        self.addSubtitle = QAction('&addSubtitle', self)
+        self.addSubtitle = QAction('&AddSubtitle', self)
         self.addSubtitle.setShortcut('Ctrl+5')
         self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
