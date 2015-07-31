@@ -6,13 +6,13 @@ from PyQt4 import QtNetwork
 import file_upload
 import json
 from plistIO import plistIO
-f = file('../action_data/settings.json')
+f = file('../data/settings.json')
 data = json.load(f)
 class Uploader(QWidget):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
-        self.setWindowIcon(QIcon('../image/icon.png'))
+        self.setWindowIcon(QIcon('../data/icon.png'))
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
         # self.tab_upload.setTabsClosable(True)
@@ -386,7 +386,7 @@ class Login(QWidget):
         super(Login, self).__init__()
         self.setWindowTitle(QString.fromUtf8("用户登录"))
         self.resize(500, 200)
-        self.setWindowIcon(QIcon('../image/icon.png'))
+        self.setWindowIcon(QIcon('../data/icon.png'))
         self.init()
 
     def init(self):
@@ -447,7 +447,7 @@ class ZipFile(QWidget):
         super(ZipFile, self).__init__()
         self.father = father
         self.setWindowTitle(QString.fromUtf8("正在压缩..."))
-        self.setWindowIcon(QIcon("../image/icon.png"))
+        self.setWindowIcon(QIcon("../data/icon.png"))
         self.resize(300, 50)
         self.zip_title = QLabel(QString.fromUtf8("正在压缩"))
         self.progress_bar = QProgressBar()

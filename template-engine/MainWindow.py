@@ -23,7 +23,7 @@ class MainWindow(QMainWindow):
 
     def loadData(self):
         #load
-        f = file('../action_data/settings.json')
+        f = file('../data/settings.json')
         self.data = json.load(f)
         f.close()
 
@@ -52,7 +52,7 @@ class MainWindow(QMainWindow):
         #DockWidget
         self.createDockWidget()
         #set Icon
-        self.setWindowIcon(QIcon('../image/icon.png'))
+        self.setWindowIcon(QIcon('../data/icon.png'))
 
     def createMenu(self):
         fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))

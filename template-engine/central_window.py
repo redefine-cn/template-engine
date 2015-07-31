@@ -7,7 +7,7 @@ import json
 sys.path.append('../')
 from plistIO.plistIO import add, delete, new_tree
 from plistlib import *
-f = file('../action_data/settings.json')
+f = file('../data/settings.json')
 data = json.load(f)
 
 
@@ -303,7 +303,7 @@ class CentralWindow(QTreeWidget):
         child.setText(1, 'dict')
         add(father, child,{'Key': unicode(name), 'Type':'dict'},self.parent().parent().currentWidget().path,
                 self.parent().parent().currentWidget().root)
-        dic = json.load(file('../action_data/'+ text))
+        dic = json.load(file('../data/'+ text))
         for k, v in dic.items():
             self.dfs(v, child, k, type(v), v)
 
