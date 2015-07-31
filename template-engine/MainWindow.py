@@ -14,6 +14,8 @@ from plistIO.plistIO import read_plist, save_plist
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
+        if os.path.exists('../tmp_data') == False:
+            os.mkdir('../tmp_data')
         self.central = list()
         self.loadData()
         self.initUI()
