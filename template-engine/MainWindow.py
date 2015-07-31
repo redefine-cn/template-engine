@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
 
     def loadData(self):
         #load
-        f = file('settings.json')
+        f = file('../action_data/settings.json')
         self.data = json.load(f)
         f.close()
 

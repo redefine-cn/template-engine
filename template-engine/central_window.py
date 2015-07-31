@@ -7,7 +7,7 @@ import json
 sys.path.append('../')
 from plistIO.plistIO import add, delete, new_tree
 from plistlib import *
-f = file('settings.json')
+f = file('../action_data/settings.json')
 data = json.load(f)
 
 

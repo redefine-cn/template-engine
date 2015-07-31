@@ -6,7 +6,7 @@ from PyQt4 import QtNetwork
 import file_upload
 import json
 from plistIO import plistIO
-f = file('../template-engine/settings.json')
+f = file('../action_data/settings.json')
 data = json.load(f)
 class Uploader(QWidget):
     def __init__(self, parent=None):

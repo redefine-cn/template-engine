@@ -75,7 +75,7 @@ class Settings(QDialog):
             path = folder.toUtf8().data()
 
             self.data["path"] = path
-            json.dump(self.data, open('settings.json','w'))
+            json.dump(self.data, open('../action_data/settings.json','w'))
 
     def closeEvent(self, QCloseEvent):
         self.fa.setLeftList()
