@@ -44,6 +44,16 @@ def changeTypeInDFS(Type):
         return 'string'
 
 
+def checkName(father, text):
+    if father == None:
+        return True
+    else:
+        for i in range(father.childCount()):
+            if unicode(father.child(i).text(0)) == unicode(text):
+                return False
+        return True
+
+
 class AddWidget(QWidget):
 
     def __init__(self, fa, father):
@@ -177,6 +187,9 @@ class AddWidget(QWidget):
 
     def save(self):
         self.dic['Value'] = ''
+        if checkName(self.fa, self.E1.text()) == False:
+            QMessageBox.critical(self.father, 'Error', 'Key Exist!', QMessageBox.Ok)
+            return False
         Type = str(self.E2.currentText())
         if Type == 'dict' or Type == 'array':
             if len(self.E1.text()) == 0:
