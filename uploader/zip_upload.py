@@ -27,7 +27,7 @@ class ZipUpload(QWidget):
         file_path = QFileDialog.getExistingDirectory(self, QString.fromUtf8("选择路径"),  "C:" + sep + "Users" +
                                 sep + "Administrator" + sep + "Desktop" + sep + "models")
         self.file_path_info.setText(file_path)
-        z = zipfile.ZipFile("test_zip.zip", 'w')
+        z = zipfile.ZipFile(unicode(file_path) + unicode('/test_zip.zip'), 'w')
         filelist = []
         if os.path.isfile(file_path):
             filelist.append(file_path)
