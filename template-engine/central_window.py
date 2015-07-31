@@ -174,6 +174,7 @@ class AddWidget(QWidget):
         self.dic['Value'] = Value
 
         add(self.fa, child, self.dic, self.father.path, self.father.root)
+        self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
 
     def save(self):
@@ -214,6 +215,7 @@ class AddWidget(QWidget):
             self.dic['Type'] = Type
             self.dic['Value'] = Value
             add(self.fa, child, self.dic, self.father.path, self.father.root)
+        self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
 
 
@@ -286,10 +288,14 @@ class CentralWindow(QTreeWidget):
             return False
 
     def addSomething(self, text):
-        if self.parent().parent().currentWidget().currentItem() == None:
+        father = self.parent().parent().currentWidget().currentItem()
+        if father == None:
             throwErrorMessage(self, 'Please Select Node')
             return False
-        father = self.parent().parent().currentWidget().currentItem()
+        fatext = str(father.text(1))
+        if fatext != 'dict' and fatext != 'array' and fatext != '':
+            throwErrorMessage(self, 'Can Not Add')
+            return False
         child = QTreeWidgetItem(father)
         key = text.split('_')[0]
         name = key + findNum(key, father)
