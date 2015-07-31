@@ -8,7 +8,7 @@ import json
 from plistIO import plistIO
 f = file('../data/settings.json')
 data = json.load(f)
-class Uploader(QWidget):
+class Uploader(QDialog):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
@@ -381,7 +381,7 @@ class MyThread(QThread):
             self.sinOut.emit(self.identity+" "+str(self.times))
             self.times -= 1
 
-class Login(QWidget):
+class Login(QDialog):
     def __init__(self):
         super(Login, self).__init__()
         self.setWindowTitle(QString.fromUtf8("用户登录"))
@@ -442,7 +442,7 @@ class Login(QWidget):
             message.exec_()
             response = message.clickedButton().text()
 
-class ZipFile(QWidget):
+class ZipFile(QDialog):
     def __init__(self, father):
         super(ZipFile, self).__init__()
         self.father = father
