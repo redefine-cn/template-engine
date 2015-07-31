@@ -174,7 +174,7 @@ class MainWindow(QMainWindow):
         self.dock = autodock(self)
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
-        self.dock.setFixedWidth(200)
+        self.dock.setFixedWidth(250)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):
@@ -229,10 +229,7 @@ class MainWindow(QMainWindow):
 
     def setSplitter(self):
         mainSplitter = QSplitter(Qt.Horizontal, self)
-
-        # self.leftList = QListWidget(mainSplitter)
         self.leftTree = QTreeView(mainSplitter)
-
         mainSplitter.setStretchFactor(0, 1)
         self.setLeftList()
         self.tab = QTabWidget(mainSplitter)
@@ -249,21 +246,6 @@ class MainWindow(QMainWindow):
         self.tab.removeTab(self.tab.currentIndex())
 
     def setLeftList(self):
-        # dir = QDir(self.data["path"])
-        # dir.setFilter(QDir.Dirs|QDir.NoDot|QDir.NoDotDot)
-        # list = dir.entryList()
-        # self.leftList.clear()
-        # for i in xrange(len(list)):
-        #     self.leftList.addItem(QListWidgetItem(list[i]))
-        #
-        # self.leftList.itemDoubleClicked.connect(self.slotList)
-
-        # model = QFileSystemModel()
-        # print self.data["path"]
-        # # model.setRootPath(QString.fromUtf8(self.data["path"]))
-        # model.setRootPath(QDir.currentPath())
-        # self.leftTree.setModel(model)
-
         if not self.model:
             self.model = QDirModel()
             self.leftTree.setModel(self.model)
@@ -278,13 +260,10 @@ class MainWindow(QMainWindow):
     def slotList(self, item):
         if not item.parent():
             return
-        filedir = item.parent().data().toString()
         f = item.data().toString().split('.')
         if f[-1] != 'plist':
             return
-        name = f[0]
         fileName = unicode(self.model.filePath(self.leftTree.selectedIndexes()[0]))
-        data = {}
         file_json = unicode(read_plist(fileName))
         json_data = file(unicode('../tmp_data/') + file_json)
         # print file_json
@@ -301,7 +280,7 @@ class MainWindow(QMainWindow):
 
 
     def resizeEvent(self, *args, **kwargs):
-        # self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
+        # self.dock.resize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
 
 if __name__ == '__main__':
