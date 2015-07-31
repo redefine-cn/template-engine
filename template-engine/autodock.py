@@ -6,7 +6,7 @@ import  sys
 sys.path.append('../')
 from plistIO.plistIO import modify
 from functools import partial
-from central_window import checkInteger
+from central_window import checkInteger, checkName
 
 
 
@@ -83,11 +83,12 @@ class autodock(QDockWidget):
     def slotlabelEdit(self, treeNode, text):
         node = {}
         node['PreKey'] = unicode(treeNode.text(0))
-        treeNode.setText(0, text)
         node['Key'] = unicode(text)
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(treeNode.text(2))
-        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
+        if checkName(treeNode.parent(), text):
+            treeNode.setText(0, text)
+            modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
         # self.updateUI(treeNode.parent())
 
     def slotCombobox(self, treeNode, index):
