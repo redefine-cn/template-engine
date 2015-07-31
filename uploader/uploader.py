@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from PyQt4 import QtNetwork
 import file_upload
 import json
+import ZipFile
 from plistIO import plistIO
 f = file('../action_data/settings.json')
 data = json.load(f)
@@ -24,7 +25,8 @@ class Uploader(QWidget):
         self.ip_line = QLineEdit("http://123.57.206.52/upload_videoScript/")
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel()
-        self.file_select = QPushButton(QString.fromUtf8("选择文件"))
+        self.file_select = QPushButton(QString.fromUtf8("上传本地文件"))
+        self.file_select_current = QPushButton(QString.fromUtf8("上传当前模版"))
         self.file_cover = QLabel(QString.fromUtf8("封面"))
         self.file_cover_info = QLabel()
         self.file_cover_select = QPushButton(QString.fromUtf8("选择封面"))
@@ -51,6 +53,7 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.http_choice_server, 0, 5)
         http_grid_layout.addWidget(self.file, 2, 0)
         http_grid_layout.addWidget(self.file_info, 2, 1)
+        http_grid_layout.addWidget(self.file_select_current, 2, 4)
         http_grid_layout.addWidget(self.file_select, 2, 5)
         http_grid_layout.addWidget(self.file_name, 3, 0)
         http_grid_layout.addWidget(self.file_name_line, 3, 1)
@@ -98,6 +101,7 @@ class Uploader(QWidget):
         layout.addWidget(self.tab_upload)
 
         self.connect(self.file_select, SIGNAL("clicked()"), self.http_fileSelect)
+        self.connect(self.file_select_current, SIGNAL("clicked()"), self.http_fileSelect_current)
         self.connect(self.file_cover_select, SIGNAL("clicked()"), self.http_fileCoverSelect)
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
@@ -111,6 +115,15 @@ class Uploader(QWidget):
         self.connect(self.check_cover_btn, SIGNAL("stateChanged(int)"), self.choose_cover)
         self.connect(self.btn_success, SIGNAL("clicked()"), self.close)
         self.show()
+
+    def http_fileSelect_current(self):
+        file_path = "C:\Users\Administrator\Desktop\models\蔚蓝之境"
+        path = file_upload.get_file_directory(file_path)
+        data["current_directory_path"] = unicode(path)
+        print data["current_directory_path"]
+        json.dump(data, open("../template-engine/settings.json", 'w'))
+
+        self.zip_file = ZipFile.ZipFile()
 
     def http_fileCoverSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的封面文件"), self.tr("*.png"))
@@ -145,7 +158,6 @@ class Uploader(QWidget):
 
     def choose_server(self):
         current_index = self.http_choice_server.currentIndex()
-        global upload_login
         if current_index == 1:
             data["server"]["choice"] = str(current_index)
             self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
