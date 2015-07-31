@@ -1,4 +1,5 @@
 # -*- coding=utf-8 -*-
+import os
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import poster
@@ -30,6 +31,12 @@ def file_upload(file):
     url = upload_without_key(bucket_name, file)
     URL = pre_url + url
     print URL
+
+def zip_upload(path):
+    print path
+    path_array = str(path).split(os.sep)
+    path_array.remove(path_array[-1])
+    fa = os.sep.join(path_array)
 
 def login(username, password, ip):
     user = dict()
@@ -142,6 +149,7 @@ def ftp_upload(file, ip, username, password):
 
 if __name__ == "__main__":
     ip = "http://123.57.206.52/upload_videoScript/"
-    fileUpload = 'c:/zhaolong/test.xml'
+    fileUpload = 'C:\Users\Administrator\Desktop\models\蔚蓝之境'
     # print fileUpload
-    print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")
+    # print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")
+    zip_upload(fileUpload)
