@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
         self.close()
 
     def slotSaveFile(self):
-        fileName = QFileDialog.getSaveFileName(self, QString.fromUtf8('另存为'), self.tr(''), self.tr('.plist'))
+        fileName = QFileDialog.getSaveFileName(self, QString.fromUtf8('另存为'), self.tr(''), self.tr('*.plist'))
         if len(fileName) != 0:
             save_plist(unicode(fileName), unicode(self.tab.currentWidget().path))
 
@@ -208,8 +208,8 @@ class MainWindow(QMainWindow):
         self.tab.setCurrentWidget(self.central[-1])
 
     def slotOpenFile(self):
-        fileName = unicode(QFileDialog.getOpenFileName(self))
-        if len(fileName) == 0 or fileName.split('.')[-1] != 'plist':
+        fileName = unicode(QFileDialog.getOpenFileName(self, QString.fromUtf8('打开'), self.tr(''), self.tr('*.plist')))
+        if len(fileName) == 0:
             return False
         file_json = read_plist(fileName)
         json_data = file(unicode('../tmp_data/') + file_json)
@@ -293,7 +293,6 @@ class MainWindow(QMainWindow):
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
 
 if __name__ == '__main__':
-    dic11 = {"dict": {"backgroundImage": "run01bg0001.png", "animation1": {"values": [{"y": 1.1, "x": 105}, {"y": 105, "x": 105}, {"y": 100, "x": 100}], "name": "scale", "starttime": {"second": 0, "frame": 0}}, "starttime": {"second": 0, "frame": 0}}}
     app = QApplication(sys.argv)
     mainWindow = MainWindow()
     mainWindow.show()
