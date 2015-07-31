@@ -461,15 +461,16 @@ class ZipFile(QWidget):
     def ziping(self):
         print "ziping...", data["current_directory_path"]
         self.progress_bar.setMinimum(0)
-        self.progress_bar.setMaximum(5)
+        self.progress_bar.setMaximum(10)
         for i in range(4):
             self.progress_bar.setValue(i)
             QThread.msleep(200)
         zip_file_path = file_upload.zip_directory(data["current_directory_path"])
-        for i in range(4, 6):
+        for i in range(4, 11):
             self.progress_bar.setValue(i)
             QThread.msleep(200)
             self.father.file_info.setText(zip_file_path)
+            self.father.file_name_line.setText(QString.fromUtf8("请输入文件名"))
         self.window().close()
 
 if __name__ == '__main__':
