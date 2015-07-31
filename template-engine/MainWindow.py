@@ -85,6 +85,11 @@ class MainWindow(QMainWindow):
         self.contextMenu = QMenu()
         self.contextMenu.addAction(self.addNormalAction)
         self.contextMenu.addAction(self.deleteAction)
+        self.contextMenu.addAction(self.addSegment)
+        self.contextMenu.addAction(self.addStraightLine)
+        self.contextMenu.addAction(self.addOpacity)
+        self.contextMenu.addAction(self.addLayer)
+        self.contextMenu.addAction(self.addSubtitle)
 
     def showContextMenu(self, pos):
         self.contextMenu.move(self.pos() + pos)
@@ -166,6 +171,8 @@ class MainWindow(QMainWindow):
         fileToolBar.addAction(self.fileSaveAction)
 
         addJsonToolBar = self.addToolBar(QString.fromUtf8("addJson"))
+        addJsonToolBar.addAction(self.addNormalAction)
+        addJsonToolBar.addAction(self.deleteAction)
         addJsonToolBar.addAction(self.addSegment)
         addJsonToolBar.addAction(self.addStraightLine)
         addJsonToolBar.addAction(self.addOpacity)

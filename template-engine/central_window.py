@@ -21,10 +21,15 @@ def checkInteger(text):
 
 def findNum(text, father):
     num = 0
+    maxNum = 0
     for i in range(father.childCount()):
         if str(father.child(i).text(0)).startswith(str(text)):
             num += 1
-    return str(num + 1)
+            try:
+                maxNum = max(maxNum, int(str(father.child(i).text(0)).replace(str(text), '')))
+            except:
+                pass
+    return str(max(maxNum, num) + 1)
 
 
 def changeTypeInDFS(Type):
@@ -322,6 +327,8 @@ class Example(QMainWindow):
 
 
 if __name__ == '__main__':
+    x = 'hello123'
+    print int(x.replace('hello',''))
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()
