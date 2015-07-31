@@ -34,15 +34,13 @@ def file_upload(file):
     print URL
 
 def get_file_directory(path):
-    print "current plist file path:", (path)
     path_array = str(path).split(os.sep)
     path_array.remove(path_array[-1])
     fa = os.sep.join(path_array)
     return fa
 
 def zip_directory(path):
-    print unicode(path) + unicode("/test_zip.zip")
-    z = zipfile.ZipFile(unicode(path) + unicode('/test_zip.zip'), 'w')
+    z = zipfile.ZipFile(unicode(path) + unicode(os.sep + 'test_zip.zip'), 'w')
     filelist = []
     if os.path.isfile(path):
        filelist.append(path)
@@ -54,7 +52,7 @@ def zip_directory(path):
         arcname = tar[len(path):]
         z.write(tar, arcname)
     z.close()
-    return unicode(path) + unicode('/test_zip.zip')
+    return unicode(path) + unicode(os.sep + 'test_zip.zip')
 
 def login(username, password, ip):
     user = dict()
@@ -170,4 +168,4 @@ if __name__ == "__main__":
     fileUpload = 'C:\Users\Administrator\Desktop\models\蔚蓝之境'
     # print fileUpload
     # print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")
-    zip_upload(fileUpload)
+    zip_directory(fileUpload)

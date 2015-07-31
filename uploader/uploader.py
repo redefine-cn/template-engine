@@ -5,7 +5,6 @@ from PyQt4.QtGui import *
 from PyQt4 import QtNetwork
 import file_upload
 import json
-import ZipFile
 from plistIO import plistIO
 f = file('../action_data/settings.json')
 data = json.load(f)
@@ -120,10 +119,7 @@ class Uploader(QWidget):
         file_path = "C:\Users\Administrator\Desktop\models\蔚蓝之境"
         path = file_upload.get_file_directory(file_path)
         data["current_directory_path"] = unicode(path)
-        print data["current_directory_path"]
-        json.dump(data, open("../template-engine/settings.json", 'w'))
-
-        self.zip_file = ZipFile.ZipFile()
+        self.zip_file = ZipFile(self)
 
     def http_fileCoverSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的封面文件"), self.tr("*.png"))
@@ -445,6 +441,37 @@ class Login(QWidget):
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
+
+class ZipFile(QWidget):
+    def __init__(self, father):
+        super(ZipFile, self).__init__()
+        self.father = father
+        self.setWindowTitle(QString.fromUtf8("正在压缩..."))
+        self.setWindowIcon(QIcon("../image/icon.png"))
+        self.resize(300, 50)
+        self.zip_title = QLabel(QString.fromUtf8("正在压缩"))
+        self.progress_bar = QProgressBar()
+        self.path = ""
+        grid_layout = QGridLayout(self)
+        grid_layout.addWidget(self.zip_title, 0, 0)
+        grid_layout.addWidget(self.progress_bar, 0, 1)
+        self.show()
+        self.ziping()
+
+    def ziping(self):
+        print "ziping...", data["current_directory_path"]
+        self.progress_bar.setMinimum(0)
+        self.progress_bar.setMaximum(5)
+        for i in range(4):
+            self.progress_bar.setValue(i)
+            QThread.msleep(200)
+        zip_file_path = file_upload.zip_directory(data["current_directory_path"])
+        for i in range(4, 6):
+            self.progress_bar.setValue(i)
+            QThread.msleep(200)
+            self.father.file_info.setText(zip_file_path)
+        self.window().close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     uploader = Uploader()
