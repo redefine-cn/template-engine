@@ -94,6 +94,7 @@ class MainWindow(QMainWindow):
     def showContextMenu(self, pos):
         self.contextMenu.move(self.pos() + pos)
         self.contextMenu.show()
+
     def createAction(self):
         #打开文件
         self.fileOpenAction = QAction(QString.fromUtf8("打开"), self)
@@ -128,30 +129,37 @@ class MainWindow(QMainWindow):
         # Action
         self.addNormalAction = QAction('&Add', self)
         self.addNormalAction.setShortcut('Ctrl+A')
+        self.addNormalAction.setStatusTip(QString.fromUtf8('添加节点'))
         self.addNormalAction.triggered.connect(self.tab.currentWidget().addNormal)
+
         self.deleteAction = QAction('&Delete', self)
         self.deleteAction.setShortcut('Ctrl+D')
+        self.deleteAction.setStatusTip(QString.fromUtf8('删除节点'))
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
-        #open the json
         self.addSegment = QAction('&AddSegment', self)
         self.addSegment.setShortcut('Ctrl+1')
+        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
         self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
 
         self.addStraightLine = QAction('&AddStraightLine', self)
         self.addStraightLine.setShortcut('Ctrl+2')
+        self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
         self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
 
         self.addOpacity = QAction('&AddOpacity', self)
         self.addOpacity.setShortcut('Ctrl+3')
+        self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
         self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
         self.addLayer = QAction('&AddLayer', self)
         self.addLayer.setShortcut('Ctrl+4')
+        self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
         self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
         self.addSubtitle.setShortcut('Ctrl+5')
+        self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
         self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
         #关于
@@ -213,7 +221,6 @@ class MainWindow(QMainWindow):
             return False
         file_json = read_plist(fileName)
         json_data = file(unicode('../tmp_data/') + file_json)
-        # print file_json
         if self.tab.currentWidget() == None:
             self.slotCreateFile()
         self.tab.currentWidget().path = unicode(file_json)
@@ -286,7 +293,6 @@ class MainWindow(QMainWindow):
             self.tab.setCurrentWidget(self.central[len(self.central) - 1])
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
-
 
     def resizeEvent(self, *args, **kwargs):
         # self.dock.resize(self.geometry().width()/3, self.geometry().height())
