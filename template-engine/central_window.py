@@ -252,8 +252,7 @@ class CentralWindow(QTreeWidget):
             child = QTreeWidgetItem(fa)
             child.setText(0, QString.fromUtf8(unicode(Key)))
             child.setText(1, Type)
-            if Type == 'integer' or Type == 'real' or Type == 'bool':
-                Value = str(Value)
+            Value = unicode(Value)
             child.setText(2, QString.fromUtf8(unicode(Value)))
             child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
