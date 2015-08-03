@@ -68,8 +68,8 @@ class main_window(QMainWindow):
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addLayer)
-        ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.addSubtitle)
+        ActionMenu.addAction(self.addSegment)
 
         ActionMenu.addAction(self.animation)
 
@@ -137,20 +137,20 @@ class main_window(QMainWindow):
         self.deleteAction.setStatusTip(QString.fromUtf8('删除节点'))
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
-        self.addSegment = QAction('&AddSegment', self)
-        self.addSegment.setShortcut('Ctrl+1')
-        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
-        self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
-
         self.addLayer = QAction('&AddLayer', self)
-        self.addLayer.setShortcut('Ctrl+2')
+        self.addLayer.setShortcut('Ctrl+1')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
         self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
-        self.addSubtitle.setShortcut('Ctrl+3')
+        self.addSubtitle.setShortcut('Ctrl+2')
         self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
         self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
+
+        self.addSegment = QAction('&AddSegment', self)
+        self.addSegment.setShortcut('Ctrl+3')
+        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
+        self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
 
         self.addStraightLine = QAction('&AddStraightLine', self)
         # self.addStraightLine.setShortcut('Ctrl+4')
