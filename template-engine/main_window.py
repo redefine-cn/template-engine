@@ -68,10 +68,10 @@ class main_window(QMainWindow):
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addSegment)
-        ActionMenu.addAction(self.addStraightLine)
-        ActionMenu.addAction(self.addOpacity)
         ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
+
+        ActionMenu.addAction(self.animation)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
@@ -142,13 +142,23 @@ class main_window(QMainWindow):
         self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
         self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
 
+        self.addLayer = QAction('&AddLayer', self)
+        self.addLayer.setShortcut('Ctrl+2')
+        self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
+        self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
+
+        self.addSubtitle = QAction('&AddSubtitle', self)
+        self.addSubtitle.setShortcut('Ctrl+3')
+        self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
+        self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
+
         self.addStraightLine = QAction('&AddStraightLine', self)
-        self.addStraightLine.setShortcut('Ctrl+2')
+        # self.addStraightLine.setShortcut('Ctrl+4')
         self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
         self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
 
         self.addOpacity = QAction('&AddOpacity', self)
-        self.addOpacity.setShortcut('Ctrl+3')
+        # self.addOpacity.setShortcut('Ctrl+5')
         self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
         self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
@@ -167,15 +177,15 @@ class main_window(QMainWindow):
         self.addStill.setStatusTip(QString.fromUtf8('添加Still'))
         self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
 
-        self.addLayer = QAction('&AddLayer', self)
-        self.addLayer.setShortcut('Ctrl+4')
-        self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
-        self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
-
-        self.addSubtitle = QAction('&AddSubtitle', self)
-        self.addSubtitle.setShortcut('Ctrl+5')
-        self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
-        self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
+        self.animation = QAction('&AddAnimation', self)
+        self.addSegment.setStatusTip(QString.fromUtf8('添加Animation'))
+        animationMenu = QMenu()
+        animationMenu.addAction(self.addStraightLine)
+        animationMenu.addAction(self.addOpacity)
+        animationMenu.addAction(self.addRotate)
+        animationMenu.addAction(self.addScale)
+        animationMenu.addAction(self.addStill)
+        self.animation.setMenu(animationMenu)
 
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
