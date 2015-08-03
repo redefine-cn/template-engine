@@ -17,6 +17,9 @@ class main_window(QMainWindow):
         if os.path.exists('../tmp_data') == False:
             os.mkdir('../tmp_data')
         self.central = list()
+        self.waitWindow = QDialog(self)
+        self.waitWindow.setWindowTitle(QString.fromUtf8('正在加载，请等候...'))
+        self.waitWindow.resize(250,50)
         self.loadData()
         self.initUI()
         self.resize(960, 540)
@@ -170,7 +173,7 @@ class main_window(QMainWindow):
         self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
 
         self.animation = QAction('&AddAnimation', self)
-        self.addSegment.setStatusTip(QString.fromUtf8('添加Animation'))
+        self.animation.setStatusTip(QString.fromUtf8('添加Animation'))
         animationMenu = QMenu()
         animationMenu.addAction(self.addStill)
         animationMenu.addAction(self.addScale)
@@ -248,8 +251,10 @@ class main_window(QMainWindow):
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
             self.tab.setCurrentWidget(self.central[-1])
+        self.waitWindow.show()
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+        self.waitWindow.close()
 
     def loadFile(self, fileName):
         file = QFile(fileName)
@@ -310,8 +315,10 @@ class main_window(QMainWindow):
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
             self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+        self.waitWindow.show()
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+        self.waitWindow.close()
 
     def resizeEvent(self, *args, **kwargs):
         # self.dock.resize(self.geometry().width()/3, self.geometry().height())
