@@ -306,6 +306,7 @@ class CentralWindow(QTreeWidget):
         dic = json.load(file('../data/'+ text))
         for k, v in dic.items():
             self.dfs(v, child, k, type(v), v)
+        self.parent().parent().parent().parent().dock.updateUI(father)
 
 
 class Example(QMainWindow):
