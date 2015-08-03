@@ -199,6 +199,7 @@ class main_window(QMainWindow):
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
+        fileToolBar.setIconSize(QSize(100, 50))
         fileToolBar.addAction(self.fileOpenAction)
         fileToolBar.addAction(self.fileCreateAction)
         fileToolBar.addAction(self.fileSaveAction)
@@ -206,11 +207,14 @@ class main_window(QMainWindow):
         addJsonToolBar = self.addToolBar(QString.fromUtf8("addJson"))
         addJsonToolBar.addAction(self.addNormalAction)
         addJsonToolBar.addAction(self.deleteAction)
-        addJsonToolBar.addAction(self.addSegment)
-        addJsonToolBar.addAction(self.addStraightLine)
-        addJsonToolBar.addAction(self.addOpacity)
         addJsonToolBar.addAction(self.addLayer)
         addJsonToolBar.addAction(self.addSubtitle)
+        addJsonToolBar.addAction(self.addSegment)
+        addJsonToolBar.addAction(self.animation)
+        # addJsonToolBar.addAction(self.addStraightLine)
+        # addJsonToolBar.addAction(self.addOpacity)
+
+
 
     def createDockWidget(self):
         self.dock = autodock(self)
