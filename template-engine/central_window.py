@@ -63,7 +63,7 @@ def throwErrorMessage(self, text):
     QMessageBox.critical(self, 'Error', text, QMessageBox.Ok)
 
 
-class AddWidget(QWidget):
+class AddWidget(QDialog):
 
     def __init__(self, fa, father):
         if hasattr(fa, 'text'):
