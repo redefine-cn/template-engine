@@ -194,4 +194,5 @@ if __name__ == '__main__':
     else:
         data[node['Key']] = node['Value']
     # add_node(parent, 1, data)
-    read_plist("c:/test.xml")
+    # read_plist("c:/test.xml")
+    read_plist("C:/Users/Administrator/Desktop/still.xml")

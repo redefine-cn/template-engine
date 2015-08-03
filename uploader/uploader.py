@@ -40,8 +40,12 @@ class Uploader(QDialog):
         # self.http_choice.addItem(QString.fromUtf8("登录系统并上传"))
         self.http_login = QPushButton(QString.fromUtf8("登录服务器"))
         self.http_choice_server = QComboBox()
-        self.http_choice_server.addItem(QString.fromUtf8("测试服务器"))
-        self.http_choice_server.addItem(QString.fromUtf8("生产服务器"))
+        for k, v in data["server"].items():
+            if k != 'choice':
+                self.http_choice_server.addItem(k)
+        # self.http_choice_server.addItem(QString.fromUtf8("developer"))
+        # self.http_choice_server.addItem(QString.fromUtf8("production"))
+        # self.http_choice_server.addItem(QString.fromUtf8("production"))
         self.http_progressBar = QProgressBar()
         self.http_upload_tip = QLabel()
         http_grid_layout = QGridLayout(self.tab_http)
@@ -153,12 +157,14 @@ class Uploader(QDialog):
         self.login_window = Login()
 
     def choose_server(self):
-        current_index = self.http_choice_server.currentIndex()
-        if current_index == 1:
-            data["server"]["choice"] = str(current_index)
+        # current_index = self.http_choice_server.currentIndex()
+        current_server = unicode(self.http_choice_server.currentText())
+        print current_server
+        if current_server == u"developer":
+            data["server"]["choice"] = unicode(current_server)
             self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
         else:
-            data["server"]["choice"] = str(current_index)
+            data["server"]["choice"] = unicode(current_server)
             self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
 
     def http_fileSelect(self):
