@@ -192,12 +192,13 @@ class main_window(QMainWindow):
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
-        fileToolBar.setIconSize(QSize(100, 50))
+        fileToolBar.setFixedHeight(30)
         fileToolBar.addAction(self.fileOpenAction)
         fileToolBar.addAction(self.fileCreateAction)
         fileToolBar.addAction(self.fileSaveAction)
 
         addJsonToolBar = self.addToolBar(QString.fromUtf8("addJson"))
+        addJsonToolBar.setFixedHeight(30)
         addJsonToolBar.addAction(self.addNormalAction)
         addJsonToolBar.addAction(self.deleteAction)
         addJsonToolBar.addAction(self.addLayer)
