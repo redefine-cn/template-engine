@@ -73,23 +73,16 @@ class main_window(QMainWindow):
 
         ActionMenu.addAction(self.animation)
 
-        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
-        helpMenu.addAction(self.aboutAction)
-
         uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
+
+        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
+        helpMenu.addAction(self.aboutAction)
 
         # 右键菜单
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.showContextMenu)
-        self.contextMenu = QMenu()
-        self.contextMenu.addAction(self.addNormalAction)
-        self.contextMenu.addAction(self.deleteAction)
-        self.contextMenu.addAction(self.addSegment)
-        self.contextMenu.addAction(self.addStraightLine)
-        self.contextMenu.addAction(self.addOpacity)
-        self.contextMenu.addAction(self.addLayer)
-        self.contextMenu.addAction(self.addSubtitle)
+        self.contextMenu = ActionMenu
 
     def showContextMenu(self, pos):
         self.contextMenu.move(self.pos() + pos)
@@ -211,10 +204,6 @@ class main_window(QMainWindow):
         addJsonToolBar.addAction(self.addSubtitle)
         addJsonToolBar.addAction(self.addSegment)
         addJsonToolBar.addAction(self.animation)
-        # addJsonToolBar.addAction(self.addStraightLine)
-        # addJsonToolBar.addAction(self.addOpacity)
-
-
 
     def createDockWidget(self):
         self.dock = autodock(self)
