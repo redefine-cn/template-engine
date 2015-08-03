@@ -11,9 +11,9 @@ from uploader.uploader import Uploader
 from autodock import autodock
 from plistIO.plistIO import read_plist, save_plist
 
-class main_window(QMainWindow):
+class MainWindow(QMainWindow):
     def __init__(self):
-        super(main_window, self).__init__()
+        super(MainWindow, self).__init__()
         if os.path.exists('../tmp_data') == False:
             os.mkdir('../tmp_data')
         self.central = list()
@@ -326,7 +326,7 @@ class main_window(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    mainWindow = main_window()
+    mainWindow = MainWindow()
     mainWindow.show()
     sys.exit(app.exec_())
 
