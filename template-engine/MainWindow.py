@@ -152,6 +152,21 @@ class MainWindow(QMainWindow):
         self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
         self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
+        self.addRotate = QAction('&AddRotate', self)
+        # self.addRotate.setShortcut('Ctrl+3')
+        self.addRotate.setStatusTip(QString.fromUtf8('添加Rotate'))
+        self.addRotate.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_rotate.json'))
+
+        self.addScale = QAction('&AddScale', self)
+        # self.addScale.setShortcut('Ctrl+3')
+        self.addScale.setStatusTip(QString.fromUtf8('添加Scale'))
+        self.addScale.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_scale.json'))
+
+        self.addStill = QAction('&AddStill', self)
+        # self.addStill.setShortcut('Ctrl+3')
+        self.addStill.setStatusTip(QString.fromUtf8('添加Still'))
+        self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
+
         self.addLayer = QAction('&AddLayer', self)
         self.addLayer.setShortcut('Ctrl+4')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
