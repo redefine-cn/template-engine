@@ -178,7 +178,7 @@ class main_window(QMainWindow):
         self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
 
         self.animation = QAction('&AddAnimation', self)
-        self.addSegment.setStatusTip(QString.fromUtf8('添加Animation'))
+        self.animation.setStatusTip(QString.fromUtf8('添加Animation'))
         animationMenu = QMenu()
         animationMenu.addAction(self.addStill)
         animationMenu.addAction(self.addScale)
