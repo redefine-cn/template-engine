@@ -6,13 +6,13 @@ from PyQt4 import QtNetwork
 import file_upload
 import json
 from plistIO import plistIO
-f = file('../template-engine/settings.json')
+f = file('../data/settings.json')
 data = json.load(f)
-class Uploader(QWidget):
+class Uploader(QDialog):
     def __init__(self, parent=None):
         super(Uploader, self).__init__()
         self.setWindowTitle(QString.fromUtf8("上传文件"))
-        self.setWindowIcon(QIcon('../image/icon.png'))
+        self.setWindowIcon(QIcon('../data/icon.png'))
         self.resize(600, 200)
         self.tab_upload = QTabWidget(self)
         # self.tab_upload.setTabsClosable(True)
@@ -24,7 +24,8 @@ class Uploader(QWidget):
         self.ip_line = QLineEdit("http://123.57.206.52/upload_videoScript/")
         self.file = QLabel(QString.fromUtf8("文件"))
         self.file_info = QLabel()
-        self.file_select = QPushButton(QString.fromUtf8("选择文件"))
+        self.file_select = QPushButton(QString.fromUtf8("上传本地文件"))
+        self.file_select_current = QPushButton(QString.fromUtf8("上传当前模版"))
         self.file_cover = QLabel(QString.fromUtf8("封面"))
         self.file_cover_info = QLabel()
         self.file_cover_select = QPushButton(QString.fromUtf8("选择封面"))
@@ -51,6 +52,7 @@ class Uploader(QWidget):
         http_grid_layout.addWidget(self.http_choice_server, 0, 5)
         http_grid_layout.addWidget(self.file, 2, 0)
         http_grid_layout.addWidget(self.file_info, 2, 1)
+        http_grid_layout.addWidget(self.file_select_current, 2, 4)
         http_grid_layout.addWidget(self.file_select, 2, 5)
         http_grid_layout.addWidget(self.file_name, 3, 0)
         http_grid_layout.addWidget(self.file_name_line, 3, 1)
@@ -98,6 +100,7 @@ class Uploader(QWidget):
         layout.addWidget(self.tab_upload)
 
         self.connect(self.file_select, SIGNAL("clicked()"), self.http_fileSelect)
+        self.connect(self.file_select_current, SIGNAL("clicked()"), self.http_fileSelect_current)
         self.connect(self.file_cover_select, SIGNAL("clicked()"), self.http_fileCoverSelect)
         self.connect(self.ftp_file_select, SIGNAL("clicked()"), self.ftp_fileSelect)
         self.connect(self.btn_cancel, SIGNAL("clicked()"), self.close)
@@ -111,6 +114,12 @@ class Uploader(QWidget):
         self.connect(self.check_cover_btn, SIGNAL("stateChanged(int)"), self.choose_cover)
         self.connect(self.btn_success, SIGNAL("clicked()"), self.close)
         self.show()
+
+    def http_fileSelect_current(self):
+        file_path = "C:\Users\Administrator\Desktop\models\蔚蓝之境"
+        path = file_upload.get_file_directory(file_path)
+        data["current_directory_path"] = unicode(path)
+        self.zip_file = ZipFile(self)
 
     def http_fileCoverSelect(self):
         select = QFileDialog.getOpenFileName(self, QString.fromUtf8("选择需要上传的封面文件"), self.tr("*.png"))
@@ -145,7 +154,6 @@ class Uploader(QWidget):
 
     def choose_server(self):
         current_index = self.http_choice_server.currentIndex()
-        global upload_login
         if current_index == 1:
             data["server"]["choice"] = str(current_index)
             self.ip_line.setText(data["server"][data["server"]["choice"]]["upload_ip"])
@@ -373,12 +381,12 @@ class MyThread(QThread):
             self.sinOut.emit(self.identity+" "+str(self.times))
             self.times -= 1
 
-class Login(QWidget):
+class Login(QDialog):
     def __init__(self):
         super(Login, self).__init__()
         self.setWindowTitle(QString.fromUtf8("用户登录"))
         self.resize(500, 200)
-        self.setWindowIcon(QIcon('../image/icon.png'))
+        self.setWindowIcon(QIcon('../data/icon.png'))
         self.init()
 
     def init(self):
@@ -433,6 +441,38 @@ class Login(QWidget):
             message.addButton(QString.fromUtf8("ok"), QMessageBox.AcceptRole)
             message.exec_()
             response = message.clickedButton().text()
+
+class ZipFile(QDialog):
+    def __init__(self, father):
+        super(ZipFile, self).__init__()
+        self.father = father
+        self.setWindowTitle(QString.fromUtf8("正在压缩..."))
+        self.setWindowIcon(QIcon("../data/icon.png"))
+        self.resize(300, 50)
+        self.zip_title = QLabel(QString.fromUtf8("正在压缩"))
+        self.progress_bar = QProgressBar()
+        self.path = ""
+        grid_layout = QGridLayout(self)
+        grid_layout.addWidget(self.zip_title, 0, 0)
+        grid_layout.addWidget(self.progress_bar, 0, 1)
+        self.show()
+        self.ziping()
+
+    def ziping(self):
+        print "ziping...", data["current_directory_path"]
+        self.progress_bar.setMinimum(0)
+        self.progress_bar.setMaximum(10)
+        for i in range(4):
+            self.progress_bar.setValue(i)
+            QThread.msleep(200)
+        zip_file_path = file_upload.zip_directory(data["current_directory_path"])
+        for i in range(4, 11):
+            self.progress_bar.setValue(i)
+            QThread.msleep(200)
+            self.father.file_info.setText(zip_file_path)
+            self.father.file_name_line.setText(QString.fromUtf8("请输入文件名"))
+        self.window().close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     uploader = Uploader()

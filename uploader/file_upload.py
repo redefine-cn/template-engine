@@ -1,4 +1,5 @@
 # -*- coding=utf-8 -*-
+import os
 from poster.encode import multipart_encode
 from poster.streaminghttp import register_openers
 import poster
@@ -6,6 +7,7 @@ import qiniu
 import urllib
 import urllib2
 import cookielib
+import zipfile
 ACCESS_KEY = "vUQlBXXwgYNrGLunTtVbEi40TGU41MvT8rw8N2Qj"
 SECRET_KEY = "fvoi1qSXnMlwpD1mG5hBkFdvoBUOLfHMPdG4FUTm"
 bucket_name = "doco"
@@ -30,6 +32,27 @@ def file_upload(file):
     url = upload_without_key(bucket_name, file)
     URL = pre_url + url
     print URL
+
+def get_file_directory(path):
+    path_array = str(path).split(os.sep)
+    path_array.remove(path_array[-1])
+    fa = os.sep.join(path_array)
+    return fa
+
+def zip_directory(path):
+    z = zipfile.ZipFile(unicode(path) + unicode(os.sep + 'test_zip.zip'), 'w')
+    filelist = []
+    if os.path.isfile(path):
+       filelist.append(path)
+    else:
+       for root, dirs, files in os.walk(unicode(path)):
+           for name in files:
+               filelist.append(os.path.join(root, name))
+    for tar in filelist:
+        arcname = tar[len(path):]
+        z.write(tar, arcname)
+    z.close()
+    return unicode(path) + unicode(os.sep + 'test_zip.zip')
 
 def login(username, password, ip):
     user = dict()
@@ -142,6 +165,7 @@ def ftp_upload(file, ip, username, password):
 
 if __name__ == "__main__":
     ip = "http://123.57.206.52/upload_videoScript/"
-    fileUpload = 'c:/zhaolong/test.xml'
+    fileUpload = 'C:\Users\Administrator\Desktop\models\蔚蓝之境'
     # print fileUpload
-    print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")
+    # print http_upload(fileUpload, "test_pyqt", ip, "devil", "11111")
+    zip_directory(fileUpload)

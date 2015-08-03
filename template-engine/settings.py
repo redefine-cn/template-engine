@@ -26,18 +26,7 @@ class Settings(QDialog):
         choseButton = QPushButton(QString.fromUtf8("选择"))
         choseButton.clicked.connect(self.slotChosePath)
 
-
-        choseLabel1 = QLabel(QString.fromUtf8("选项1："))
-        choseBox1 = QComboBox()
-        choseBox1.addItem(QString.fromUtf8("男"))
-        choseBox1.addItem(QString.fromUtf8("女"))
-
-
-        choseLabel2 = QLabel(QString.fromUtf8("选项2："))
-        choseEdit2 = QLineEdit()
-
-        choseLabel3 = QLabel(QString.fromUtf8("选项3："))
-        choseEdit3 = QLineEdit()
+        # TODO Here to Change settings.json
 
         saveButton = QPushButton(QString.fromUtf8("保存"))
         saveButton.clicked.connect(self.slotSave)
@@ -54,16 +43,7 @@ class Settings(QDialog):
         baseLayout.addWidget(self.pathEdit, 0, contentCol)
         baseLayout.addWidget(choseButton, 0, buttonCol)
 
-        baseLayout.addWidget(choseLabel1, 1, labelCol)
-        baseLayout.addWidget(choseBox1, 1, contentCol)
-
-        baseLayout.addWidget(choseLabel2, 2, labelCol)
-        baseLayout.addWidget(choseEdit2, 2, contentCol)
-
-        baseLayout.addWidget(choseLabel3, 3, labelCol)
-        baseLayout.addWidget(choseEdit3, 3, contentCol)
-
-        baseLayout.addLayout(saveLayout, 4, buttonCol, Qt.AlignRight)
+        baseLayout.addLayout(saveLayout, 1, buttonCol, Qt.AlignRight)
 
         self.setLayout(baseLayout)
 
@@ -75,7 +55,7 @@ class Settings(QDialog):
             path = folder.toUtf8().data()
 
             self.data["path"] = path
-            json.dump(self.data, open('settings.json','w'))
+            json.dump(self.data, open('../data/settings.json','w'))
 
     def closeEvent(self, QCloseEvent):
         self.fa.setLeftList()
