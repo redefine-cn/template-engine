@@ -67,8 +67,8 @@ class main_window(QMainWindow):
         ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
-        ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.addLayer)
+        ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.addSubtitle)
 
         ActionMenu.addAction(self.animation)
@@ -180,11 +180,11 @@ class main_window(QMainWindow):
         self.animation = QAction('&AddAnimation', self)
         self.addSegment.setStatusTip(QString.fromUtf8('添加Animation'))
         animationMenu = QMenu()
-        animationMenu.addAction(self.addStraightLine)
-        animationMenu.addAction(self.addOpacity)
-        animationMenu.addAction(self.addRotate)
-        animationMenu.addAction(self.addScale)
         animationMenu.addAction(self.addStill)
+        animationMenu.addAction(self.addScale)
+        animationMenu.addAction(self.addRotate)
+        animationMenu.addAction(self.addOpacity)
+        animationMenu.addAction(self.addStraightLine)
         self.animation.setMenu(animationMenu)
 
         #关于
