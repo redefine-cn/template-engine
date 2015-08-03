@@ -236,6 +236,39 @@ class CentralWindow(QTreeWidget):
         self.root.setText(0, 'root')
         self.root.setExpanded(True)
 
+    def bfs(self, dic, fa, Key, Type, Value):
+        queue = []
+        queue.append((fa, dic, Key, Type, Value))
+        while len(queue):
+            fa, dic , Key, Type, Value = queue.pop()
+            if Type == type({}) or Type == type([]):
+                child = QTreeWidgetItem(fa)
+                child.setText(0,unicode(Key))
+                if Type == type({}):
+                    child.setText(1, 'dict')
+                    child.setExpanded(True)
+                    add(fa, child, {'Key':Key, 'Type':'dict'}, self.parent().parent().currentWidget().path,
+                        self.parent().parent().currentWidget().root)
+                    for k, v in dic.items():
+                        queue.append((child, v , k , type(v), v))
+                else:
+                    child.setText(1, 'array')
+                    child.setExpanded(True)
+                    add(fa, child, {'Key':Key, 'Type':'array'}, self.parent().parent().currentWidget().path,
+                        self.parent().parent().currentWidget().root)
+                    for i in range(len(dic)):
+                        queue.append((child, dic[i], 'item' + str(i), type(dic[i]) , dic[i]))
+            else:
+                Type = changeTypeInDFS(Type)
+                child = QTreeWidgetItem(fa)
+                child.setText(0, QString.fromUtf8(unicode(Key)))
+                child.setText(1, Type)
+                Value = unicode(Value)
+                child.setText(2, QString.fromUtf8(unicode(Value)))
+                child.setExpanded(True)
+                add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
+                    self.parent().parent().currentWidget().root)
+
     def dfs(self, dic, fa, Key, Type, Value):
         if Type == type({}) or Type == type([]):
             child = QTreeWidgetItem(fa)
@@ -334,8 +367,6 @@ class Example(QMainWindow):
 
 
 if __name__ == '__main__':
-    x = 'hello123'
-    print int(x.replace('hello',''))
     app = QApplication(sys.argv)
     mainWindow = Example()
     mainWindow.show()
