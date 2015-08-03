@@ -61,35 +61,27 @@ class main_window(QMainWindow):
         fileMenu.addAction(self.fileSaveAction)
         fileMenu.addAction(self.exitAction)
 
-        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
-        editMenu.addAction(self.setting)
-
         ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addLayer)
-        ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.addSubtitle)
-
+        ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.animation)
-
-        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
-        helpMenu.addAction(self.aboutAction)
 
         uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
 
+        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
+        editMenu.addAction(self.setting)
+
+        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
+        helpMenu.addAction(self.aboutAction)
+
         # 右键菜单
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self.showContextMenu)
-        self.contextMenu = QMenu()
-        self.contextMenu.addAction(self.addNormalAction)
-        self.contextMenu.addAction(self.deleteAction)
-        self.contextMenu.addAction(self.addSegment)
-        self.contextMenu.addAction(self.addStraightLine)
-        self.contextMenu.addAction(self.addOpacity)
-        self.contextMenu.addAction(self.addLayer)
-        self.contextMenu.addAction(self.addSubtitle)
+        self.contextMenu = ActionMenu
 
     def showContextMenu(self, pos):
         self.contextMenu.move(self.pos() + pos)
@@ -137,20 +129,20 @@ class main_window(QMainWindow):
         self.deleteAction.setStatusTip(QString.fromUtf8('删除节点'))
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
-        self.addSegment = QAction('&AddSegment', self)
-        self.addSegment.setShortcut('Ctrl+1')
-        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
-        self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
-
         self.addLayer = QAction('&AddLayer', self)
-        self.addLayer.setShortcut('Ctrl+2')
+        self.addLayer.setShortcut('Ctrl+1')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
         self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
-        self.addSubtitle.setShortcut('Ctrl+3')
+        self.addSubtitle.setShortcut('Ctrl+2')
         self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
         self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
+
+        self.addSegment = QAction('&AddSegment', self)
+        self.addSegment.setShortcut('Ctrl+3')
+        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
+        self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
 
         self.addStraightLine = QAction('&AddStraightLine', self)
         # self.addStraightLine.setShortcut('Ctrl+4')
@@ -194,11 +186,13 @@ class main_window(QMainWindow):
 
         # 上传文件
         self.uploadAction = QAction(QString.fromUtf8("上传模版") ,self)
+        self.uploadAction.setShortcut('Ctrl+U')
         self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
         self.uploadAction.triggered.connect(self.slotUpload)
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
+        fileToolBar.setIconSize(QSize(100, 50))
         fileToolBar.addAction(self.fileOpenAction)
         fileToolBar.addAction(self.fileCreateAction)
         fileToolBar.addAction(self.fileSaveAction)
@@ -206,11 +200,10 @@ class main_window(QMainWindow):
         addJsonToolBar = self.addToolBar(QString.fromUtf8("addJson"))
         addJsonToolBar.addAction(self.addNormalAction)
         addJsonToolBar.addAction(self.deleteAction)
-        addJsonToolBar.addAction(self.addSegment)
-        addJsonToolBar.addAction(self.addStraightLine)
-        addJsonToolBar.addAction(self.addOpacity)
         addJsonToolBar.addAction(self.addLayer)
         addJsonToolBar.addAction(self.addSubtitle)
+        addJsonToolBar.addAction(self.addSegment)
+        addJsonToolBar.addAction(self.animation)
 
     def createDockWidget(self):
         self.dock = autodock(self)
