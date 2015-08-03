@@ -74,7 +74,7 @@ class AddWidget(QDialog):
         if fatext == 'integer' or fatext == 'string' or fatext == 'real' or fatext == 'bool':
             throwErrorMessage(father, 'Can Not Add')
             return
-        super(AddWidget, self).__init__()
+        super(AddWidget, self).__init__(father)
 
         self.father = father
         self.fa = fa
