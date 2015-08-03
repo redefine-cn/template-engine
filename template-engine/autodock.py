@@ -7,7 +7,8 @@ sys.path.append('../')
 from plistIO.plistIO import modify
 from functools import partial
 from central_window import checkInteger, checkName
-
+f = file('../data/settings.json')
+data = json.load(f)
 
 
 class autodock(QDockWidget):
@@ -64,7 +65,15 @@ class autodock(QDockWidget):
         combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
         if tp != 'dict' and tp != 'array' and treeNode.parent() != None:
-            if tp != 'bool':
+            if unicode(key) == 'name' and str(treeNode.parent().text(0)).startswith('animation'):
+                box = QComboBox()
+                for i in range(len(data['actionList'])):
+                    box.addItem(data['actionList'][i])
+                    if data['actionList'][i] == unicode(value):
+                        box.setCurrentIndex(i)
+                box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
+                self.gridLayout.addWidget(box, self.row, self.contentCol)
+            elif tp != 'bool':
                 edit = QLineEdit()
                 edit.setText(value)
                 edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
@@ -171,4 +180,4 @@ class autodock(QDockWidget):
         self.setWidget(self.dialog)
 
 if __name__ == '__main__':
-    print float('123')
+    print unicode('aaa') == 'aaa'
