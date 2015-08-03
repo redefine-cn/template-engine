@@ -61,20 +61,19 @@ class main_window(QMainWindow):
         fileMenu.addAction(self.fileSaveAction)
         fileMenu.addAction(self.exitAction)
 
-        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
-        editMenu.addAction(self.setting)
-
         ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
         ActionMenu.addAction(self.addSegment)
-
         ActionMenu.addAction(self.animation)
 
         uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
+
+        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
+        editMenu.addAction(self.setting)
 
         helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
@@ -187,6 +186,7 @@ class main_window(QMainWindow):
 
         # 上传文件
         self.uploadAction = QAction(QString.fromUtf8("上传模版") ,self)
+        self.uploadAction.setShortcut('Ctrl+U')
         self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
         self.uploadAction.triggered.connect(self.slotUpload)
 
