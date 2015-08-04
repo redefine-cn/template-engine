@@ -60,15 +60,12 @@ class MainWindow(QMainWindow):
     def createMenu(self):
 
         menuBar = self.menuBar()
-        # menuBar = QMenuBar()
-        # fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
         fileMenu = menuBar.addMenu(QString.fromUtf8("文件"))
         fileMenu.addAction(self.fileOpenAction)
         fileMenu.addAction(self.fileCreateAction)
         fileMenu.addAction(self.fileSaveAction)
         fileMenu.addAction(self.exitAction)
 
-        # ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
         ActionMenu = menuBar.addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
@@ -77,20 +74,16 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.animation)
 
-        # uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
         uploadMenu = menuBar.addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
 
-        # editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
         editMenu = menuBar.addMenu(QString.fromUtf8("设置"))
         editMenu.addAction(self.setting)
 
-        # helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
         helpMenu = menuBar.addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
 
         menuBar.setNativeMenuBar(False)
-        # self.setMenuBar(menuBar)
 
         # 右键菜单
         self.setContextMenuPolicy(Qt.CustomContextMenu)
@@ -128,7 +121,7 @@ class MainWindow(QMainWindow):
 
         #设置
         self.setting = QAction(QString.fromUtf8('设置'), self)
-        self.setting.setShortcut('Ctrl+Q')
+        self.setting.setShortcut('Ctrl+P')
         self.setting.setStatusTip(QString.fromUtf8('设置'))
         self.setting.triggered.connect(self.slotSetting)
 
