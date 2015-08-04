@@ -58,6 +58,7 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('../data/icon.png'))
 
     def createMenu(self):
+
         menuBar = QMenuBar()
         # fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
         fileMenu = menuBar.addMenu(QString.fromUtf8("文件"))
@@ -87,6 +88,7 @@ class MainWindow(QMainWindow):
         helpMenu = menuBar.addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
 
+        menuBar.setNativeMenuBar(False)
         self.setMenuBar(menuBar)
 
         # 右键菜单
