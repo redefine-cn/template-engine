@@ -58,13 +58,16 @@ class MainWindow(QMainWindow):
         self.setWindowIcon(QIcon('../data/icon.png'))
 
     def createMenu(self):
-        fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
+        menuBar = QMenuBar()
+        # fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
+        fileMenu = menuBar.addMenu(QString.fromUtf8("文件"))
         fileMenu.addAction(self.fileOpenAction)
         fileMenu.addAction(self.fileCreateAction)
         fileMenu.addAction(self.fileSaveAction)
         fileMenu.addAction(self.exitAction)
 
-        ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
+        # ActionMenu = self.menuBar().addMenu(QString.fromUtf8('动作'))
+        ActionMenu = menuBar.addMenu(QString.fromUtf8('动作'))
         ActionMenu.addAction(self.addNormalAction)
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addLayer)
@@ -72,14 +75,19 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addSegment)
         ActionMenu.addAction(self.animation)
 
-        uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
+        # uploadMenu = self.menuBar().addMenu(QString.fromUtf8("上传"))
+        uploadMenu = menuBar.addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
 
-        editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
+        # editMenu = self.menuBar().addMenu(QString.fromUtf8("设置"))
+        editMenu = menuBar.addMenu(QString.fromUtf8("设置"))
         editMenu.addAction(self.setting)
 
-        helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
+        # helpMenu = self.menuBar().addMenu(QString.fromUtf8("关于"))
+        helpMenu = menuBar.addMenu(QString.fromUtf8("关于"))
         helpMenu.addAction(self.aboutAction)
+
+        self.setMenuBar(menuBar)
 
         # 右键菜单
         self.setContextMenuPolicy(Qt.CustomContextMenu)
