@@ -59,7 +59,8 @@ class MainWindow(QMainWindow):
 
     def createMenu(self):
 
-        menuBar = QMenuBar()
+        menuBar = self.menuBar()
+        # menuBar = QMenuBar()
         # fileMenu = self.menuBar().addMenu(QString.fromUtf8("文件"))
         fileMenu = menuBar.addMenu(QString.fromUtf8("文件"))
         fileMenu.addAction(self.fileOpenAction)
@@ -89,7 +90,7 @@ class MainWindow(QMainWindow):
         helpMenu.addAction(self.aboutAction)
 
         menuBar.setNativeMenuBar(False)
-        self.setMenuBar(menuBar)
+        # self.setMenuBar(menuBar)
 
         # 右键菜单
         self.setContextMenuPolicy(Qt.CustomContextMenu)
