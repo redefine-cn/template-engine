@@ -475,8 +475,8 @@ class ZipFile(QDialog):
         for i in range(4, 11):
             self.progress_bar.setValue(i)
             QThread.msleep(200)
-            self.father.file_info.setText(zip_file_path)
-            self.father.file_name_line.setText(QString.fromUtf8("请输入文件名"))
+        self.father.file_info.setText(zip_file_path)
+        self.father.file_name_line.setText(QString.fromUtf8("请输入文件名"))
         self.window().close()
 
 if __name__ == '__main__':
