@@ -60,9 +60,10 @@ class autodock(QDockWidget):
         else:
             self.gridLayout.addWidget(labelEdit, self.row, self.labelCol)
         self.gridLayout.addWidget(combobox, self.row, self.typeCol)
-
-        labelEdit.textChanged[QString].connect(partial(self.slotlabelEdit, treeNode))
-        combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
+        labelEdit.textChanged.connect(lambda :self.slotlabelEdit(treeNode, labelEdit.text()))
+        # labelEdit.textChanged[QString].connect(partial(self.slotlabelEdit, treeNode))
+        combobox.currentIndexChanged.connect(lambda :self.slotCombobox(treeNode, int(combobox.currentIndex())))
+        # combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
         if tp != 'dict' and tp != 'array' and treeNode.parent() != None:
             if unicode(key) == 'name' and str(treeNode.parent().text(0)).startswith('animation'):
@@ -71,12 +72,14 @@ class autodock(QDockWidget):
                     box.addItem(data['actionList'][i])
                     if data['actionList'][i] == unicode(value):
                         box.setCurrentIndex(i)
-                box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
+                box.currentIndexChanged.connect(lambda :self.slotValueEdit(treeNode, int(box.currentIndex())))
+                # box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(box, self.row, self.contentCol)
             elif tp != 'bool':
                 edit = QLineEdit()
                 edit.setText(value)
-                edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
+                edit.textChanged.connect(lambda :self.slotValueEdit(treeNode, edit.text()))
+                # edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(edit, self.row, self.contentCol)
             else:
                 box = QComboBox()
@@ -86,7 +89,8 @@ class autodock(QDockWidget):
                     box.setCurrentIndex(0)
                 else:
                     box.setCurrentIndex(1)
-                box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
+                box.currentIndexChanged.connect(lambda :self.slotValueEdit(treeNode, int(box.currentIndex())))
+                # box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(box, self.row, self.contentCol)
 
     def slotlabelEdit(self, treeNode, text):
