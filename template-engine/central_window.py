@@ -33,6 +33,7 @@ def findNum(text, father):
 
 
 def changeTypeInDFS(Type):
+    # return Type.__name__ if Type.__name__ != 'unicode' else 'string'
     if Type == type({}):
         return 'dict'
     elif Type == type([]):
@@ -168,7 +169,7 @@ class AddWidget(QDialog):
             Value = self.E3.text()
         Value = unicode(Value)
         child.setText(2, QString.fromUtf8(Value))
-        child.setExpanded(True)
+        # child.setExpanded(True)
         self.dic['Key'] = 'ARRAY'
         self.dic['Type'] = Type
         self.dic['Value'] = Value
@@ -190,7 +191,7 @@ class AddWidget(QDialog):
             child = QTreeWidgetItem(self.fa)
             child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
-            child.setExpanded(True)
+            # child.setExpanded(True)
             self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = Type
             add(self.fa, child, self.dic, self.father.path, self.father.root)
@@ -210,7 +211,7 @@ class AddWidget(QDialog):
                 Value = self.E3.text()
             Value = unicode(Value)
             child.setText(2, QString.fromUtf8(Value))
-            child.setExpanded(True)
+            # child.setExpanded(True)
             self.dic['Key'] = unicode(self.E1.text())
             self.dic['Type'] = Type
             self.dic['Value'] = Value
@@ -234,7 +235,7 @@ class CentralWindow(QTreeWidget):
         self.header().resizeSection(2, 200)
         self.root = QTreeWidgetItem(self)
         self.root.setText(0, 'root')
-        self.root.setExpanded(True)
+        # self.root.setExpanded(True)
 
     def bfs(self, dic, fa, Key, Type, Value):
         queue = []
@@ -246,14 +247,14 @@ class CentralWindow(QTreeWidget):
                 child.setText(0,unicode(Key))
                 if Type == type({}):
                     child.setText(1, 'dict')
-                    child.setExpanded(True)
+                    # child.setExpanded(True)
                     add(fa, child, {'Key':Key, 'Type':'dict'}, self.parent().parent().currentWidget().path,
                         self.parent().parent().currentWidget().root)
                     for k, v in dic.items():
                         queue.append((child, v , k , type(v), v))
                 else:
                     child.setText(1, 'array')
-                    child.setExpanded(True)
+                    # child.setExpanded(True)
                     add(fa, child, {'Key':Key, 'Type':'array'}, self.parent().parent().currentWidget().path,
                         self.parent().parent().currentWidget().root)
                     for i in range(len(dic)):
@@ -265,7 +266,7 @@ class CentralWindow(QTreeWidget):
                 child.setText(1, Type)
                 Value = unicode(Value)
                 child.setText(2, QString.fromUtf8(unicode(Value)))
-                child.setExpanded(True)
+                # child.setExpanded(True)
                 add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
                     self.parent().parent().currentWidget().root)
 
@@ -275,14 +276,14 @@ class CentralWindow(QTreeWidget):
             child.setText(0, QString.fromUtf8(unicode(Key)))
             if Type == type({}):
                 child.setText(1, 'dict')
-                child.setExpanded(True)
+                # child.setExpanded(True)
                 add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path,
                     self.parent().parent().currentWidget().root)
                 for k, v in dic.items():
                     self.dfs(v, child, k, type(v), v)
             else:
                 child.setText(1, 'array')
-                child.setExpanded(True)
+                # child.setExpanded(True)
                 add(fa, child, {'Key':(Key),'Type':'array'}, self.parent().parent().currentWidget().path,
                     self.parent().parent().currentWidget().root)
                 for i in range(len(dic)):
@@ -294,7 +295,7 @@ class CentralWindow(QTreeWidget):
             child.setText(1, Type)
             Value = unicode(Value)
             child.setText(2, QString.fromUtf8(unicode(Value)))
-            child.setExpanded(True)
+            # child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
                 self.parent().parent().currentWidget().root)
 
