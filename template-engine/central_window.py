@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 sys.path.append('../')
-from plistIO.plistIO import add, delete, new_tree, Map
+from plistIO.plistIO import add, delete, new_tree, Map, modifyPositionScaleOpacity
 f = file('../data/settings.json')
 data = json.load(f)
 
@@ -182,6 +182,7 @@ class AddWidget(QDialog):
         self.dic['Value'] = Value
 
         add(self.fa, child, self.dic, self.father.path, self.father.root)
+        modifyPositionScaleOpacity(child, self.father.path, self.father.root)
         self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
 
@@ -223,6 +224,7 @@ class AddWidget(QDialog):
             self.dic['Type'] = Type
             self.dic['Value'] = Value
             add(self.fa, child, self.dic, self.father.path, self.father.root)
+        modifyPositionScaleOpacity(child, self.father.path, self.father.root)
         self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
 
@@ -331,6 +333,8 @@ class CentralWindow(QTreeWidget):
                    Node, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
             self.parent().parent().currentWidget().currentItem().parent().removeChild(self.parent().parent().
                                                                                       currentWidget().currentItem())
+            modifyPositionScaleOpacity(self.parent().parent().currentWidget().currentItem(), self.parent().parent().currentWidget().path,
+                                       self.parent().parent().currentWidget().root)
         else:
             return False
 

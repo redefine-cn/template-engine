@@ -8,6 +8,7 @@ from plistIO.plistIO import modify
 from central_window import checkInteger, checkNameExist
 f = file('../data/settings.json')
 data = json.load(f)
+from plistIO.plistIO import modifyPositionScaleOpacity
 
 
 class autodock(QDockWidget):
@@ -137,7 +138,10 @@ class autodock(QDockWidget):
             edit = QLineEdit(treeNode.text(2))
             self.gridLayout.addWidget(edit, self.row, self.contentCol)
         treeNode.setText(2, unicode(node['Value']))
-        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
+        list_index = None
+        if str(treeNode.parent().text(1)) == 'array':
+            list_index = treeNode.parent().indexOfChild(treeNode)
+        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1, list_index)
         if treeNode != self.data:
             self.updateUI(treeNode.parent())
         else:
@@ -153,8 +157,19 @@ class autodock(QDockWidget):
         if node['Type'] == 'integer' and checkInteger(node['Value']) == False:
             QMessageBox.critical(self, 'error', 'Value Error', QMessageBox.Ok)
             return False
+
         treeNode.setText(2, text)
-        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1)
+        index = None
+        if str(treeNode.parent().text(1)) == 'array':
+            index = treeNode.parent().indexOfChild(treeNode)
+        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1, index)
+        modifyPositionScaleOpacity(treeNode, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root)
+
+        # if unicode(treeNode.parent().parent().text(0)) == u'values' and Map[unicode(treeNode.parent().parent().parent())][u'name'] == u'straightline' \
+        #     and unicode(treeNode.parent().parent().parent().parent().parent().text(0)) == u'layer1':
+        #     Map[unicode(treeNode.parent().parent().parent().parent().parent())]['position'] = Map[unicode(treeNode.parent().parent())][-1]
+        #     print Map[unicode(treeNode.parent().parent().parent().parent().parent())]['straightline']
+
         # self.updateUI(treeNode.parent())
 
     def updateUI(self, data):

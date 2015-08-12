@@ -7,6 +7,27 @@ from plistlib import *
 # create tree and create the file.json, return the file name
 Map = {}
 import random
+
+def findFather(pos, text):
+    while pos != None and unicode(pos.text(0)) != text:
+        pos = pos.parent()
+    return pos
+
+def modifyPositionScaleOpacity(treeNode, file_json, root):
+    va_fa = findFather(treeNode, u'values')
+    if not va_fa:return False
+    ani_fa = va_fa.parent()
+    if not ani_fa:return False
+    lay_fa = findFather(ani_fa, u'layer1')
+    if not lay_fa:return False
+    va_fa = unicode(va_fa)
+    ani_fa = unicode(ani_fa)
+    lay_fa = unicode(lay_fa)
+
+    switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity'}
+    Map[lay_fa][switch[Map[ani_fa][u'name']]] = Map[va_fa][-1]
+    write_json(Map[str(root)], file_json)
+
 def new_tree():
     data = {}
     seed = (str(time.time()) + str(random.random() * 10000))
@@ -95,7 +116,7 @@ def returnTrueData(data, type):
         return []
 
 
-def modify(addr, addrchild, node, file_json, root, changeType):
+def modify(addr, addrchild, node, file_json, root, changeType, index=None):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
     if changeType == 0:
@@ -123,26 +144,26 @@ def modify(addr, addrchild, node, file_json, root, changeType):
         else:
             # print node['PreValue'] == u''
             if node['Type'] == 'integer':
-                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = int(node['Value'])
             elif node['Type'] == 'string':
-                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = str(node['Value'])
             elif node['Type'] == 'real':
-                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = float(node['Value'])
             elif node['Type'] == 'bool':
                 if node['Value'] == 'True':
-                    index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
+                    # index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
                     Node[index] = True
                 else:
-                    index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
+                    # index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
                     Node[index] = False
             elif node['Type'] == 'dict':
-                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = {}
             elif node['Type'] == 'array':
-                index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
                 Node[index] = []
             Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)
