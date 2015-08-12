@@ -5,10 +5,17 @@ from PyQt4.QtCore import *
 import sys
 import json
 sys.path.append('../')
-from plistIO.plistIO import add, delete, new_tree
-from plistlib import *
+from plistIO.plistIO import add, delete, new_tree, Map
 f = file('../data/settings.json')
 data = json.load(f)
+
+
+def checkNameValid(child_name, parent_name):
+    if child_name.startswith('segment') and not child_name.endswith('s') and parent_name != 'segments':
+        return False
+    if child_name.startswith('animation') and not child_name.endswith('s') and parent_name != 'animations':
+        return False
+    return True
 
 
 def checkInteger(text):
@@ -50,7 +57,7 @@ def changeTypeInDFS(Type):
         return 'string'
 
 
-def checkName(father, text):
+def checkNameExist(father, text):
     if father == None:
         return True
     else:
@@ -180,7 +187,7 @@ class AddWidget(QDialog):
 
     def save(self):
         self.dic['Value'] = ''
-        if checkName(self.fa, self.E1.text()) == False:
+        if checkNameExist(self.fa, self.E1.text()) == False:
             throwErrorMessage(self, 'Key Exist!')
             return False
         Type = str(self.E2.currentText())
@@ -271,14 +278,20 @@ class CentralWindow(QTreeWidget):
                     self.parent().parent().currentWidget().root)
 
     def dfs(self, dic, fa, Key, Type, Value):
+        child_name = unicode(Key)
+        parent_name = unicode(fa.text(0))
         if Type == type({}) or Type == type([]):
             child = QTreeWidgetItem(fa)
             child.setText(0, QString.fromUtf8(unicode(Key)))
             if Type == type({}):
                 child.setText(1, 'dict')
                 # child.setExpanded(True)
+                # child.setTextColor(0, QColor('red'))
                 add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path,
                     self.parent().parent().currentWidget().root)
+                # if child_name == 'starttime' or child_name == 'duration':
+                #     Map[unicode(child)][unicode(child_name)] = Map[unicode(self.parent().parent().currentWidget().currentItem())][unicode(child_name)]
+                # else:
                 for k, v in dic.items():
                     self.dfs(v, child, k, type(v), v)
             else:
@@ -330,14 +343,27 @@ class CentralWindow(QTreeWidget):
         if fatext != 'dict' and fatext != 'array' and fatext != '':
             throwErrorMessage(self, 'Can Not Add')
             return False
-        child = QTreeWidgetItem(father)
+
         key = text.split('_')[0]
         name = key + findNum(key, father)
+        if not checkNameValid(name, unicode(father.text(0))):
+            throwErrorMessage(self, 'Can Not Add')
+            return False
+        dic = json.load(file('../data/'+ text))
+        # TODO PROCESS THE DICT FOR DIFFERENT ACTION
+        if key == 'animation':
+            if dic.has_key('starttime'):
+                dic[u'starttime'] = Map[unicode(father)]['starttime']
+            if dic.has_key('duration'):
+                dic[u'duration'] = Map[unicode(father)]['duration']
+
+        father.setExpanded(True)
+        child = QTreeWidgetItem(father)
         child.setText(0, name)
         child.setText(1, 'dict')
         add(father, child,{'Key': unicode(name), 'Type':'dict'},self.parent().parent().currentWidget().path,
                 self.parent().parent().currentWidget().root)
-        dic = json.load(file('../data/'+ text))
+
         for k, v in dic.items():
             self.dfs(v, child, k, type(v), v)
         self.parent().parent().parent().parent().dock.updateUI(father)

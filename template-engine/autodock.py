@@ -5,8 +5,7 @@ import json
 import  sys
 sys.path.append('../')
 from plistIO.plistIO import modify
-from functools import partial
-from central_window import checkInteger, checkName
+from central_window import checkInteger, checkNameExist
 f = file('../data/settings.json')
 data = json.load(f)
 
@@ -99,7 +98,7 @@ class autodock(QDockWidget):
         node['Key'] = unicode(text)
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(treeNode.text(2))
-        if checkName(treeNode.parent(), text):
+        if checkNameExist(treeNode.parent(), text):
             treeNode.setText(0, text)
             modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
         # self.updateUI(treeNode.parent())

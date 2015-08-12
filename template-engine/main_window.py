@@ -266,7 +266,7 @@ class MainWindow(QMainWindow):
             self.tab.setCurrentWidget(self.central[-1])
         self.waitWindow.show()
         for k, v in data.items():
-            self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+            self.tab.currentWidget().bfs(v, self.tab.currentWidget().root, k, type(v), v)
         self.waitWindow.close()
 
     def loadFile(self, fileName):
@@ -330,7 +330,7 @@ class MainWindow(QMainWindow):
             self.tab.setCurrentWidget(self.central[len(self.central) - 1])
         self.waitWindow.show()
         for k, v in data.items():
-            self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
+            self.tab.currentWidget().bfs(v, self.tab.currentWidget().root, k, type(v), v)
         self.waitWindow.close()
 
     def resizeEvent(self, *args, **kwargs):
