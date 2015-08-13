@@ -327,9 +327,6 @@ class CentralWindow(QTreeWidget):
         else:
             return None, None, None
 
-    def deleteMap(self):
-        del Map[str(self.parent().parent().currentWidget().root)]
-
     def checkDfs(self, treeNode, filejson, root):
         for i in range(treeNode.childCount()):
             self.checkDfs(treeNode.child(i), filejson, root)
