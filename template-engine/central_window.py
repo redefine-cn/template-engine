@@ -205,7 +205,7 @@ class AddWidget(QDialog):
         self.dic['Value'] = ''
         if checkNameExist(self.fa, self.E1.text()) == False:
             throwErrorMessage(self, 'Key Exist!')
-            return False
+            return None, None, None
         Type = str(self.E2.currentText())
         if Type == 'dict' or Type == 'array':
             if len(self.E1.text()) == 0:
