@@ -8,7 +8,7 @@ from plistIO.plistIO import modify
 from central_window import checkInteger, checkNameExist
 f = file('../data/settings.json')
 data = json.load(f)
-from plistIO.plistIO import modifyPositionScaleOpacity
+from plistIO.plistIO import modifyPositionScaleOpacity, after_modify
 
 
 class autodock(QDockWidget):
@@ -146,7 +146,7 @@ class autodock(QDockWidget):
             self.updateUI(treeNode.parent())
         else:
             self.updateUI(treeNode)
-
+    @after_modify
     def slotValueEdit(self, treeNode, text):
         node = {}
         node['PreValue'] = unicode(treeNode.text(2))
@@ -156,21 +156,16 @@ class autodock(QDockWidget):
         node['Value'] = unicode(text)
         if node['Type'] == 'integer' and checkInteger(node['Value']) == False:
             QMessageBox.critical(self, 'error', 'Value Error', QMessageBox.Ok)
-            return False
+            return None, None, None
 
         treeNode.setText(2, text)
         index = None
+        file_json, root = self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root
         if str(treeNode.parent().text(1)) == 'array':
             index = treeNode.parent().indexOfChild(treeNode)
-        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1, index)
-        modifyPositionScaleOpacity(treeNode, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root)
-
-        # if unicode(treeNode.parent().parent().text(0)) == u'values' and Map[unicode(treeNode.parent().parent().parent())][u'name'] == u'straightline' \
-        #     and unicode(treeNode.parent().parent().parent().parent().parent().text(0)) == u'layer1':
-        #     Map[unicode(treeNode.parent().parent().parent().parent().parent())]['position'] = Map[unicode(treeNode.parent().parent())][-1]
-        #     print Map[unicode(treeNode.parent().parent().parent().parent().parent())]['straightline']
-
-        # self.updateUI(treeNode.parent())
+        modify(treeNode.parent(), treeNode, node, file_json, root, 1, index)
+        return treeNode, file_json, root
+        # modifyPositionScaleOpacity(treeNode, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root)
 
     def updateUI(self, data):
         self.data = data

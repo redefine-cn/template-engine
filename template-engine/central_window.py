@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 sys.path.append('../')
-from plistIO.plistIO import add, delete, new_tree, Map, modifyPositionScaleOpacity
+from plistIO.plistIO import add, delete, new_tree, Map, modifyPositionScaleOpacity, after_modify
 f = file('../data/settings.json')
 data = json.load(f)
 

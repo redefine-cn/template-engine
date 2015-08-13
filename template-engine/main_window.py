@@ -258,12 +258,12 @@ class MainWindow(QMainWindow):
         json_data = file(unicode('../tmp_data/') + file_json)
         if self.tab.currentWidget() == None:
             self.slotCreateFile()
-        self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
             self.tab.setCurrentWidget(self.central[-1])
+        self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
@@ -289,14 +289,14 @@ class MainWindow(QMainWindow):
         central = CentralWindow()
         self.central.append(central)
         self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
-        self.tab.setTabsClosable(True)
-        self.tab.tabCloseRequested.connect(self.closeTab)
+        # self.tab.setTabsClosable(True)
+        # self.tab.tabCloseRequested.connect(self.closeTab)
         mainSplitter.setStretchFactor(1, 3)
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
         self.setCentralWidget(mainSplitter)
 
-    def closeTab(self):
-        self.tab.removeTab(self.tab.currentIndex())
+    # def closeTab(self):
+    #     self.tab.removeTab(self.tab.currentIndex())
 
     def setLeftList(self):
         if not self.model:

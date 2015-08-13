@@ -19,14 +19,41 @@ def modifyPositionScaleOpacity(treeNode, file_json, root):
     ani_fa = va_fa.parent()
     if not ani_fa:return False
     lay_fa = findFather(ani_fa, u'layer1')
-    if not lay_fa:return False
-    va_fa = unicode(va_fa)
-    ani_fa = unicode(ani_fa)
-    lay_fa = unicode(lay_fa)
+    if not lay_fa: lay_fa = findFather(ani_fa, u'head')
+    if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle1')
+    if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
+    if not lay_fa: return False
 
     switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity'}
-    Map[lay_fa][switch[Map[ani_fa][u'name']]] = Map[va_fa][-1]
+    name = switch[Map[unicode(ani_fa)][u'name']]
+    Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
     write_json(Map[str(root)], file_json)
+    for i in range(lay_fa.childCount()):
+        if lay_fa.child(i).text(0) == name:
+            lay_fa.remove(lay_fa.child(i))
+
+def after_modify(func):
+    def inner(*args, **kwargs):
+        treeNode, file_json, root = func(*args, **kwargs)
+        if not treeNode:return False
+        va_fa = findFather(treeNode, u'values')
+        if va_fa:
+            ani_fa = va_fa.parent()
+            if not ani_fa:return False
+            lay_fa = findFather(ani_fa, u'layer1')
+            if not lay_fa: lay_fa = findFather(ani_fa, u'head')
+            if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle1')
+            if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
+            if not lay_fa: return False
+            switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity'}
+            name = switch[Map[unicode(ani_fa)][u'name']]
+            Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
+            write_json(Map[str(root)], file_json)
+        st_fa = findFather(treeNode, u'starttime')
+        if st_fa:
+            ani_fa = st_fa.parent()
+            if not ani_fa:return False
+    return inner
 
 def new_tree():
     data = {}
