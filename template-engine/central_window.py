@@ -294,6 +294,11 @@ class CentralWindow(QTreeWidget):
                 self.parent().parent().parent().parent().dock.show()
             self.parent().parent().parent().parent().dock.updateUI(self.parent().parent().currentWidget().currentItem())
 
+    def keyReleaseEvent(self, QKeyEvent):
+        if QKeyEvent.key() == Qt.Key_Return:
+            child = self.parent().parent().currentWidget().currentItem()
+            child.setExpanded(False if child.isExpanded() else True)
+
     def addNormal(self):
         self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().
                                 currentWidget())
