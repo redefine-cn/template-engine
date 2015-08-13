@@ -8,7 +8,7 @@ from plistIO.plistIO import modify
 from central_window import checkInteger, checkNameExist
 f = file('../data/settings.json')
 data = json.load(f)
-from plistIO.plistIO import modifyPositionScaleOpacity, after_modify
+from plistIO.plistIO import after_modify
 
 
 class autodock(QDockWidget):
@@ -104,6 +104,7 @@ class autodock(QDockWidget):
             modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
         # self.updateUI(treeNode.parent())
 
+    @after_modify
     def slotCombobox(self, treeNode, index):
         node = {}
         node['PreType'] = str(treeNode.text(1))
@@ -132,7 +133,7 @@ class autodock(QDockWidget):
                 node['Value'] = 'True'
         else:
             node['Value'] = unicode(treeNode.text(2))
-
+        file_json, root = self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root
         if treeNode.text(2) == QString.fromUtf8(''):
             treeNode.setText(2, unicode(node['Value']))
             edit = QLineEdit(treeNode.text(2))
@@ -141,11 +142,13 @@ class autodock(QDockWidget):
         list_index = None
         if str(treeNode.parent().text(1)) == 'array':
             list_index = treeNode.parent().indexOfChild(treeNode)
-        modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 1, list_index)
+        modify(treeNode.parent(), treeNode, node, file_json, root, 1, list_index)
         if treeNode != self.data:
             self.updateUI(treeNode.parent())
         else:
             self.updateUI(treeNode)
+        return treeNode, file_json, root
+
     @after_modify
     def slotValueEdit(self, treeNode, text):
         node = {}

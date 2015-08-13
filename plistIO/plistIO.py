@@ -3,7 +3,6 @@ import os
 import time
 import json
 from plistlib import *
-
 # create tree and create the file.json, return the file name
 Map = {}
 import random
@@ -13,30 +12,14 @@ def findFather(pos, text):
         pos = pos.parent()
     return pos
 
-def modifyPositionScaleOpacity(treeNode, file_json, root):
-    va_fa = findFather(treeNode, u'values')
-    if not va_fa:return False
-    ani_fa = va_fa.parent()
-    if not ani_fa:return False
-    lay_fa = findFather(ani_fa, u'layer1')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'head')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle1')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
-    if not lay_fa: return False
-
-    switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity'}
-    name = switch[Map[unicode(ani_fa)][u'name']]
-    Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
-    write_json(Map[str(root)], file_json)
-    for i in range(lay_fa.childCount()):
-        if lay_fa.child(i).text(0) == name:
-            lay_fa.remove(lay_fa.child(i))
 
 def after_modify(func):
     def inner(*args, **kwargs):
         treeNode, file_json, root = func(*args, **kwargs)
         if not treeNode:return False
+        # modify last value
         va_fa = findFather(treeNode, u'values')
+        treeNode = va_fa.child(va_fa.childCount() - 1)
         if va_fa:
             ani_fa = va_fa.parent()
             if not ani_fa:return False
@@ -45,15 +28,27 @@ def after_modify(func):
             if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle1')
             if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
             if not lay_fa: return False
-            switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity'}
+            switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity', 'rotate':None, 'still':None}
             name = switch[Map[unicode(ani_fa)][u'name']]
+            if not name:return False
             Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
             write_json(Map[str(root)], file_json)
+            # TODO CHANGE WIDGETITEM IN TREELIST
+            for i in range(lay_fa.childCount()):
+                if unicode(lay_fa.child(i).text(0)) == unicode(name):
+                    lay_fa.removeChild(lay_fa.child(i))
+                    child = treeNode.clone()
+                    child.setText(0, name)
+                    lay_fa.insertChild(i, child)
+                    child.setExpanded(True)
+                    Map[str(child)] = Map[str(treeNode)]
+        # modify animations/ starttime & duration
         st_fa = findFather(treeNode, u'starttime')
         if st_fa:
             ani_fa = st_fa.parent()
             if not ani_fa:return False
     return inner
+
 
 def new_tree():
     data = {}
@@ -225,22 +220,6 @@ def ftp_login(username, password):
         return "failure"
 
 if __name__ == '__main__':
-    data = {}
-    # data['parent'] = "1"
-    # data['child'] = 10
-    # data['data'] = "test_data"
-    parent = []
-    # parent.append("segment1")
-    # parent.append("starttime")
-    # parent.append("second")
-    node = {'parent': ['segment1', 'starttime', 'second'], 'Type': 'integer', 'Value': '10', 'Key': 'child'}
-    parent_get = node['parent']
-    for i in range(len(parent_get)):
-        parent.append(parent_get[i])
-    if node['Type'] == "integer":
-        data[node['Key']] = int(node['Value'])
-    else:
-        data[node['Key']] = node['Value']
-    # add_node(parent, 1, data)
-    # read_plist("c:/test.xml")
-    read_plist("C:/Users/Administrator/Desktop/still.xml")
+    def x(*args, **kwargs):
+        return 1
+    print x()

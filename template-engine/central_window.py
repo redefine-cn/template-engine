@@ -5,7 +5,7 @@ from PyQt4.QtCore import *
 import sys
 import json
 sys.path.append('../')
-from plistIO.plistIO import add, delete, new_tree, Map, modifyPositionScaleOpacity, after_modify
+from plistIO.plistIO import add, delete, new_tree, Map, after_modify
 f = file('../data/settings.json')
 data = json.load(f)
 
@@ -159,15 +159,16 @@ class AddWidget(QDialog):
             self.E3.show()
             self.L3.show()
 
-    def saveArray(self):
+    @after_modify
+    def saveArray(self, WTF=0):
         self.dic['Type'] = ''
         Type = str(self.E2.currentText())
         if len(self.E3.text()) == 0 and Type != 'dict' and Type != 'bool':
             throwErrorMessage(self, 'Value Can Not Empty')
-            return False
+            return None, None, None
         if Type == 'integer' and checkInteger(self.E3.text()) == False:
             throwErrorMessage(self, 'Integer Value Error')
-            return False
+            return None, None, None
         child = QTreeWidgetItem(self.fa)
         child.setText(1, self.E2.currentText())
         if Type == 'bool':
@@ -182,11 +183,13 @@ class AddWidget(QDialog):
         self.dic['Value'] = Value
 
         add(self.fa, child, self.dic, self.father.path, self.father.root)
-        modifyPositionScaleOpacity(child, self.father.path, self.father.root)
+        # modifyPositionScaleOpacity(child, self.father.path, self.father.root)
         self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
+        return child, self.father.path, self.father.root
 
-    def save(self):
+    @after_modify
+    def save(self, WTF=0):
         self.dic['Value'] = ''
         if checkNameExist(self.fa, self.E1.text()) == False:
             throwErrorMessage(self, 'Key Exist!')
@@ -195,7 +198,7 @@ class AddWidget(QDialog):
         if Type == 'dict' or Type == 'array':
             if len(self.E1.text()) == 0:
                 throwErrorMessage(self, 'Value Can Not Empty')
-                return False
+                return None, None, None
             child = QTreeWidgetItem(self.fa)
             child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
@@ -206,10 +209,10 @@ class AddWidget(QDialog):
         else:
             if len(self.E1.text()) == 0 or (len(self.E3.text()) == 0 and Type != 'bool'):
                 throwErrorMessage(self, 'Value Can Not Empty')
-                return False
+                return None, None, None
             if Type == 'integer' and checkInteger(self.E3.text()) == False:
                 throwErrorMessage(self, 'Integer Value Error')
-                return False
+                return None, None, None
             child = QTreeWidgetItem(self.fa)
             child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
             child.setText(1, self.E2.currentText())
@@ -224,9 +227,10 @@ class AddWidget(QDialog):
             self.dic['Type'] = Type
             self.dic['Value'] = Value
             add(self.fa, child, self.dic, self.father.path, self.father.root)
-        modifyPositionScaleOpacity(child, self.father.path, self.father.root)
+        # modifyPositionScaleOpacity(child, self.father.path, self.father.root)
         self.father.parent().parent().parent().parent().dock.updateUI(self.father.parent().parent().currentWidget().currentItem())
         self.close()
+        return child, self.father.path, self.father.root
 
 
 class CentralWindow(QTreeWidget):
@@ -323,20 +327,22 @@ class CentralWindow(QTreeWidget):
     def addNormal(self):
         self.Window = AddWidget(self.parent().parent().currentWidget().currentItem(), self.parent().parent().
                                 currentWidget())
-
-    def delete(self):
+    @after_modify
+    def delete(self, WTF=0):
         if self.parent().parent().currentWidget().currentItem().text(0) != 'root':
+            treeNode, file_json, root = self.parent().parent().currentWidget().currentItem(), \
+                                        self.parent().parent().currentWidget().path, \
+                                        self.parent().parent().currentWidget().root
             Node = {}
             Node['Key'] = unicode(self.parent().parent().currentWidget().currentItem().text(0))
-            delete(self.parent().parent().currentWidget().currentItem().parent(),
-                   self.parent().parent().currentWidget().currentItem(),
-                   Node, self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root)
-            self.parent().parent().currentWidget().currentItem().parent().removeChild(self.parent().parent().
-                                                                                      currentWidget().currentItem())
-            modifyPositionScaleOpacity(self.parent().parent().currentWidget().currentItem(), self.parent().parent().currentWidget().path,
-                                       self.parent().parent().currentWidget().root)
+            delete(treeNode.parent(), treeNode, Node, file_json, root)
+            parentNode = treeNode.parent()
+            treeNode.parent().removeChild(treeNode)
+            self.parent().parent().parent().parent().dock.updateUI(parentNode)
+            return parentNode, file_json, root
+            # modifyPositionScaleOpacity(self.parent().parent().currentWidget().currentItem(), file_json, root)
         else:
-            return False
+            return None, None, None
 
     def addSomething(self, text):
         father = self.parent().parent().currentWidget().currentItem()
