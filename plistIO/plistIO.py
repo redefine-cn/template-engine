@@ -244,6 +244,23 @@ def ftp_login(username, password):
         return "failure"
 
 if __name__ == '__main__':
-    def x(*args, **kwargs):
-        return 1
-    print x()
+    data = {}
+    # data['parent'] = "1"
+    # data['child'] = 10
+    # data['data'] = "test_data"
+    parent = []
+    # parent.append("segment1")
+    # parent.append("starttime")
+    # parent.append("second")
+    node = {'parent': ['segment1', 'starttime', 'second'], 'Type': 'integer', 'Value': '10', 'Key': 'child'}
+    parent_get = node['parent']
+    for i in range(len(parent_get)):
+        parent.append(parent_get[i])
+    if node['Type'] == "integer":
+        data[node['Key']] = int(node['Value'])
+    else:
+        data[node['Key']] = node['Value']
+    # add_node(parent, 1, data)
+    # read_plist("c:/test.xml")
+    read_plist("C:/Users/Administrator/Desktop/plist_subassembly/track.plist")
+
