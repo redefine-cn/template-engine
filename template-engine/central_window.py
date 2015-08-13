@@ -362,10 +362,10 @@ class CentralWindow(QTreeWidget):
         dic = json.load(file('../data/'+ text))
         # TODO PROCESS THE DICT FOR DIFFERENT ACTION
         if key == 'animation':
-            if dic.has_key('starttime'):
-                dic[u'starttime'] = Map[unicode(father)]['starttime']
-            if dic.has_key('duration'):
-                dic[u'duration'] = Map[unicode(father)]['duration']
+            # if dic.has_key('starttime'):
+            dic[u'starttime'] = Map[unicode(father)]['starttime']
+            # if dic.has_key('duration'):
+            dic[u'duration'] = Map[unicode(father)]['duration']
 
         father.setExpanded(True)
         child = QTreeWidgetItem(father)

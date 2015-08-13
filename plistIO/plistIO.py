@@ -8,52 +8,72 @@ Map = {}
 import random
 
 def findFather(pos, text):
-    while pos != None and unicode(pos.text(0)) != text:
+    while pos != None and not unicode(pos.text(0)).startswith(text):
         pos = pos.parent()
     return pos
 
 
 def after_modify(func):
+
+    def check(treeNode, text):
+        st_fa = findFather(treeNode, text)
+        if not st_fa: return False
+        ani_fa = st_fa.parent()
+        if not ani_fa: return False
+        if not ani_fa.text(0) == 'animations': return False
+        for i in range(ani_fa.childCount()):
+            child = ani_fa.child(i)
+            if unicode(child.text(0)).startswith('animation'):
+                for j in range(child.childCount()):
+                    child_child = child.child(j)
+                    if unicode(child_child.text(0)).startswith(text):
+                        Map[str(child)][text] = Map[str(ani_fa)][text]
+                        is_expanded = child_child.isExpanded()
+                        child.removeChild(child_child)
+                        new_child = st_fa.clone()
+                        child.insertChild(j, new_child)
+                        new_child.setExpanded(is_expanded)
+                        Map[str(new_child)] = Map[str(st_fa)]
+        return True
+
     def inner(*args, **kwargs):
         treeNode, file_json, root = func(*args, **kwargs)
-        if not treeNode:return False
+        if not treeNode: return False
         # modify last value
         va_fa = findFather(treeNode, u'values')
-        treeNode = va_fa.child(va_fa.childCount() - 1)
         if va_fa:
+            treeNode = va_fa.child(va_fa.childCount() - 1)
             ani_fa = va_fa.parent()
-            if not ani_fa:return False
-            lay_fa = findFather(ani_fa, u'layer1')
+            if not ani_fa: return False
+            lay_fa = findFather(ani_fa, u'layer')
             if not lay_fa: lay_fa = findFather(ani_fa, u'head')
-            if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle1')
+            if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle')
             if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
             if not lay_fa: return False
             switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity', 'rotate':None, 'still':None}
             name = switch[Map[unicode(ani_fa)][u'name']]
-            if not name:return False
+            if not name: return False
             Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
-            write_json(Map[str(root)], file_json)
             # TODO CHANGE WIDGETITEM IN TREELIST
             for i in range(lay_fa.childCount()):
                 if unicode(lay_fa.child(i).text(0)) == unicode(name):
+                    is_expanded = lay_fa.child(i).isExpanded()
                     lay_fa.removeChild(lay_fa.child(i))
                     child = treeNode.clone()
                     child.setText(0, name)
                     lay_fa.insertChild(i, child)
-                    child.setExpanded(True)
+                    child.setExpanded(is_expanded)
                     Map[str(child)] = Map[str(treeNode)]
         # modify animations/ starttime & duration
-        st_fa = findFather(treeNode, u'starttime')
-        if st_fa:
-            ani_fa = st_fa.parent()
-            if not ani_fa:return False
+        check(treeNode, u'starttime')
+        check(treeNode, u'duration')
+        write_json(Map[str(root)], file_json)
     return inner
 
 
 def new_tree():
     data = {}
     seed = (str(time.time()) + str(random.random() * 10000))
-    # print random.random()
     file_name = 'new' + str(seed) + '.json'
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
