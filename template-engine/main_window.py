@@ -71,7 +71,8 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.deleteAction)
         ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
-        ActionMenu.addAction(self.addSegment)
+        ActionMenu.addAction(self.addTrack)
+        ActionMenu.addAction(self.segment)
         ActionMenu.addAction(self.animation)
 
         uploadMenu = menuBar.addMenu(QString.fromUtf8("上传"))
@@ -148,12 +149,21 @@ class MainWindow(QMainWindow):
         self.addSubtitle.triggered.connect(lambda :self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
         # self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
-        self.addSegment = QAction('&AddSegment', self)
-        self.addSegment.setShortcut('Ctrl+3')
-        self.addSegment.setStatusTip(QString.fromUtf8('添加Segment'))
-        self.addSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_segment.json'))
-        # self.addSegment.triggered.connect(partial(self.tab.currentWidget().addSomething, 'segment_segment.json'))
+        # SEGMENTS
+        self.addHeadSegment = QAction('&AddHead', self)
+        self.addHeadSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_head.json'))
 
+        self.addNormalSegment = QAction('&AddNormal', self)
+        self.addNormalSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_normal.json'))
+
+        self.addFootSegment = QAction('&AddFoot', self)
+        self.addFootSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_foot.json'))
+
+        # TRACK
+        self.addTrack = QAction('&AddTrack', self)
+        self.addTrack.triggered.connect(lambda :self.tab.currentWidget().addSomething('track_track.json'))
+
+        # ANIMATIONS
         self.addStraightLine = QAction('&AddStraightLine', self)
         # self.addStraightLine.setShortcut('Ctrl+4')
         self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
@@ -194,6 +204,14 @@ class MainWindow(QMainWindow):
         animationMenu.addAction(self.addStraightLine)
         self.animation.setMenu(animationMenu)
 
+        self.segment = QAction('&AddSegment', self)
+        self.segment.setStatusTip(QString.fromUtf8('添加Segment'))
+        segmentMenu = QMenu()
+        segmentMenu.addAction(self.addHeadSegment)
+        segmentMenu.addAction(self.addNormalSegment)
+        segmentMenu.addAction(self.addFootSegment)
+        self.segment.setMenu(segmentMenu)
+
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
@@ -218,7 +236,8 @@ class MainWindow(QMainWindow):
         addJsonToolBar.addAction(self.deleteAction)
         addJsonToolBar.addAction(self.addLayer)
         addJsonToolBar.addAction(self.addSubtitle)
-        addJsonToolBar.addAction(self.addSegment)
+        addJsonToolBar.addAction(self.addTrack)
+        addJsonToolBar.addAction(self.segment)
         addJsonToolBar.addAction(self.animation)
 
     def createDockWidget(self):
