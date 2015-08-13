@@ -128,23 +128,23 @@ class MainWindow(QMainWindow):
 
         # Action
         self.addNormalAction = QAction('&Add', self)
-        self.addNormalAction.setShortcut('Ctrl+A')
+        self.addNormalAction.setShortcut('Alt+A')
         self.addNormalAction.setStatusTip(QString.fromUtf8('添加节点'))
         self.addNormalAction.triggered.connect(self.tab.currentWidget().addNormal)
 
         self.deleteAction = QAction('&Delete', self)
-        self.deleteAction.setShortcut('Ctrl+D')
+        self.deleteAction.setShortcut('Alt+D')
         self.deleteAction.setStatusTip(QString.fromUtf8('删除节点'))
         self.deleteAction.triggered.connect(self.tab.currentWidget().delete)
 
         self.addLayer = QAction('&AddLayer', self)
-        self.addLayer.setShortcut('Ctrl+1')
+        self.addLayer.setShortcut('Alt+L')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
         self.addLayer.triggered.connect(lambda :self.tab.currentWidget().addSomething('layer_layer.json'))
         # self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
-        self.addSubtitle.setShortcut('Ctrl+2')
+        self.addSubtitle.setShortcut('Alt+S')
         self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
         self.addSubtitle.triggered.connect(lambda :self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
         # self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
@@ -161,35 +161,36 @@ class MainWindow(QMainWindow):
 
         # TRACK
         self.addTrack = QAction('&AddTrack', self)
+        self.addTrack.setShortcut('Alt+T')
         self.addTrack.triggered.connect(lambda :self.tab.currentWidget().addSomething('track_track.json'))
 
         # ANIMATIONS
         self.addStraightLine = QAction('&AddStraightLine', self)
-        # self.addStraightLine.setShortcut('Ctrl+4')
+        self.addStraightLine.setShortcut('Alt+5')
         self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
         self.addStraightLine.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_straightline.json'))
         # self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
 
         self.addOpacity = QAction('&AddOpacity', self)
-        # self.addOpacity.setShortcut('Ctrl+5')
+        self.addOpacity.setShortcut('Alt+4')
         self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
         self.addOpacity.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_opacity.json'))
         # self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
         self.addRotate = QAction('&AddRotate', self)
-        # self.addRotate.setShortcut('Ctrl+3')
+        self.addRotate.setShortcut('Alt+3')
         self.addRotate.setStatusTip(QString.fromUtf8('添加Rotate'))
         self.addRotate.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_rotate.json'))
         # self.addRotate.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_rotate.json'))
 
         self.addScale = QAction('&AddScale', self)
-        # self.addScale.setShortcut('Ctrl+3')
+        self.addScale.setShortcut('Alt+2')
         self.addScale.setStatusTip(QString.fromUtf8('添加Scale'))
         self.addScale.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_scale.json'))
         # self.addScale.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_scale.json'))
 
         self.addStill = QAction('&AddStill', self)
-        # self.addStill.setShortcut('Ctrl+3')
+        self.addStill.setShortcut('Alt+1')
         self.addStill.setStatusTip(QString.fromUtf8('添加Still'))
         self.addStill.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_still.json'))
         # self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
