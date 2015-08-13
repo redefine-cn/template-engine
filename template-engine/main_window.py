@@ -328,14 +328,15 @@ class MainWindow(QMainWindow):
         central = CentralWindow()
         self.central.append(central)
         self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
-        # self.tab.setTabsClosable(True)
-        # self.tab.tabCloseRequested.connect(self.closeTab)
+        self.tab.setTabsClosable(True)
+        self.tab.tabCloseRequested.connect(self.closeTab)
         mainSplitter.setStretchFactor(1, 3)
         mainSplitter.setWindowTitle(QString.fromUtf8("分割窗口"))
         self.setCentralWidget(mainSplitter)
 
-    # def closeTab(self):
-    #     self.tab.removeTab(self.tab.currentIndex())
+    def closeTab(self):
+        self.tab.currentWidget().deleteMap()
+        self.tab.removeTab(self.tab.currentIndex())
 
     def setLeftList(self):
         if not self.model:
