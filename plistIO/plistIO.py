@@ -13,60 +13,64 @@ def findFather(pos, text):
     return pos
 
 
-def after_modify(func):
+def checkTime(treeNode, text):
+    st_fa = findFather(treeNode, text)
+    if not st_fa: return False
+    ani_fa = st_fa.parent()
+    if not ani_fa: return False
+    if not ani_fa.text(0) == 'animations': return False
+    for i in range(ani_fa.childCount()):
+        child = ani_fa.child(i)
+        if unicode(child.text(0)).startswith('animation'):
+            for j in range(child.childCount()):
+                child_child = child.child(j)
+                if unicode(child_child.text(0)).startswith(text):
+                    Map[str(child)][text] = Map[str(ani_fa)][text]
+                    is_expanded = child_child.isExpanded()
+                    child.removeChild(child_child)
+                    new_child = st_fa.clone()
+                    child.insertChild(j, new_child)
+                    new_child.setExpanded(is_expanded)
+                    Map[str(new_child)] = Map[str(st_fa)]
+    return True
 
-    def check(treeNode, text):
-        st_fa = findFather(treeNode, text)
-        if not st_fa: return False
-        ani_fa = st_fa.parent()
-        if not ani_fa: return False
-        if not ani_fa.text(0) == 'animations': return False
-        for i in range(ani_fa.childCount()):
-            child = ani_fa.child(i)
-            if unicode(child.text(0)).startswith('animation'):
-                for j in range(child.childCount()):
-                    child_child = child.child(j)
-                    if unicode(child_child.text(0)).startswith(text):
-                        Map[str(child)][text] = Map[str(ani_fa)][text]
-                        is_expanded = child_child.isExpanded()
-                        child.removeChild(child_child)
-                        new_child = st_fa.clone()
-                        child.insertChild(j, new_child)
-                        new_child.setExpanded(is_expanded)
-                        Map[str(new_child)] = Map[str(st_fa)]
-        return True
+
+def checkValue(treeNode):
+    va_fa = findFather(treeNode, u'values')
+    if not va_fa: return False
+    treeNode = va_fa.child(va_fa.childCount() - 1)
+    ani_fa = va_fa.parent()
+    if not ani_fa: return False
+    lay_fa = findFather(ani_fa, u'layer')
+    if not lay_fa: lay_fa = findFather(ani_fa, u'head')
+    if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle')
+    if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
+    if not lay_fa: return False
+    switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity', 'rotate':None, 'still':None}
+    name = switch[Map[unicode(ani_fa)][u'name']]
+    if not name: return False
+    Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
+    # TODO CHANGE WIDGETITEM IN TREELIST
+    for i in range(lay_fa.childCount()):
+        if unicode(lay_fa.child(i).text(0)) == unicode(name):
+            is_expanded = lay_fa.child(i).isExpanded()
+            lay_fa.removeChild(lay_fa.child(i))
+            child = treeNode.clone()
+            child.setText(0, name)
+            lay_fa.insertChild(i, child)
+            child.setExpanded(is_expanded)
+            Map[str(child)] = Map[str(treeNode)]
+
+def after_modify(func):
 
     def inner(*args, **kwargs):
         treeNode, file_json, root = func(*args, **kwargs)
         if not treeNode: return False
         # modify last value
-        va_fa = findFather(treeNode, u'values')
-        if va_fa:
-            treeNode = va_fa.child(va_fa.childCount() - 1)
-            ani_fa = va_fa.parent()
-            if not ani_fa: return False
-            lay_fa = findFather(ani_fa, u'layer')
-            if not lay_fa: lay_fa = findFather(ani_fa, u'head')
-            if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle')
-            if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
-            if not lay_fa: return False
-            switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity', 'rotate':None, 'still':None}
-            name = switch[Map[unicode(ani_fa)][u'name']]
-            if not name: return False
-            Map[unicode(lay_fa)][name] = Map[unicode(va_fa)][-1]
-            # TODO CHANGE WIDGETITEM IN TREELIST
-            for i in range(lay_fa.childCount()):
-                if unicode(lay_fa.child(i).text(0)) == unicode(name):
-                    is_expanded = lay_fa.child(i).isExpanded()
-                    lay_fa.removeChild(lay_fa.child(i))
-                    child = treeNode.clone()
-                    child.setText(0, name)
-                    lay_fa.insertChild(i, child)
-                    child.setExpanded(is_expanded)
-                    Map[str(child)] = Map[str(treeNode)]
+        checkValue(treeNode)
         # modify animations/ starttime & duration
-        check(treeNode, u'starttime')
-        check(treeNode, u'duration')
+        checkTime(treeNode, u'starttime')
+        checkTime(treeNode, u'duration')
         write_json(Map[str(root)], file_json)
     return inner
 
