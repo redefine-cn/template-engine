@@ -71,6 +71,10 @@ def throwErrorMessage(self, text):
     QMessageBox.critical(self, 'Error', text, QMessageBox.Ok)
 
 
+@after_modify
+def checkItem(treeNode, file_json, root):
+    return treeNode, file_json, root
+
 class AddWidget(QDialog):
 
     def __init__(self, fa, father):
@@ -286,6 +290,7 @@ class CentralWindow(QTreeWidget):
     def dfs(self, dic, fa, Key, Type, Value):
         child_name = unicode(Key)
         parent_name = unicode(fa.text(0))
+        file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
         if Type == type({}) or Type == type([]):
             child = QTreeWidgetItem(fa)
             child.setText(0, QString.fromUtf8(unicode(Key)))
@@ -293,8 +298,7 @@ class CentralWindow(QTreeWidget):
                 child.setText(1, 'dict')
                 # child.setExpanded(True)
                 # child.setTextColor(0, QColor('red'))
-                add(fa, child, {'Key':(Key),'Type':'dict'}, self.parent().parent().currentWidget().path,
-                    self.parent().parent().currentWidget().root)
+                add(fa, child, {'Key':(Key),'Type':'dict'}, file_json, root)
                 # if child_name == 'starttime' or child_name == 'duration':
                 #     Map[unicode(child)][unicode(child_name)] = Map[unicode(self.parent().parent().currentWidget().currentItem())][unicode(child_name)]
                 # else:
@@ -303,8 +307,7 @@ class CentralWindow(QTreeWidget):
             else:
                 child.setText(1, 'array')
                 # child.setExpanded(True)
-                add(fa, child, {'Key':(Key),'Type':'array'}, self.parent().parent().currentWidget().path,
-                    self.parent().parent().currentWidget().root)
+                add(fa, child, {'Key':(Key),'Type':'array'}, file_json, root)
                 for i in range(len(dic)):
                     self.dfs(dic[i], child, 'item'+ str(i), type(dic[i]), dic[i])
         else:
@@ -315,8 +318,8 @@ class CentralWindow(QTreeWidget):
             Value = unicode(Value)
             child.setText(2, QString.fromUtf8(unicode(Value)))
             # child.setExpanded(True)
-            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, self.parent().parent().currentWidget().path,
-                self.parent().parent().currentWidget().root)
+            add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, file_json, root)
+        # checkItem(child, file_json, root)
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
@@ -344,8 +347,14 @@ class CentralWindow(QTreeWidget):
         else:
             return None, None, None
 
+    def checkDfs(self, treeNode, filejson, root):
+        for i in range(treeNode.childCount()):
+            self.checkDfs(treeNode.child(i), filejson, root)
+        checkItem(treeNode, filejson, root)
+
     def addSomething(self, text):
         father = self.parent().parent().currentWidget().currentItem()
+        file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
         if father == None:
             throwErrorMessage(self, 'Please Select Node')
             return False
@@ -371,13 +380,12 @@ class CentralWindow(QTreeWidget):
         child = QTreeWidgetItem(father)
         child.setText(0, name)
         child.setText(1, 'dict')
-        add(father, child,{'Key': unicode(name), 'Type':'dict'},self.parent().parent().currentWidget().path,
-                self.parent().parent().currentWidget().root)
+        add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
 
         for k, v in dic.items():
             self.dfs(v, child, k, type(v), v)
         self.parent().parent().parent().parent().dock.updateUI(father)
-
+        self.checkDfs(father, file_json, root)
 
 class Example(QMainWindow):
     def __init__(self):
