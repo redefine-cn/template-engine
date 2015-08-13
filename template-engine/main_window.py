@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.addLayer)
         ActionMenu.addAction(self.addSubtitle)
         ActionMenu.addAction(self.addTrack)
+        ActionMenu.addAction(self.cutto)
         ActionMenu.addAction(self.segment)
         ActionMenu.addAction(self.animation)
 
@@ -149,7 +150,17 @@ class MainWindow(QMainWindow):
         self.addSubtitle.triggered.connect(lambda :self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
         # self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
+        # CUTTO_LAYER
+        self.addCuttoLayers = QAction('&AddCuttoLayer', self)
+        self.addCuttoLayers.triggered.connect(lambda :self.tab.currentWidget().addSomething('cutto_layers.json'))
+
+        self.addCutto = QAction('&AddCutto', self)
+        self.addCutto.triggered.connect(lambda :self.tab.currentWidget().addSomething('cutto_cutto.json'))
+
         # SEGMENTS
+        self.addSegments = QAction('&AddSegments', self)
+        self.addSegments.triggered.connect(lambda :self.tab.currentWidget().addSomething('segments_segments.json'))
+
         self.addHeadSegment = QAction('&AddHead', self)
         self.addHeadSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_head.json'))
 
@@ -208,10 +219,17 @@ class MainWindow(QMainWindow):
         self.segment = QAction('&AddSegment', self)
         self.segment.setStatusTip(QString.fromUtf8('添加Segment'))
         segmentMenu = QMenu()
+        segmentMenu.addAction(self.addSegments)
         segmentMenu.addAction(self.addHeadSegment)
         segmentMenu.addAction(self.addNormalSegment)
         segmentMenu.addAction(self.addFootSegment)
         self.segment.setMenu(segmentMenu)
+
+        self.cutto = QAction('&AddCuttoLayer', self)
+        cutto = QMenu()
+        cutto.addAction(self.addCuttoLayers)
+        cutto.addAction(self.addCutto)
+        self.cutto.setMenu(cutto)
 
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
@@ -238,6 +256,7 @@ class MainWindow(QMainWindow):
         addJsonToolBar.addAction(self.addLayer)
         addJsonToolBar.addAction(self.addSubtitle)
         addJsonToolBar.addAction(self.addTrack)
+        addJsonToolBar.addAction(self.cutto)
         addJsonToolBar.addAction(self.segment)
         addJsonToolBar.addAction(self.animation)
 

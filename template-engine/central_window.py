@@ -11,9 +11,17 @@ data = json.load(f)
 
 
 def checkNameValid(child_name, parent_name):
+    if child_name == 'segments' and not parent_name == 'root':
+        return False
+    if child_name == 'cutto_layers' and not parent_name == 'root':
+        return False
     if child_name.startswith('segment') and not child_name.endswith('s') and parent_name != 'segments':
         return False
     if child_name.startswith('animation') and not child_name.endswith('s') and parent_name != 'animations':
+        return False
+    if child_name.startswith('cutto') and not child_name.endswith('s') and parent_name != 'cutto_layers':
+        return False
+    if child_name.startswith('track') and not (parent_name.startswith('segment') and not parent_name.endswith('s')):
         return False
     return True
 
@@ -335,9 +343,11 @@ class CentralWindow(QTreeWidget):
             throwErrorMessage(self, 'Can Not Add')
             return False
         key = text.split('_')[0]
-        name = key + findNum(key, father)
+        name = key + findNum(key, father) if text != 'cutto_layers.json' else 'cutto_layers'
+        if key == 'segments':
+            name = 'segments'
         if not checkNameValid(name, unicode(father.text(0))):
-            throwErrorMessage(self, 'Can Not Add')
+            throwErrorMessage(self, 'Can Not Add!')
             return False
         dic = json.load(file('../data/'+ text))
         # TODO PROCESS THE DICT FOR DIFFERENT ACTION
