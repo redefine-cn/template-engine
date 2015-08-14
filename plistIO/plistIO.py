@@ -4,6 +4,8 @@ import time
 import json
 from plistlib import *
 # create tree and create the file.json, return the file name
+# Map来映射addr -> Key
+# 由于addr的唯一性， 所以不会冲突
 Map = {}
 import random
 
@@ -12,7 +14,7 @@ def find_father(pos, text):
         pos = pos.parent()
     return pos
 
-
+# 联动检查starttime, duration
 def check_time(treeNode, text):
     st_fa = find_father(treeNode, text)
     if not st_fa: return False
@@ -34,7 +36,7 @@ def check_time(treeNode, text):
                     Map[str(new_child)] = Map[str(st_fa)]
     return True
 
-
+# 联动检查position, scale, opacity
 def check_value(treeNode):
     va_fa = find_father(treeNode, u'values')
     if not va_fa: return False
@@ -61,6 +63,7 @@ def check_value(treeNode):
             child.setExpanded(is_expanded)
             Map[str(child)] = Map[str(treeNode)]
 
+# 装饰器, 需要func有三个返回值，必须为当前节点，json的路径和当前的根节点(treeNode, file_json, root)
 def after_modify(func):
 
     def inner(*args, **kwargs):
@@ -74,7 +77,7 @@ def after_modify(func):
         write_json(Map[str(root)], file_json)
     return inner
 
-
+# 每次创建一个新的Central_Window时，则新建一个json数据来存放，由此函数生成json的fileName
 def new_tree():
     data = {}
     seed = (str(time.time()) + str(random.random() * 10000))
@@ -82,8 +85,8 @@ def new_tree():
     new_json = "../tmp_data/" + file_name
     json.dump(data, open(new_json, 'w'))
     return unicode(file_name)
-# add node info to the tree
 
+# 添加节点
 def add(addr, addrchild, node, file_json, root):
     try :
         Node = Map[str(addr)]
@@ -133,7 +136,7 @@ def add(addr, addrchild, node, file_json, root):
     # print node
     write_json(Map[str(root)], file_json)
 
-
+# 删除节点
 def delete(addr, addrchild, node, file_json, root):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
@@ -161,7 +164,7 @@ def return_true_data(data, type):
     elif type == 'array':
         return []
 
-
+# 修改节点
 def modify(addr, addrchild, node, file_json, root, changeType, index=None):
     Node = Map[str(addr)]
     NodeChild = Map[str(addrchild)]
