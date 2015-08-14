@@ -2,13 +2,14 @@
 from PyQt4.QtGui import *
 from PyQt4.QtCore import *
 import json
-import  sys
+import sys
 sys.path.append('../')
 from plistIO.plistIO import modify
 from central_window import check_integer, check_name_exist
 f = file('../data/settings.json')
 data = json.load(f)
 from plistIO.plistIO import after_modify
+name_list = data['name_list']
 
 
 class autodock(QDockWidget):
@@ -66,6 +67,7 @@ class autodock(QDockWidget):
         # combobox.currentIndexChanged[int].connect(partial(self.slotCombobox, treeNode))
 
         if tp != 'dict' and tp != 'array' and treeNode.parent() != None:
+            # 各种animation 放进一个QcoboBox来选择
             if unicode(key) == 'name' and str(treeNode.parent().text(0)).startswith('animation'):
                 box = QComboBox()
                 for i in range(len(data['actionList'])):
@@ -75,12 +77,18 @@ class autodock(QDockWidget):
                 box.currentIndexChanged.connect(lambda :self.slotValueEdit(treeNode, int(box.currentIndex())))
                 # box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(box, self.row, self.contentCol)
+            # 如果类型不是bool(string, integer, real)
             elif tp != 'bool':
                 edit = QLineEdit()
                 edit.setText(value)
                 edit.textChanged.connect(lambda :self.slotValueEdit(treeNode, edit.text()))
                 # edit.textChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(edit, self.row, self.contentCol)
+                if key in name_list:
+                    but = QPushButton('select')
+                    but.clicked.connect(lambda :self.openFile(treeNode))
+                    self.gridLayout.addWidget(but, self.row, self.contentCol + 1)
+            # 如果是bool型，则也是一个QComboBox来选择True, False
             else:
                 box = QComboBox()
                 box.addItem('True')
@@ -92,6 +100,13 @@ class autodock(QDockWidget):
                 box.currentIndexChanged.connect(lambda :self.slotValueEdit(treeNode, int(box.currentIndex())))
                 # box.currentIndexChanged[QString].connect(partial(self.slotValueEdit, treeNode))
                 self.gridLayout.addWidget(box, self.row, self.contentCol)
+
+    def openFile(self, treeNode):
+        fileName = unicode(QFileDialog.getOpenFileName(self, QString.fromUtf8('打开')))
+        fi = QFileInfo(fileName)
+        fileName = fi.fileName()
+        self.slotValueEdit(treeNode, fileName)
+        self.updateUI(treeNode.parent())
 
     def slotlabelEdit(self, treeNode, text):
         node = {}
@@ -151,6 +166,7 @@ class autodock(QDockWidget):
 
     @after_modify
     def slotValueEdit(self, treeNode, text):
+        print treeNode, text
         node = {}
         node['PreValue'] = unicode(treeNode.text(2))
         node['PreType'] = str(treeNode.text(1))
