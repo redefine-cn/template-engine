@@ -366,7 +366,7 @@ class MainWindow(QMainWindow):
 
     def resizeEvent(self, *args, **kwargs):
         # self.dock.resize(self.geometry().width()/3, self.geometry().height())
-        self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
+        self.dock.setMaximumSize(self.geometry().width()/2, self.geometry().height())
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
