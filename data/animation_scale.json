@@ -1,1 +1,1 @@
-{"duration": {"second": 0, "frame": 0}, "values": [0, 0, 0, 0], "name": "scale", "starttime": {"second": 0, "frame": 0}, "times": [{"second": 0, "frame": 0}, {"second": 0, "frame": 0}, {"second": 0, "frame": 0}, {"second": 0, "frame": 0}]}
+{"duration": {"second": 0, "frame": 0}, "values": [{"y": 0, "x": 0}, {"y": 0, "x": 0}, {"y": 0, "x": 0}, {"y": 0, "x": 0}], "name": "scale", "starttime": {"second": 0, "frame": 0}, "times": [{"second": 0, "frame": 0}, {"second": 0, "frame": 0}, {"second": 0, "frame": 0}, {"second": 0, "frame": 0}]}
