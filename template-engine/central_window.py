@@ -9,6 +9,16 @@ from plistIO.plistIO import add, delete, new_tree, Map, after_modify
 f = file('../data/settings.json')
 data = json.load(f)
 
+# 找到starttime
+def find_starttime(key, father):
+    now = None
+    for i in range(father.childCount()):
+        if unicode(father.child(i).text(0)).startswith(key):
+            now = father.child(i)
+    if not now: return False
+    print now.text(0)
+    return Map[str(now)]['starttime']['second'] + Map[str(now)]['duration']['second']
+
 # 判断子节点是否可以加到父节点下面
 def check_name_valid(child_name, parent_name):
     if child_name == 'segments' and not parent_name == 'root':
@@ -358,6 +368,17 @@ class CentralWindow(QTreeWidget):
             dic[u'starttime'] = Map[unicode(father)]['starttime']
             # if dic.has_key('duration'):
             dic[u'duration'] = Map[unicode(father)]['duration']
+            for i in (dic[u'times']):
+                i['second'] = dic[u'starttime']['second']
+                i['frame'] = dic[u'starttime']['frame']
+            dic[u'times'][-1]['second'] = int(dic[u'starttime']['second'] + dic[u'duration']['second'])
+            dic[u'times'][-1]['frame'] = dic[u'duration']['frame']
+
+        if (str(key).startswith('segment') and str(key) != 'segments') or \
+                (str(key).startswith('cutto') and not str(key).endswith('s')):
+            time = find_starttime(key, father)
+            if time:
+                dic[u'starttime']['second'] = time
 
         father.setExpanded(True)
         child = QTreeWidgetItem(father)

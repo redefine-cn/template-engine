@@ -15,7 +15,32 @@ def find_father(pos, text):
     return pos
 
 # 联动检查starttime, duration
-def check_time(treeNode, text):
+
+def dfs_find_animations(treeNode, text, ani_fa, st_fa, fa, pos):
+    if unicode(treeNode.text(0)) == text and treeNode.parent() != ani_fa:
+        Map[str(fa)][text] = Map[str(ani_fa)][text]
+        is_expanded = treeNode.isExpanded()
+        fa.removeChild(treeNode)
+        new_child = st_fa.clone()
+        fa.insertChild(pos, new_child)
+        new_child.setExpanded(is_expanded)
+        Map[str(new_child)] = Map[str(st_fa)]
+        return True
+    for i in range(treeNode.childCount()):
+        dfs_find_animations(treeNode.child(i), text, ani_fa, st_fa, treeNode, i)
+
+# 从segment, cutto更新所有子节点的starttime, duration
+def check_up_time(treeNode, text, up_text):
+    st_fa = find_father(treeNode, text)
+    if not st_fa: return False
+    ani_fa = st_fa.parent()
+    if not ani_fa: return False
+    if not unicode(ani_fa.text(0)).startswith(up_text): return False
+    dfs_find_animations(ani_fa, text, ani_fa, st_fa, None, 0)
+    # ani_fa 为segment, cutto节点
+
+# 从animations更新所有子节点的starttime, duration
+def check_low_time(treeNode, text):
     st_fa = find_father(treeNode, text)
     if not st_fa: return False
     ani_fa = st_fa.parent()
@@ -72,8 +97,12 @@ def after_modify(func):
         # modify last value
         check_value(treeNode)
         # modify animations/ starttime & duration
-        check_time(treeNode, u'starttime')
-        check_time(treeNode, u'duration')
+        check_up_time(treeNode, u'starttime', u'segment')
+        check_up_time(treeNode, u'duration', u'segment')
+        check_up_time(treeNode, u'starttime', u'cutto')
+        check_up_time(treeNode, u'duration', u'cutto')
+        check_low_time(treeNode, u'starttime')
+        check_low_time(treeNode, u'duration')
         write_json(Map[str(root)], file_json)
     return inner
 
@@ -247,23 +276,10 @@ def ftp_login(username, password):
         return "failure"
 
 if __name__ == '__main__':
-    data = {}
+    data = {'2':2,'1':1}
     # data['parent'] = "1"
     # data['child'] = 10
     # data['data'] = "test_data"
-    parent = []
-    # parent.append("segment1")
-    # parent.append("starttime")
-    # parent.append("second")
-    node = {'parent': ['segment1', 'starttime', 'second'], 'Type': 'integer', 'Value': '10', 'Key': 'child'}
-    parent_get = node['parent']
-    for i in range(len(parent_get)):
-        parent.append(parent_get[i])
-    if node['Type'] == "integer":
-        data[node['Key']] = int(node['Value'])
-    else:
-        data[node['Key']] = node['Value']
-    # add_node(parent, 1, data)
-    # read_plist("c:/test.xml")
-    read_plist("C:/Users/Administrator/Desktop/plist_subassembly/track.plist")
+    parent = {'1':1, '2':2}
+    print data == parent
 
