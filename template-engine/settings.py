@@ -40,6 +40,13 @@ class Settings(QDialog):
         self.serverAdd = QPushButton(QString.fromUtf8("添加服务器"))
         self.serverAdd.clicked.connect(self.slotserverAdd)
 
+        nameListLabel = QLabel(QString.fromUtf8("列表："))
+        self.nameListbox = QComboBox()
+        for itm in self.data["name_list"]:
+            self.nameListbox.addItem(itm)
+        self.nameListAdd = QPushButton(QString.fromUtf8("添加名称"))
+        self.nameListAdd.clicked.connect(self.slotnameListAdd)
+
         # TODO Here to Change settings.json
 
         saveButton = QPushButton(QString.fromUtf8("保存"))
@@ -62,7 +69,10 @@ class Settings(QDialog):
         baseLayout.addWidget(serverLabel, 2, labelCol)
         baseLayout.addWidget(self.serverbox, 2, contentCol)
         baseLayout.addWidget(self.serverAdd, 2, buttonCol)
-        baseLayout.addLayout(saveLayout, 3, buttonCol, Qt.AlignRight)
+        baseLayout.addWidget(nameListLabel, 3, labelCol)
+        baseLayout.addWidget(self.nameListbox, 3, contentCol)
+        baseLayout.addWidget(self.nameListAdd, 3, buttonCol)
+        baseLayout.addLayout(saveLayout, 4, buttonCol, Qt.AlignRight)
         self.setLayout(baseLayout)
 
     def slotChosePath(self):
@@ -83,6 +93,10 @@ class Settings(QDialog):
     def slotserverAdd(self):
         server_add = ServerDialog(self)
         server_add.show()
+
+    def slotnameListAdd(self):
+        nameList_add = NameListDialog(self)
+        nameList_add.show()
 
     def closeEvent(self, QCloseEvent):
         self.fa.setLeftList()
@@ -127,6 +141,44 @@ class ChooseAddDialog(QDialog):
         self.parent().data["actionList"].append(choose)
         json.dump(self.data, open('../data/settings.json', 'w'))
         self.parent().choosebox.addItem(QString.fromUtf8(choose))
+        self.close()
+
+    def slotCancel(self):
+        self.close()
+
+class NameListDialog(QDialog):
+    def __init__(self, parent):
+        super(NameListDialog, self).__init__(parent)
+        self.data = parent.data
+        self.setWindowTitle(QString.fromUtf8("添加新的名称"))
+
+        self.addLabel = QLabel(QString.fromUtf8("请输入新的名称："))
+        self.addText = QLineEdit()
+
+        saveButton = QPushButton(QString.fromUtf8("保存"))
+        saveButton.clicked.connect(self.slotSave)
+
+        cancelButton = QPushButton(QString.fromUtf8("取消"))
+        cancelButton.clicked.connect(self.slotCancel)
+
+        saveLayout = QHBoxLayout()
+        saveLayout.addWidget(saveButton)
+        saveLayout.addWidget(cancelButton)
+        saveLayout.setAlignment(Qt.AlignRight)
+
+        baseLayout = QGridLayout()
+        baseLayout.addWidget(self.addLabel, 0, 0)
+        baseLayout.addWidget(self.addText, 0, 1)
+        baseLayout.addLayout(saveLayout, 1, 2, Qt.AlignRight)
+        self.setLayout(baseLayout)
+
+    def slotSave(self):
+        choose = unicode(self.addText.text())
+        if choose == "":
+            return
+        self.parent().data["name_list"].append(choose)
+        json.dump(self.data, open('../data/settings.json', 'w'))
+        self.parent().nameListbox.addItem(QString.fromUtf8(choose))
         self.close()
 
     def slotCancel(self):
