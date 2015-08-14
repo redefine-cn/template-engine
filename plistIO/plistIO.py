@@ -7,18 +7,18 @@ from plistlib import *
 Map = {}
 import random
 
-def findFather(pos, text):
+def find_father(pos, text):
     while pos != None and not unicode(pos.text(0)).startswith(text):
         pos = pos.parent()
     return pos
 
 
-def checkTime(treeNode, text):
-    st_fa = findFather(treeNode, text)
+def check_time(treeNode, text):
+    st_fa = find_father(treeNode, text)
     if not st_fa: return False
     ani_fa = st_fa.parent()
     if not ani_fa: return False
-    if not ani_fa.text(0) == 'animations': return False
+    if not unicode(ani_fa.text(0)) == 'animations': return False
     for i in range(ani_fa.childCount()):
         child = ani_fa.child(i)
         if unicode(child.text(0)).startswith('animation'):
@@ -35,16 +35,16 @@ def checkTime(treeNode, text):
     return True
 
 
-def checkValue(treeNode):
-    va_fa = findFather(treeNode, u'values')
+def check_value(treeNode):
+    va_fa = find_father(treeNode, u'values')
     if not va_fa: return False
     treeNode = va_fa.child(va_fa.childCount() - 1)
     ani_fa = va_fa.parent()
     if not ani_fa: return False
-    lay_fa = findFather(ani_fa, u'layer')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'head')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'subtitle')
-    if not lay_fa: lay_fa = findFather(ani_fa, u'foot')
+    lay_fa = find_father(ani_fa, u'layer')
+    if not lay_fa: lay_fa = find_father(ani_fa, u'head')
+    if not lay_fa: lay_fa = find_father(ani_fa, u'subtitle')
+    if not lay_fa: lay_fa = find_father(ani_fa, u'foot')
     if not lay_fa: return False
     switch = {'straightline':u'position', 'scale':u'scale', 'opacity':u'opacity', 'rotate':None, 'still':None}
     name = switch[Map[unicode(ani_fa)][u'name']]
@@ -67,10 +67,10 @@ def after_modify(func):
         treeNode, file_json, root = func(*args, **kwargs)
         if not treeNode: return False
         # modify last value
-        checkValue(treeNode)
+        check_value(treeNode)
         # modify animations/ starttime & duration
-        checkTime(treeNode, u'starttime')
-        checkTime(treeNode, u'duration')
+        check_time(treeNode, u'starttime')
+        check_time(treeNode, u'duration')
         write_json(Map[str(root)], file_json)
     return inner
 
@@ -144,7 +144,7 @@ def delete(addr, addrchild, node, file_json, root):
     write_json(Map[str(root)], file_json)
 
 
-def returnTrueData(data, type):
+def return_true_data(data, type):
     if type == 'integer':
         return int(data)
     elif type == 'real':
@@ -190,26 +190,26 @@ def modify(addr, addrchild, node, file_json, root, changeType, index=None):
         else:
             # print node['PreValue'] == u''
             if node['Type'] == 'integer':
-                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = int(node['Value'])
             elif node['Type'] == 'string':
-                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = str(node['Value'])
             elif node['Type'] == 'real':
-                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = float(node['Value'])
             elif node['Type'] == 'bool':
                 if node['Value'] == 'True':
-                    # index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
+                    # index = Node.index(return_true_data(str(node['PreValue']), node['PreType']))
                     Node[index] = True
                 else:
-                    # index = Node.index(returnTrueData(str(node['PreValue']), node['PreType']))
+                    # index = Node.index(return_true_data(str(node['PreValue']), node['PreType']))
                     Node[index] = False
             elif node['Type'] == 'dict':
-                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = {}
             elif node['Type'] == 'array':
-                # index = Node.index(returnTrueData(node['PreValue'], node['PreType']))
+                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = []
             Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)

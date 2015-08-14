@@ -10,7 +10,7 @@ f = file('../data/settings.json')
 data = json.load(f)
 
 
-def checkNameValid(child_name, parent_name):
+def check_name_valid(child_name, parent_name):
     if child_name == 'segments' and not parent_name == 'root':
         return False
     if child_name == 'cutto_layers' and not parent_name == 'root':
@@ -26,7 +26,7 @@ def checkNameValid(child_name, parent_name):
     return True
 
 
-def checkInteger(text):
+def check_integer(text):
     text = str(text)
     for i in range(len(text)):
         if text[i] < '0' or text[i] > '9':
@@ -34,7 +34,7 @@ def checkInteger(text):
     return True
 
 
-def findNum(text, father):
+def find_num(text, father):
     num = 0
     maxNum = 0
     for i in range(father.childCount()):
@@ -47,7 +47,7 @@ def findNum(text, father):
     return str(max(maxNum, num) + 1)
 
 
-def changeTypeInDFS(Type):
+def change_type_in_dfs(Type):
     # return Type.__name__ if Type.__name__ != 'unicode' else 'string'
     if Type == type({}):
         return 'dict'
@@ -65,7 +65,7 @@ def changeTypeInDFS(Type):
         return 'string'
 
 
-def checkNameExist(father, text):
+def check_name_exist(father, text):
     if father == None:
         return True
     else:
@@ -75,12 +75,12 @@ def checkNameExist(father, text):
         return True
 
 
-def throwErrorMessage(self, text):
+def throw_error_message(self, text):
     QMessageBox.critical(self, 'Error', text, QMessageBox.Ok)
 
 
 @after_modify
-def checkItem(treeNode, file_json, root):
+def check_item(treeNode, file_json, root):
     return treeNode, file_json, root
 
 class AddWidget(QDialog):
@@ -89,10 +89,10 @@ class AddWidget(QDialog):
         if hasattr(fa, 'text'):
             fatext = str(fa.text(1))
         else:
-            throwErrorMessage(father, 'Please Select Node')
+            throw_error_message(father, 'Please Select Node')
             return
         if fatext == 'integer' or fatext == 'string' or fatext == 'real' or fatext == 'bool':
-            throwErrorMessage(father, 'Can Not Add')
+            throw_error_message(father, 'Can Not Add')
             return
         super(AddWidget, self).__init__(father)
 
@@ -176,10 +176,10 @@ class AddWidget(QDialog):
         self.dic['Type'] = ''
         Type = str(self.E2.currentText())
         if len(self.E3.text()) == 0 and Type != 'dict' and Type != 'bool':
-            throwErrorMessage(self, 'Value Can Not Empty')
+            throw_error_message(self, 'Value Can Not Empty')
             return None, None, None
-        if Type == 'integer' and checkInteger(self.E3.text()) == False:
-            throwErrorMessage(self, 'Integer Value Error')
+        if Type == 'integer' and check_integer(self.E3.text()) == False:
+            throw_error_message(self, 'Integer Value Error')
             return None, None, None
         child = QTreeWidgetItem(self.fa)
         child.setText(1, self.E2.currentText())
@@ -203,13 +203,13 @@ class AddWidget(QDialog):
     @after_modify
     def save(self, WTF=0):
         self.dic['Value'] = ''
-        if checkNameExist(self.fa, self.E1.text()) == False:
-            throwErrorMessage(self, 'Key Exist!')
+        if check_name_exist(self.fa, self.E1.text()) == False:
+            throw_error_message(self, 'Key Exist!')
             return None, None, None
         Type = str(self.E2.currentText())
         if Type == 'dict' or Type == 'array':
             if len(self.E1.text()) == 0:
-                throwErrorMessage(self, 'Value Can Not Empty')
+                throw_error_message(self, 'Value Can Not Empty')
                 return None, None, None
             child = QTreeWidgetItem(self.fa)
             child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
@@ -220,10 +220,10 @@ class AddWidget(QDialog):
             add(self.fa, child, self.dic, self.father.path, self.father.root)
         else:
             if len(self.E1.text()) == 0 or (len(self.E3.text()) == 0 and Type != 'bool'):
-                throwErrorMessage(self, 'Value Can Not Empty')
+                throw_error_message(self, 'Value Can Not Empty')
                 return None, None, None
-            if Type == 'integer' and checkInteger(self.E3.text()) == False:
-                throwErrorMessage(self, 'Integer Value Error')
+            if Type == 'integer' and check_integer(self.E3.text()) == False:
+                throw_error_message(self, 'Integer Value Error')
                 return None, None, None
             child = QTreeWidgetItem(self.fa)
             child.setText(0, QString.fromUtf8(unicode(self.E1.text())))
@@ -286,7 +286,7 @@ class CentralWindow(QTreeWidget):
                 for i in range(len(dic)):
                     self.dfs(dic[i], child, 'item'+ str(i), type(dic[i]), dic[i])
         else:
-            Type = changeTypeInDFS(Type)
+            Type = change_type_in_dfs(Type)
             child = QTreeWidgetItem(fa)
             child.setText(0, QString.fromUtf8(unicode(Key)))
             child.setText(1, Type)
@@ -294,7 +294,7 @@ class CentralWindow(QTreeWidget):
             child.setText(2, QString.fromUtf8(unicode(Value)))
             # child.setExpanded(True)
             add(fa, child, {'Key':(Key),'Type':Type,'Value':Value}, file_json, root)
-        # checkItem(child, file_json, root)
+        # check_item(child, file_json, root)
 
     def mouseDoubleClickEvent(self, QmouseEvent):
         if QmouseEvent.button() == Qt.LeftButton:
@@ -330,24 +330,24 @@ class CentralWindow(QTreeWidget):
     def checkDfs(self, treeNode, filejson, root):
         for i in range(treeNode.childCount()):
             self.checkDfs(treeNode.child(i), filejson, root)
-        checkItem(treeNode, filejson, root)
+        check_item(treeNode, filejson, root)
 
     def addSomething(self, text):
         father = self.parent().parent().currentWidget().currentItem()
         file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
         if father == None:
-            throwErrorMessage(self, 'Please Select Node')
+            throw_error_message(self, 'Please Select Node')
             return False
         fatext = str(father.text(1))
         if fatext != 'dict' and fatext != 'array' and fatext != '':
-            throwErrorMessage(self, 'Can Not Add')
+            throw_error_message(self, 'Can Not Add')
             return False
         key = text.split('_')[0]
-        name = key + findNum(key, father) if text != 'cutto_layers.json' else 'cutto_layers'
+        name = key + find_num(key, father) if text != 'cutto_layers.json' else 'cutto_layers'
         if key == 'segments':
             name = 'segments'
-        if not checkNameValid(name, unicode(father.text(0))):
-            throwErrorMessage(self, 'Can Not Add!')
+        if not check_name_valid(name, unicode(father.text(0))):
+            throw_error_message(self, 'Can Not Add!')
             return False
         dic = json.load(file('../data/'+ text))
         # TODO PROCESS THE DICT FOR DIFFERENT ACTION
