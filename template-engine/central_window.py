@@ -367,11 +367,12 @@ class CentralWindow(QTreeWidget):
             dic[u'starttime'] = Map[unicode(father)]['starttime']
             # if dic.has_key('duration'):
             dic[u'duration'] = Map[unicode(father)]['duration']
-            for i in (dic[u'times']):
-                i['second'] = dic[u'starttime']['second']
-                i['frame'] = dic[u'starttime']['frame']
-            dic[u'times'][-1]['second'] = int(dic[u'starttime']['second'] + dic[u'duration']['second'])
-            dic[u'times'][-1]['frame'] = dic[u'duration']['frame']
+            if dic['name'] != 'still':
+                for i in (dic[u'times']):
+                    i['second'] = dic[u'starttime']['second']
+                    # i['frame'] = dic[u'starttime']['frame']
+                dic[u'times'][-1]['second'] = int(dic[u'starttime']['second'] + dic[u'duration']['second'])
+                # dic[u'times'][-1]['frame'] = dic[u'duration']['frame']
 
         if (str(key).startswith('segment') and str(key) != 'segments') or \
                 (str(key).startswith('cutto') and not str(key).endswith('s')):
