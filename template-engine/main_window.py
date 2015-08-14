@@ -357,7 +357,7 @@ class MainWindow(QMainWindow):
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
-            self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+            self.tab.setCurrentWidget(self.central[-1])
         self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
         for k, v in data.items():
