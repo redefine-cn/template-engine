@@ -9,7 +9,7 @@ from plistIO.plistIO import add, delete, new_tree, Map, after_modify
 f = file('../data/settings.json')
 data = json.load(f)
 
-
+# 判断子节点是否可以加到父节点下面
 def check_name_valid(child_name, parent_name):
     if child_name == 'segments' and not parent_name == 'root':
         return False
@@ -21,11 +21,13 @@ def check_name_valid(child_name, parent_name):
         return False
     if child_name.startswith('cutto') and not child_name.endswith('s') and parent_name != 'cutto_layers':
         return False
+    if child_name.startswith('subtitle') and not child_name.endswith('s') and parent_name != 'subtitles':
+        return False
     if child_name.startswith('track') and not (parent_name.startswith('segment') and not parent_name.endswith('s')):
         return False
     return True
 
-
+# 判断是否是输入数据是否符合int
 def check_integer(text):
     text = str(text)
     for i in range(len(text)):
@@ -33,7 +35,7 @@ def check_integer(text):
             return False
     return True
 
-
+# 找到下一个num的位置，类似在segments下面有segment1,2,3,然后添加的时候需要找到最大值+1
 def find_num(text, father):
     num = 0
     maxNum = 0
@@ -46,7 +48,7 @@ def find_num(text, father):
                 pass
     return str(max(maxNum, num) + 1)
 
-
+# 将type转换为string
 def change_type_in_dfs(Type):
     # return Type.__name__ if Type.__name__ != 'unicode' else 'string'
     if Type == type({}):
@@ -64,7 +66,7 @@ def change_type_in_dfs(Type):
     else:
         return 'string'
 
-
+# 判断在父节点下改name是否已经存在，比如在root下添加segments ,如果 segments已经存在，则无法再添加
 def check_name_exist(father, text):
     if father == None:
         return True
@@ -74,11 +76,11 @@ def check_name_exist(father, text):
                 return False
         return True
 
-
+# 用一个message抛出一个提示信息
 def throw_error_message(self, text):
     QMessageBox.critical(self, 'Error', text, QMessageBox.Ok)
 
-
+# 检查该节点是否需要联动操作
 @after_modify
 def check_item(treeNode, file_json, root):
     return treeNode, file_json, root
