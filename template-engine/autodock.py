@@ -5,7 +5,7 @@ import json
 import  sys
 sys.path.append('../')
 from plistIO.plistIO import modify
-from central_window import checkInteger, checkNameExist
+from central_window import check_integer, check_name_exist
 f = file('../data/settings.json')
 data = json.load(f)
 from plistIO.plistIO import after_modify
@@ -99,7 +99,7 @@ class autodock(QDockWidget):
         node['Key'] = unicode(text)
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(treeNode.text(2))
-        if checkNameExist(treeNode.parent(), text):
+        if check_name_exist(treeNode.parent(), text):
             treeNode.setText(0, text)
             modify(treeNode.parent(), treeNode, node, self.parent().tab.currentWidget().path, self.parent().tab.currentWidget().root, 0)
         # self.updateUI(treeNode.parent())
@@ -157,7 +157,7 @@ class autodock(QDockWidget):
         node['Key'] = unicode(treeNode.text(0))
         node['Type'] = str(treeNode.text(1))
         node['Value'] = unicode(text)
-        if node['Type'] == 'integer' and checkInteger(node['Value']) == False:
+        if node['Type'] == 'integer' and check_integer(node['Value']) == False:
             QMessageBox.critical(self, 'error', 'Value Error', QMessageBox.Ok)
             return None, None, None
 

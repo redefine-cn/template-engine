@@ -142,13 +142,11 @@ class MainWindow(QMainWindow):
         self.addLayer.setShortcut('Alt+L')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
         self.addLayer.triggered.connect(lambda :self.tab.currentWidget().addSomething('layer_layer.json'))
-        # self.addLayer.triggered.connect(partial(self.tab.currentWidget().addSomething, 'layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
         self.addSubtitle.setShortcut('Alt+S')
         self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
         self.addSubtitle.triggered.connect(lambda :self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
-        # self.addSubtitle.triggered.connect(partial(self.tab.currentWidget().addSomething, 'subtitle_subtitle.json'))
 
         # CUTTO_LAYER
         self.addCuttoLayers = QAction('&AddCuttoLayer', self)
@@ -180,31 +178,26 @@ class MainWindow(QMainWindow):
         self.addStraightLine.setShortcut('Alt+5')
         self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
         self.addStraightLine.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_straightline.json'))
-        # self.addStraightLine.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_straightline.json'))
 
         self.addOpacity = QAction('&AddOpacity', self)
         self.addOpacity.setShortcut('Alt+4')
         self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
         self.addOpacity.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_opacity.json'))
-        # self.addOpacity.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_opacity.json'))
 
         self.addRotate = QAction('&AddRotate', self)
         self.addRotate.setShortcut('Alt+3')
         self.addRotate.setStatusTip(QString.fromUtf8('添加Rotate'))
         self.addRotate.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_rotate.json'))
-        # self.addRotate.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_rotate.json'))
 
         self.addScale = QAction('&AddScale', self)
         self.addScale.setShortcut('Alt+2')
         self.addScale.setStatusTip(QString.fromUtf8('添加Scale'))
         self.addScale.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_scale.json'))
-        # self.addScale.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_scale.json'))
 
         self.addStill = QAction('&AddStill', self)
         self.addStill.setShortcut('Alt+1')
         self.addStill.setStatusTip(QString.fromUtf8('添加Still'))
         self.addStill.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_still.json'))
-        # self.addStill.triggered.connect(partial(self.tab.currentWidget().addSomething, 'animation_still.json'))
 
         self.animation = QAction('&AddAnimation', self)
         self.animation.setStatusTip(QString.fromUtf8('添加Animation'))
@@ -273,7 +266,6 @@ class MainWindow(QMainWindow):
 
     def slotUpload(self):
         self.uploadDialog = Uploader()
-        # uploadDialog.show()
 
     def slotExit(self):
         self.close()
@@ -361,12 +353,12 @@ class MainWindow(QMainWindow):
         # print file_json
         if self.tab.currentWidget() == None:
             self.slotCreateFile()
-        self.tab.currentWidget().path = unicode(file_json)
         data = json.load(json_data)
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
             self.slotCreateFile()
             self.tab.setCurrentWidget(self.central[len(self.central) - 1])
+        self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
         for k, v in data.items():
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
