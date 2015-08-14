@@ -14,8 +14,7 @@ def find_father(pos, text):
         pos = pos.parent()
     return pos
 
-# 联动检查starttime, duration
-
+# 对于segment节点的starttime&duration修改，递归修改所有节点
 def dfs_find_animations(treeNode, text, ani_fa, st_fa, fa, pos):
     if unicode(treeNode.text(0)) == text and treeNode.parent() != ani_fa:
         Map[str(fa)][text] = Map[str(ani_fa)][text]
@@ -176,23 +175,6 @@ def delete(addr, addrchild, node, file_json, root):
     write_json(Map[str(root)], file_json)
 
 
-def return_true_data(data, type):
-    if type == 'integer':
-        return int(data)
-    elif type == 'real':
-        return float(data)
-    elif type == 'string':
-        return unicode(data)
-    elif type == 'bool':
-        if data == 'True':
-            return True
-        else:
-            return False
-    elif type == 'dict':
-        return {}
-    elif type == 'array':
-        return []
-
 # 修改节点
 def modify(addr, addrchild, node, file_json, root, changeType, index=None):
     Node = Map[str(addr)]
@@ -220,28 +202,20 @@ def modify(addr, addrchild, node, file_json, root, changeType, index=None):
                 Node[node['Key']] = []
             Map[str(addrchild)] = Node[node['Key']]
         else:
-            # print node['PreValue'] == u''
             if node['Type'] == 'integer':
-                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = int(node['Value'])
             elif node['Type'] == 'string':
-                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = str(node['Value'])
             elif node['Type'] == 'real':
-                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = float(node['Value'])
             elif node['Type'] == 'bool':
                 if node['Value'] == 'True':
-                    # index = Node.index(return_true_data(str(node['PreValue']), node['PreType']))
                     Node[index] = True
                 else:
-                    # index = Node.index(return_true_data(str(node['PreValue']), node['PreType']))
                     Node[index] = False
             elif node['Type'] == 'dict':
-                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = {}
             elif node['Type'] == 'array':
-                # index = Node.index(return_true_data(node['PreValue'], node['PreType']))
                 Node[index] = []
             Map[str(addrchild)] = Node[index]
     write_json(Map[str(root)], file_json)
@@ -274,12 +248,3 @@ def ftp_login(username, password):
         return "success"
     else:
         return "failure"
-
-if __name__ == '__main__':
-    data = {'2':2,'1':1}
-    # data['parent'] = "1"
-    # data['child'] = 10
-    # data['data'] = "test_data"
-    parent = {'1':1, '2':2}
-    print data == parent
-

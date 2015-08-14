@@ -16,7 +16,6 @@ def find_starttime(key, father):
         if unicode(father.child(i).text(0)).startswith(key):
             now = father.child(i)
     if not now: return False
-    print now.text(0)
     return Map[str(now)]['starttime']['second'] + Map[str(now)]['duration']['second']
 
 # 判断子节点是否可以加到父节点下面
