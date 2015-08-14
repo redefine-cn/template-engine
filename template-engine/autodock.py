@@ -105,6 +105,7 @@ class autodock(QDockWidget):
         fileName = unicode(QFileDialog.getOpenFileName(self, QString.fromUtf8('打开')))
         fi = QFileInfo(fileName)
         fileName = fi.fileName()
+        if len(fileName) == 0: return False
         self.slotValueEdit(treeNode, fileName)
         self.updateUI(treeNode.parent())
 
@@ -166,7 +167,6 @@ class autodock(QDockWidget):
 
     @after_modify
     def slotValueEdit(self, treeNode, text):
-        print treeNode, text
         node = {}
         node['PreValue'] = unicode(treeNode.text(2))
         node['PreType'] = str(treeNode.text(1))
