@@ -52,7 +52,7 @@ pyinstaller -F -w -n template-engine -p ./ template-engine/main_window.py
 
 2)`Type=bool`会有选项选择`True&False`
 
-3)如果该节点的父节点`Type=array`,则该节点没有`Key`这一属性
+3)如果该节点的父节点`Type=array`,则该节点没有`Key`这一属性,`array`下无法再加`array`
 
 2、`Delete`删除这个节点和对应的子树
 
@@ -80,7 +80,7 @@ pyinstaller -F -w -n template-engine -p ./ template-engine/main_window.py
 
 14、`addRotate`添加一个`animation`，其父节点只能是`adnimations`,对应`rotate`
 
-15、`addOpacity`添加一个`animation`，其父节点只能是`adnimations`,对应`rotate`
+15、`addOpacity`添加一个`animation`，其父节点只能是`adnimations`,对应`opacity`
 
 16、`addStraightline`添加一个`animation`，其父节点只能是`adnimations`,对应`straightline`
 
