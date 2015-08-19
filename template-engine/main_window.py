@@ -11,6 +11,10 @@ from uploader.uploader import Uploader
 from autodock import autodock
 from plistIO.plistIO import read_plist, save_plist
 
+
+VERSION = " 1.0 RC1"
+
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -41,7 +45,7 @@ class MainWindow(QMainWindow):
     def initUI(self):
         self.text = QTextEdit()
         #name
-        self.setWindowTitle(QString.fromUtf8('Template-Engine'))
+        self.setWindowTitle(QString.fromUtf8('Template-Engine' + VERSION))
         #Splitter
         self.setSplitter()
         #Action
@@ -262,7 +266,8 @@ class MainWindow(QMainWindow):
 
     def slotAbout(self):
         # QMessageBox.aboutQt(self, 'About Qt')
-        QMessageBox.about(self, QString.fromUtf8("About me"), QString.fromUtf8("欢迎使用本软件"))
+        QMessageBox.about(self, QString.fromUtf8("About"),
+                          QString.fromUtf8("Template Engine" + VERSION +"\n\n北京东方云图科技有限公司"))
 
     def slotUpload(self):
         self.uploadDialog = Uploader()
