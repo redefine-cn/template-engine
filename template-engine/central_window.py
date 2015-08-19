@@ -266,9 +266,9 @@ class CentralWindow(QTreeWidget):
     def init(self):
         self.setColumnCount(3)
         self.setHeaderLabels(['Key', 'Type', 'Value'])
-        self.header().resizeSection(0, 200)
-        self.header().resizeSection(1, 200)
-        self.header().resizeSection(2, 200)
+        self.header().resizeSection(0, 400)
+        self.header().resizeSection(1, 400)
+        self.header().resizeSection(2, 400)
         self.root = QTreeWidgetItem(self)
         self.root.setText(0, 'root')
         # self.root.setExpanded(True)

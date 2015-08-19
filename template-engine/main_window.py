@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
         self.waitWindow.resize(250,50)
         self.loadData()
         self.initUI()
-        self.resize(960, 540)
+        self.resize(1024, 768)
 
     def loadData(self):
         #load
@@ -145,63 +145,63 @@ class MainWindow(QMainWindow):
         self.addLayer = QAction('&AddLayer', self)
         self.addLayer.setShortcut('Alt+L')
         self.addLayer.setStatusTip(QString.fromUtf8('添加Layer'))
-        self.addLayer.triggered.connect(lambda :self.tab.currentWidget().addSomething('layer_layer.json'))
+        self.addLayer.triggered.connect(lambda: self.tab.currentWidget().addSomething('layer_layer.json'))
 
         self.addSubtitle = QAction('&AddSubtitle', self)
         self.addSubtitle.setShortcut('Alt+S')
         self.addSubtitle.setStatusTip(QString.fromUtf8('添加Subtitle'))
-        self.addSubtitle.triggered.connect(lambda :self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
+        self.addSubtitle.triggered.connect(lambda: self.tab.currentWidget().addSomething('subtitle_subtitle.json'))
 
         # CUTTO_LAYER
         self.addCuttoLayers = QAction('&AddCuttoLayer', self)
-        self.addCuttoLayers.triggered.connect(lambda :self.tab.currentWidget().addSomething('cutto_layers.json'))
+        self.addCuttoLayers.triggered.connect(lambda: self.tab.currentWidget().addSomething('cutto_layers.json'))
 
         self.addCutto = QAction('&AddCutto', self)
-        self.addCutto.triggered.connect(lambda :self.tab.currentWidget().addSomething('cutto_cutto.json'))
+        self.addCutto.triggered.connect(lambda: self.tab.currentWidget().addSomething('cutto_cutto.json'))
 
         # SEGMENTS
         self.addSegments = QAction('&AddSegments', self)
-        self.addSegments.triggered.connect(lambda :self.tab.currentWidget().addSomething('segments_segments.json'))
+        self.addSegments.triggered.connect(lambda: self.tab.currentWidget().addSomething('segments_segments.json'))
 
         self.addHeadSegment = QAction('&AddHead', self)
-        self.addHeadSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_head.json'))
+        self.addHeadSegment.triggered.connect(lambda: self.tab.currentWidget().addSomething('segment_head.json'))
 
         self.addNormalSegment = QAction('&AddNormal', self)
-        self.addNormalSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_normal.json'))
+        self.addNormalSegment.triggered.connect(lambda: self.tab.currentWidget().addSomething('segment_normal.json'))
 
         self.addFootSegment = QAction('&AddFoot', self)
-        self.addFootSegment.triggered.connect(lambda :self.tab.currentWidget().addSomething('segment_foot.json'))
+        self.addFootSegment.triggered.connect(lambda: self.tab.currentWidget().addSomething('segment_foot.json'))
 
         # TRACK
         self.addTrack = QAction('&AddTrack', self)
         self.addTrack.setShortcut('Alt+T')
-        self.addTrack.triggered.connect(lambda :self.tab.currentWidget().addSomething('track_track.json'))
+        self.addTrack.triggered.connect(lambda: self.tab.currentWidget().addSomething('track_track.json'))
 
         # ANIMATIONS
         self.addStraightLine = QAction('&AddStraightLine', self)
         self.addStraightLine.setShortcut('Alt+5')
         self.addStraightLine.setStatusTip(QString.fromUtf8('添加StraightLine'))
-        self.addStraightLine.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_straightline.json'))
+        self.addStraightLine.triggered.connect(lambda: self.tab.currentWidget().addSomething('animation_straightline.json'))
 
         self.addOpacity = QAction('&AddOpacity', self)
         self.addOpacity.setShortcut('Alt+4')
         self.addOpacity.setStatusTip(QString.fromUtf8('添加Opacity'))
-        self.addOpacity.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_opacity.json'))
+        self.addOpacity.triggered.connect(lambda: self.tab.currentWidget().addSomething('animation_opacity.json'))
 
         self.addRotate = QAction('&AddRotate', self)
         self.addRotate.setShortcut('Alt+3')
         self.addRotate.setStatusTip(QString.fromUtf8('添加Rotate'))
-        self.addRotate.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_rotate.json'))
+        self.addRotate.triggered.connect(lambda: self.tab.currentWidget().addSomething('animation_rotate.json'))
 
         self.addScale = QAction('&AddScale', self)
         self.addScale.setShortcut('Alt+2')
         self.addScale.setStatusTip(QString.fromUtf8('添加Scale'))
-        self.addScale.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_scale.json'))
+        self.addScale.triggered.connect(lambda: self.tab.currentWidget().addSomething('animation_scale.json'))
 
         self.addStill = QAction('&AddStill', self)
         self.addStill.setShortcut('Alt+1')
         self.addStill.setStatusTip(QString.fromUtf8('添加Still'))
-        self.addStill.triggered.connect(lambda :self.tab.currentWidget().addSomething('animation_still.json'))
+        self.addStill.triggered.connect(lambda: self.tab.currentWidget().addSomething('animation_still.json'))
 
         self.animation = QAction('&AddAnimation', self)
         self.animation.setStatusTip(QString.fromUtf8('添加Animation'))
@@ -261,13 +261,13 @@ class MainWindow(QMainWindow):
         self.dock = autodock(self)
         self.dock.setMaximumSize(self.geometry().width()/3, self.geometry().height())
         self.dock.setMinimumSize(self.geometry().width()/4, self.geometry().height())
-        self.dock.setFixedWidth(250)
+        self.dock.setFixedWidth(600)
         self.addDockWidget(Qt.RightDockWidgetArea, self.dock)
 
     def slotAbout(self):
         # QMessageBox.aboutQt(self, 'About Qt')
         QMessageBox.about(self, QString.fromUtf8("About"),
-                          QString.fromUtf8("Template Engine" + VERSION +"\n\n北京东方云图科技有限公司"))
+                          QString.fromUtf8("Template Engine" + VERSION +"\n\nCopyright@2015 北京东方云图科技有限公司"))
 
     def slotUpload(self):
         self.uploadDialog = Uploader()
