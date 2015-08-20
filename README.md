@@ -84,6 +84,14 @@ pyinstaller -F -w -n template-engine -p ./ template-engine/main_window.py
 
 16、`addStraightline`添加一个`animation`，其父节点只能是`adnimations`,对应`straightline`
 
+17、`Copy`复制当前节点及其子树
+
+18、`Paste`粘贴复制过的节点，以下是一些规则:
+
+1) 复制的节点必须是类似segment1,animation1,cutto1之类的有序号的节点。
+
+2)粘贴的时候，需要选中复制节点的父节点，比如复制了segment3,那么粘贴之前要先选中segments，再粘贴，同理其他复制操作
+
 ### 一些联动操作
 
 1、修改`segment`层的`starttime&duration`整个`segment`下的`starttime&duration`都会改变
