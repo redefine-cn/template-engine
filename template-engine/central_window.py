@@ -9,6 +9,15 @@ from plistIO.plistIO import add, delete, new_tree, Map, after_modify
 f = file('../data/settings.json')
 data = json.load(f)
 
+# 找到类似segment1,animation1之类的前缀
+def find_name(name):
+    real_name = ''
+    for i in range(len(name)):
+        if name[i] >= '0' and name[i] <= '9':
+            return real_name
+        real_name += name[i]
+    return real_name
+
 # 找到starttime
 def find_starttime(key, father):
     now = None
@@ -393,8 +402,8 @@ class CentralWindow(QTreeWidget):
         self.checkDfs(father, file_json, root)
 
     def copyItem(self):
+        self.copyName = unicode(self.parent().parent().currentWidget().currentItem().text(0))
         self.copyJson = Map[unicode(self.parent().parent().currentWidget().currentItem())]
-        # print self.copyJson
 
     def pasteItem(self):
         if not self.copyJson:
@@ -402,7 +411,7 @@ class CentralWindow(QTreeWidget):
             return False
         father = self.parent().parent().currentWidget().currentItem()
         file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
-        key = str(father.text(0))[:-1]
+        key = find_name(self.copyName)
         name = key + find_num(key, father)
         child = QTreeWidgetItem(father)
         child.setText(0, name)
