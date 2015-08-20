@@ -260,6 +260,7 @@ class CentralWindow(QTreeWidget):
 
     def __init__(self, parent=None):
         super(CentralWindow, self).__init__(parent)
+        self.copyJson = None
         self.init()
         self.path = new_tree()
 
@@ -390,6 +391,28 @@ class CentralWindow(QTreeWidget):
             self.dfs(v, child, k, type(v), v)
         self.parent().parent().parent().parent().dock.updateUI(father)
         self.checkDfs(father, file_json, root)
+
+    def copyItem(self):
+        self.copyJson = Map[unicode(self.parent().parent().currentWidget().currentItem())]
+        # print self.copyJson
+
+    def pasteItem(self):
+        if not self.copyJson:
+            throw_error_message(self, 'Can Not Paste')
+            return False
+        father = self.parent().parent().currentWidget().currentItem()
+        file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
+        key = str(father.text(0))[:-1]
+        name = key + find_num(key, father)
+        child = QTreeWidgetItem(father)
+        child.setText(0, name)
+        child.setText(1, 'dict')
+        add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
+        for k, v in self.copyJson.items():
+            self.dfs(v, child, k, type(v), v)
+        self.parent().parent().parent().parent().dock.updateUI(father)
+        self.checkDfs(father, file_json, root)
+
 
 class Example(QMainWindow):
     def __init__(self):

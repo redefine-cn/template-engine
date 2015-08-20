@@ -60,6 +60,8 @@ class MainWindow(QMainWindow):
         self.createDockWidget()
         #set Icon
         self.setWindowIcon(QIcon('../data/icon.png'))
+        # add Default
+        self.addDefault()
 
     def createMenu(self):
 
@@ -79,6 +81,8 @@ class MainWindow(QMainWindow):
         ActionMenu.addAction(self.cutto)
         ActionMenu.addAction(self.segment)
         ActionMenu.addAction(self.animation)
+        ActionMenu.addAction(self.copyItem)
+        ActionMenu.addAction(self.pasteItem)
 
         uploadMenu = menuBar.addMenu(QString.fromUtf8("上传"))
         uploadMenu.addAction(self.uploadAction)
@@ -111,7 +115,7 @@ class MainWindow(QMainWindow):
         self.fileCreateAction = QAction(QString.fromUtf8("新建"), self)
         self.fileCreateAction.setShortcut("Ctrl+N")
         self.fileCreateAction.setStatusTip(QString.fromUtf8("创建一个文件"))
-        self.fileCreateAction.triggered.connect(self.slotCreateFile)
+        self.fileCreateAction.triggered.connect(lambda :self.slotCreateFile(0))
 
         #保存文件
         self.fileSaveAction = QAction(QString.fromUtf8("保存"), self)
@@ -228,6 +232,16 @@ class MainWindow(QMainWindow):
         cutto.addAction(self.addCutto)
         self.cutto.setMenu(cutto)
 
+        # 复制
+        self.copyItem = QAction(QString.fromUtf8('Copy'), self)
+        self.copyItem.setShortcut('Ctrl+C')
+        self.copyItem.triggered.connect(self.tab.currentWidget().copyItem)
+
+        # 粘贴
+        self.pasteItem = QAction(QString.fromUtf8('Paste'), self)
+        self.pasteItem.setShortcut('Ctrl+V')
+        self.pasteItem.triggered.connect(self.tab.currentWidget().pasteItem)
+
         #关于
         self.aboutAction = QAction(QString.fromUtf8("关于") ,self)
         self.aboutAction.setStatusTip(QString.fromUtf8("关于"))
@@ -238,6 +252,13 @@ class MainWindow(QMainWindow):
         self.uploadAction.setShortcut('Ctrl+U')
         self.uploadAction.setStatusTip(QString.fromUtf8("上传模版文件"))
         self.uploadAction.triggered.connect(self.slotUpload)
+
+    def addDefault(self):
+        self.tab.currentWidget().setCurrentItem(self.tab.currentWidget().root)
+        self.addSegments.trigger()
+        self.addCuttoLayers.trigger()
+        self.tab.currentWidget().setCurrentItem(self.tab.currentWidget().root.child(0))
+        self.addHeadSegment.trigger()
 
     def createToolBars(self):
         fileToolBar = self.addToolBar("File")
@@ -280,11 +301,13 @@ class MainWindow(QMainWindow):
         if len(fileName) != 0:
             save_plist(unicode(fileName), unicode(self.tab.currentWidget().path))
 
-    def slotCreateFile(self):
+    def slotCreateFile(self, type):
         central = CentralWindow()
         self.central.append(central)
         self.tab.addTab(self.central[-1], 'Tab' + str(len(self.central)))
         self.tab.setCurrentWidget(self.central[-1])
+        if not type:
+            self.addDefault()
 
     def slotOpenFile(self):
         fileName = unicode(QFileDialog.getOpenFileName(self, QString.fromUtf8('打开'), self.tr(''), self.tr('*.plist')))
@@ -293,11 +316,12 @@ class MainWindow(QMainWindow):
         file_json = read_plist(fileName)
         json_data = file(unicode('../tmp_data/') + file_json)
         if self.tab.currentWidget() == None:
-            self.slotCreateFile()
+            self.slotCreateFile(1)
         data = json.load(json_data)
+        # print data
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
-            self.slotCreateFile()
+            self.slotCreateFile(1)
             self.tab.setCurrentWidget(self.central[-1])
         self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
@@ -357,11 +381,11 @@ class MainWindow(QMainWindow):
         json_data = file(unicode('../tmp_data/') + file_json)
         # print file_json
         if self.tab.currentWidget() == None:
-            self.slotCreateFile()
+            self.slotCreateFile(1)
         data = json.load(json_data)
         # Check if window is not empty, create a new window
         if self.tab.currentWidget().root.childCount() != 0:
-            self.slotCreateFile()
+            self.slotCreateFile(1)
             self.tab.setCurrentWidget(self.central[-1])
         self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
