@@ -16,7 +16,7 @@ def find_name(name):
         if name[i] >= '0' and name[i] <= '9':
             return real_name
         real_name += name[i]
-    return real_name
+    return False
 
 # 找到starttime
 def find_starttime(key, father):
@@ -63,6 +63,14 @@ def find_num(text, father):
             except:
                 pass
     return str(max(maxNum, num) + 1)
+
+# 找到类似segment1,2,3出现的最后位置
+def find_pos(text, father):
+    pos = father.childCount() - 1
+    for i in range(father.childCount()):
+        if str(father.child(i).text(0)).startswith(str(text)):
+            pos = i
+    return pos + 1
 
 # 将type转换为string
 def change_type_in_dfs(Type):
@@ -363,6 +371,7 @@ class CentralWindow(QTreeWidget):
             return False
         key = text.split('_')[0]
         name = key + find_num(key, father) if text != 'cutto_layers.json' else 'cutto_layers'
+        pos = find_pos(key, father)
         if key == 'segments':
             name = 'segments'
         if not check_name_valid(name, unicode(father.text(0))):
@@ -387,11 +396,11 @@ class CentralWindow(QTreeWidget):
             time = find_starttime(key, father)
             if time:
                 dic[u'starttime']['second'] = time
-
         father.setExpanded(True)
-        child = QTreeWidgetItem(father)
+        child = QTreeWidgetItem()
         child.setText(0, name)
         child.setText(1, 'dict')
+        father.insertChild(pos, child)
         add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
 
         for k, v in sorted(dic.items(), key=lambda d:d[0]):
@@ -401,6 +410,9 @@ class CentralWindow(QTreeWidget):
 
     def copyItem(self):
         self.copyName = unicode(self.parent().parent().currentWidget().currentItem().text(0))
+        if not find_name(self.copyName):
+            throw_error_message(self, 'Can Not Copy')
+            return False
         self.copyJson = Map[unicode(self.parent().parent().currentWidget().currentItem())]
 
     def pasteItem(self):
@@ -411,9 +423,11 @@ class CentralWindow(QTreeWidget):
         file_json, root = self.parent().parent().currentWidget().path, self.parent().parent().currentWidget().root
         key = find_name(self.copyName)
         name = key + find_num(key, father)
-        child = QTreeWidgetItem(father)
+        pos = find_pos(key, father)
+        child = QTreeWidgetItem()
         child.setText(0, name)
         child.setText(1, 'dict')
+        father.insertChild(pos, child)
         add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
         for k, v in sorted(self.copyJson.items(), key=lambda d:d[0]):
             self.dfs(v, child, k, type(v), v)

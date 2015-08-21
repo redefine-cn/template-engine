@@ -6,6 +6,8 @@ from plistlib import *
 # create tree and create the file.json, return the file name
 # Map来映射addr -> Key
 # 由于addr的唯一性， 所以不会冲突
+# import collections
+# Map = collections.OrderedDict()
 Map = {}
 import random
 
