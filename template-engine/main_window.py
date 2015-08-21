@@ -325,7 +325,7 @@ class MainWindow(QMainWindow):
             self.tab.setCurrentWidget(self.central[-1])
         self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
-        for k, v in data.items():
+        for k, v in sorted(data.items(), key=lambda d:d[0]):
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
         self.waitWindow.close()
 
@@ -389,7 +389,7 @@ class MainWindow(QMainWindow):
             self.tab.setCurrentWidget(self.central[-1])
         self.tab.currentWidget().path = unicode(file_json)
         self.waitWindow.show()
-        for k, v in data.items():
+        for k, v in sorted(data.items(), key=lambda d:d[0]):
             self.tab.currentWidget().dfs(v, self.tab.currentWidget().root, k, type(v), v)
         self.waitWindow.close()
 

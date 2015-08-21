@@ -37,8 +37,6 @@ def check_name_valid(child_name, parent_name):
         return False
     if child_name.startswith('animation') and not child_name.endswith('s') and parent_name != 'animations':
         return False
-    if child_name.startswith('cutto') and not child_name.endswith('s') and parent_name != 'cutto_layers':
-        return False
     if child_name.startswith('subtitle') and not child_name.endswith('s') and parent_name != 'subtitles':
         return False
     if child_name.startswith('track') and not (parent_name.startswith('segment') and not parent_name.endswith('s')):
@@ -298,7 +296,7 @@ class CentralWindow(QTreeWidget):
                 # if child_name == 'starttime' or child_name == 'duration':
                 #     Map[unicode(child)][unicode(child_name)] = Map[unicode(self.parent().parent().currentWidget().currentItem())][unicode(child_name)]
                 # else:
-                for k, v in dic.items():
+                for k, v in sorted(dic.items(), key=lambda d:d[0]):
                     self.dfs(v, child, k, type(v), v)
             else:
                 child.setText(1, 'array')
@@ -396,7 +394,7 @@ class CentralWindow(QTreeWidget):
         child.setText(1, 'dict')
         add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
 
-        for k, v in dic.items():
+        for k, v in sorted(dic.items(), key=lambda d:d[0]):
             self.dfs(v, child, k, type(v), v)
         self.parent().parent().parent().parent().dock.updateUI(father)
         self.checkDfs(father, file_json, root)
@@ -417,7 +415,7 @@ class CentralWindow(QTreeWidget):
         child.setText(0, name)
         child.setText(1, 'dict')
         add(father, child,{'Key': unicode(name), 'Type':'dict'}, file_json, root)
-        for k, v in self.copyJson.items():
+        for k, v in sorted(self.copyJson.items(), key=lambda d:d[0]):
             self.dfs(v, child, k, type(v), v)
         self.parent().parent().parent().parent().dock.updateUI(father)
         self.checkDfs(father, file_json, root)
