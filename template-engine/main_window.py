@@ -12,7 +12,7 @@ from autodock import autodock
 from plistIO.plistIO import read_plist, save_plist
 
 
-VERSION = " 1.0 RC1"
+VERSION = " 1.0 RC2"
 
 
 class MainWindow(QMainWindow):
